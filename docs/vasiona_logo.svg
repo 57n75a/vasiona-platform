@@ -1,0 +1,43 @@
+<svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0b1330"/>
+      <stop offset="100%" stop-color="#152252"/>
+    </linearGradient>
+    <linearGradient id="earthGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a4d8f"/>
+      <stop offset="100%" stop-color="#0d2b52"/>
+    </linearGradient>
+  </defs>
+
+  <circle cx="300" cy="300" r="290" fill="url(#skyGrad)"/>
+
+  <!-- orbit rings -->
+  <ellipse cx="300" cy="300" rx="260" ry="100" fill="none" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2"/>
+  <ellipse cx="300" cy="300" rx="230" ry="230" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.5"/>
+
+  <!-- satellite dots on orbit -->
+  <circle cx="560" cy="300" r="6" fill="#ffffff"/>
+  <circle cx="70" cy="260" r="5" fill="#ffffff" opacity="0.85"/>
+  <circle cx="480" cy="150" r="4.5" fill="#ffffff" opacity="0.8"/>
+  <circle cx="150" cy="420" r="4" fill="#ffffff" opacity="0.7"/>
+
+  <!-- Earth -->
+  <circle cx="300" cy="300" r="150" fill="url(#earthGrad)" stroke="#0a1a33" stroke-width="3"/>
+
+  <!-- Serbia wedge highlight (stylised, not a real map projection) -->
+  <path d="M 300 300 L 300 150 A 150 150 0 0 1 388 175 Z" fill="#c6363c"/>
+
+  <!-- vertical sovereignty column above the highlighted wedge -->
+  <path d="M 300 150 L 300 30 M 344 162 L 372 55" stroke="#ffffff" stroke-width="3" stroke-dasharray="6 8" stroke-linecap="round" opacity="0.8"/>
+  <circle cx="300" cy="30" r="5" fill="#ffffff"/>
+  <circle cx="372" cy="55" r="4" fill="#ffffff"/>
+
+  <!-- Serbian tricolor bar -->
+  <rect x="230" y="500" width="140" height="10" fill="#c6363c"/>
+  <rect x="230" y="512" width="140" height="10" fill="#0c4076"/>
+  <rect x="230" y="524" width="140" height="10" fill="#ffffff"/>
+
+  <!-- Wordmark -->
+  <text x="300" y="475" font-family="Georgia, 'Times New Roman', serif" font-size="42" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="4">VASIONA</text>
+</svg>

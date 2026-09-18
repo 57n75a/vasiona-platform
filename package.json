@@ -1,0 +1,26 @@
+{
+  "name": "vasiona-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "VASIONA — Serbian air & space overflight monitoring platform (with hypothetical toll-fee ledger).",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "estimate:historical": "ts-node scripts/historical-estimate.ts"
+  },
+  "dependencies": {
+    "@vercel/postgres": "^0.10.0",
+    "next": "^14.2.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "satellite.js": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "@types/react": "^18.3.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.3"
+  }
+}

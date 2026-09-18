@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/fetch-tles",
+      "schedule": "0 3 * * *"
+    }
+  ]
+}
