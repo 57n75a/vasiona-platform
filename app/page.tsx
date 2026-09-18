@@ -1,18 +1,8 @@
 import { getDict } from "@/lib/i18n";
+import { getLedgerData } from "@/lib/ledgerService";
+import { getOverheadEvents } from "@/lib/overheadService";
 
 export const dynamic = "force-dynamic";
-
-async function getLedger(lang: string) {
-  const base = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000";
-  const res = await fetch(`${base}/api/ledger?lang=${lang}`, { cache: "no-store" });
-  return res.json();
-}
-
-async function getOverhead() {
-  const base = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000";
-  const res = await fetch(`${base}/api/overhead`, { cache: "no-store" });
-  return res.json();
-}
 
 export default async function Home({
   searchParams,
@@ -23,7 +13,10 @@ export default async function Home({
   const t = getDict(lang);
   const otherLang = lang === "sr" ? "en" : "sr";
 
-  const [ledger, overhead] = await Promise.all([getLedger(lang), getOverhead()]);
+  const [ledger, overhead] = await Promise.all([
+    getLedgerData(lang),
+    getOverheadEvents(100),
+  ]);
 
   return (
     <main style={{ maxWidth: 900, margin: "0 auto", padding: "24px 20px 60px" }}>

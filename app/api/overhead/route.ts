@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
-import { ensureSchema, recentEvents } from "@/lib/db";
+import { getOverheadEvents } from "@/lib/overheadService";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  await ensureSchema();
-  const events = await recentEvents(100);
-  return NextResponse.json({ events });
+  const data = await getOverheadEvents(100);
+  return NextResponse.json(data);
 }
