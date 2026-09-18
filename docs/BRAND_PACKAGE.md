@@ -25,9 +25,17 @@ Soviet rocket family, and camera brand all use "Zenit").
 - Body: clean grotesque (Inter, Source Sans, or system UI stack)
 
 ## Logo
-`vasiona_logo.svg` in this folder — Earth with Serbia's territory highlighted in red,
-a dashed "sovereignty column" rising into orbit, satellite nodes on orbital rings, and
-a Serbian tricolor base strip. Vector, freely editable.
+`vasiona_logo.svg` in this folder — a seal-style emblem: gold circular rim
+text ("VASIONA" top, "OCULUS CAELI · SERBIA · 2020" bottom) on a cream disc,
+a navy globe with Serbia shown as an actual flag-colored (red/blue/white)
+silhouette clipped to its real border shape, a dashed gold orbit ellipse, and
+a gold ray connecting Serbia to a satellite icon. Renders as a medallion
+against the site's dark navy UI. Vector, freely editable.
+
+Note: the seal itself uses a gold/cream palette distinct from the site's red
+UI accent (`#C6363C`) — that's intentional, the same way a national seal's
+metallic tone differs from a flag's flat colors. Don't try to force the two
+into one palette.
 
 **Do not** make the logo a close copy of Serbia's official coat of arms — keep the
 eagle/shield-style motifs original so the brand reads as a private/initiative mark,

@@ -38,3 +38,13 @@ export async function getSignatureCount(): Promise<number> {
   const { rows } = await sql`SELECT COUNT(*)::int AS count FROM petition_signatures;`;
   return rows[0]?.count ?? 0;
 }
+
+export async function listSignatures(limit = 1000) {
+  const { rows } = await sql`
+    SELECT id, name, country, comment, created_at
+    FROM petition_signatures
+    ORDER BY created_at DESC
+    LIMIT ${limit};
+  `;
+  return rows;
+}

@@ -26,15 +26,17 @@ subscribers or investors without that caveat attached.
 | TLE data (cron job) | 🟢 Real — live pull from CelesTrak |
 | SGP4 propagation | 🟢 Real — same library as the earlier browser demo, run server-side |
 | Serbia geofence | 🟢 Real border polygon — ~130-point ray-casting point-in-polygon test |
-| Operator/country per satellite | 🟡 Heuristic — pattern-matched from catalog name (e.g. "STARLINK-1007" → SpaceX/USA), not authoritative registry data |
-| Live map | 🟢 Real — SVG rendered server-side from the actual border polygon, with real logged events plotted on it |
+| Operator/country per satellite | 🟡 Heuristic — pattern-matched from catalog name (e.g. "STARLINK-1007" → SpaceX/USA), bucketed into a fixed color palette per country/bloc |
+| Object type (LEO/MEO/GEO, Space Station, GNSS) | 🟡 Heuristic — name pattern for stations/GNSS, altitude-bucketed for everything else |
+| Live map | 🟢 Real — interactive client-rendered map from the actual border polygon, real logged events as hover-able, color+shape-coded dots, with a legend |
+| Petition signatures | 🟢 Real — stored in Postgres; public page shows a count only (see docs/ADMIN.md for how to actually list signers) |
 | "Real logged" ledger numbers | 🟢 Real — actual passes this deployment has observed since it went live |
 | "Modeled 2020→now" ledger numbers | 🟡 Statistical estimate — see `lib/historicalModel.ts` |
 | Fee-per-pass, coverage factor | 🟡 Illustrative, adjustable via env vars |
 
 ## Site structure
 - **/** — main dashboard (map, ledger, recent events, About and Contact sections)
-- **/petition** — reachable only via the nav bar, not linked from the dashboard body — a real petition (content from `docs/`-adjacent source material) proposing an Outer Space Treaty amendment, with a live signature counter (count only; names aren't published)
+- **/petition** — reachable only via the nav bar, not linked from the dashboard body — a real petition (content from `docs/`-adjacent source material) proposing an Outer Space Treaty amendment, with a live signature counter (count only; names aren't published — see `docs/ADMIN.md` for how to actually list signers)
 
 ## Repo layout
 ```
@@ -46,28 +48,31 @@ app/
     Footer.tsx                 site-wide footer
     ContactForm.tsx            client component — builds a mailto: link, no email service needed
     PetitionSignForm.tsx       client component — real POST to /api/petition/sign
-    logo.ts                    shared inline logo SVG markup
+    SerbiaMap.tsx               interactive client map — hover tooltips, color + shape legends
+    logo.ts                    shared inline seal-style logo SVG markup
   api/cron/fetch-tles/route.ts the cron job Vercel calls on schedule
   api/overhead/route.ts        recent real logged events
   api/ledger/route.ts          combined real + modeled hypothetical ledger (bilingual via ?lang=)
   api/petition/sign/route.ts   accepts petition sign submissions
+  api/petition/list/route.ts   admin-only: lists/exports signatures (separate ADMIN_SECRET)
 lib/
   tle.ts                       CelesTrak fetch + TLE parsing
   propagate.ts                 SGP4 wrapper (satellite.js)
   serbia.ts                    real Serbia border polygon + point-in-polygon geofence
-  serbiaMapSvg.ts              renders the border polygon + event dots as inline SVG
-  operatorLookup.ts            heuristic satellite -> operator/country classifier
+  serbiaMapSvg.ts              shared pure projection math (used by the map component)
+  operatorLookup.ts            operator/country classifier (bucketed colors) + object-type classifier (LEO/MEO/GEO, station, GNSS)
   db.ts                        Postgres access layer
   historicalModel.ts           2020->now statistical estimate
   ledgerService.ts             shared ledger logic (used by page + API, no self-fetch)
   overheadService.ts           shared overhead-events logic (used by page + API)
-  petitionService.ts           petition signature storage + count
+  petitionService.ts           petition signature storage, count, and admin listing
   i18n.ts                      EN/SR UI dictionary
 db/schema.sql                  reference schema (also auto-created by lib/db.ts)
 docs/
   BRAND_PACKAGE.md / .sr.md
   BUSINESS_PLAN.md / .sr.md
   BUILD_LOG.md / .sr.md
+  ADMIN.md                     how to list petition signers
   vasiona_logo.svg
 scripts/historical-estimate.ts CLI: prints the modeled ledger for several countries
 README.sr.md, DEPLOY.sr.md     Serbian versions of this file and the deploy guide

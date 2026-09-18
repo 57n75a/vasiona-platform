@@ -53,7 +53,7 @@ export async function GET(req: NextRequest) {
     }
     if (isOverSerbia(point.lat, point.lon)) {
       overSerbia++;
-      await upsertSatellite(tle.noradId, tle.name);
+      await upsertSatellite(tle.noradId, tle.name, point.altKm);
       await logOverflight({
         noradId: tle.noradId,
         lat: point.lat,

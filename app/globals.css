@@ -41,3 +41,18 @@ th { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spa
 
 .num-big { font-size: 26px; font-weight: 800; color: var(--good); }
 .muted { color: var(--muted); font-size: 12px; }
+
+/* Mobile breakpoint — cards get tighter padding, type scales down slightly,
+   nav wraps to two lines gracefully instead of overflowing. */
+@media (max-width: 600px) {
+  .card { padding: 14px; border-radius: 12px; }
+  table { font-size: 12px; }
+  th, td { padding: 6px 4px; }
+  .num-big { font-size: 22px; }
+  h1 { font-size: 17px !important; }
+}
+
+@media (max-width: 420px) {
+  .card { padding: 12px; }
+  table { font-size: 11px; }
+}

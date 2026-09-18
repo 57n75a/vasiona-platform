@@ -98,6 +98,73 @@ real petition page built from a user-provided policy document:
   straight quote is truly needed), never a bare " inside a double-quoted TS
   string.
 
+**2026-09-18, session 8** — Major upgrade covering object classification, map
+interactivity, a redesigned seal-style logo, admin tooling, and mobile layout:
+- `lib/operatorLookup.ts` — refactored to a small fixed color palette bucketed
+  by country/bloc (`COUNTRY_COLORS`), so a legend stays legible instead of
+  having one color per operator. Added `classifyObjectType()`: detects space
+  stations (ISS, Tiangong, etc.) and GNSS/navigation constellations (GPS,
+  GLONASS, Galileo, BeiDou, etc.) by name, and falls back to an altitude-based
+  LEO/MEO/GEO bucket using the real SGP4-computed altitude for anything else.
+- `lib/db.ts` — `satellites` table gained an `object_type` column (migrated
+  safely via `ADD COLUMN IF NOT EXISTS`); `upsertSatellite` now accepts
+  altitude so the classifier has what it needs.
+- `app/components/SerbiaMap.tsx` — replaced the old static server-rendered
+  map with an interactive client component: real hover tooltips (satellite
+  name, operator/country, object type) that follow the cursor, plus two
+  legends — a color legend for country/operator and a shape legend for
+  object type (circle = orbit class, diamond = space station, square = GNSS).
+  `lib/serbiaMapSvg.ts` was refactored into a pure, shareable projection
+  function (`getSerbiaMapProjection`) so the map math isn't duplicated.
+- **Logo redesign**: rebuilt as a seal-style emblem — circular "VASIONA" /
+  "SERBIA 2020" rim text (verified correct orientation by actually rendering
+  to PNG with cairosvg before shipping, since SVG circular-text arc direction
+  is easy to get backwards — see the empirical derivation notes below), a
+  small globe with Serbia's real border polygon on it at a *correctly small*
+  scale (an earlier draft had Serbia filling the whole globe — caught by
+  rendering and looking at it, not by inspection), a dashed ray from Serbia to
+  a satellite icon, and an "OCULUS CAELI" motto banner. Verified legible at
+  the small (44px) size it actually renders at in the nav bar.
+- `app/petition/page.tsx` unchanged in content, but signatures are no longer
+  a dead end: `app/api/petition/list/route.ts` (admin-only, separate
+  `ADMIN_SECRET`) plus `docs/ADMIN.md` documents two ways to actually see who
+  signed (the admin endpoint, or Neon's own SQL editor) without publishing
+  names on the public page.
+- `app/components/NavBar.tsx`, `Footer.tsx` — logo enlarged (44px in nav);
+  footer now reads "© Copyright VASIONA 2020".
+- Punchline gained a second line: "It no longer benefits humanity as a whole
+  — only a select few." Not attributed to anyone by name on the site itself,
+  since the requested inspiration ("MJ") couldn't be verified as a specific
+  real, quotable source — treated as house copy rather than a sourced quote.
+- Mobile: added a `viewport` export to `app/layout.tsx` and breakpoint CSS in
+  `globals.css` (tighter padding, smaller type under 600px/420px, tables wrap
+  in a horizontal-scroll container instead of breaking layout). This is one
+  responsive site that adapts to both, not two separate builds — that's the
+  standard modern equivalent of "a mobile and a web version."
+**2026-09-19, session 9** — Redesigned the logo again after the user provided
+a reference image with a stronger direction: gold-on-cream seal palette
+instead of navy-on-navy, Serbia rendered as an actual flag-colored
+(red/blue/white) silhouette rather than solid red, and a dashed orbit
+ellipse. Merged that direction with elements from the previous version
+(the "SERBIA 2020" founding year in the rim text, a marker dot at the ray's
+origin point). Verified at each step by rendering to PNG with cairosvg — not
+just visually inspecting the SVG source — including a specific check of how
+it looks composited against the site's dark navy nav-bar background at the
+actual ~44px size it renders at there, since a cream-background seal on a
+dark UI could easily have turned out looking like a mismatched sticker
+instead of the intended medallion effect. `docs/BRAND_PACKAGE.md` and
+`.sr.md` updated to describe the new palette and explicitly note that the
+seal's gold/cream tone is intentionally distinct from the site's red UI
+accent color, not a mismatch to fix.
+
+**2026-09-19, session 10** — Repositioned the satellite in the logo to the
+2 o'clock mark per request (was previously around 4:20), recalculating both
+the orbit-distance placement and the icon's rotation so it still points along
+the ray direction correctly rather than just moving the dot and leaving the
+icon facing the old way. Founding year ("2020") in the rim text kept as-is
+for now — ties to the brand's 2020 origin story used elsewhere (petition,
+footer) — but flagged as easy to remove later if it ends up feeling redundant.
+
 ## Known simplifications carried through every version
 1. ~~**Serbia geofence** is a lat/lon bounding box~~ — **Updated:** now uses a real
    ~130-point national border polygon (ray-casting point-in-polygon test) instead
