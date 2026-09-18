@@ -1,4 +1,5 @@
 import { sql } from "@vercel/postgres";
+import { classifyOperator } from "@/lib/operatorLookup";
 
 export async function ensureSchema() {
   await sql`
@@ -8,6 +9,11 @@ export async function ensureSchema() {
       last_updated TIMESTAMPTZ NOT NULL DEFAULT now()
     );
   `;
+  // Safe to run repeatedly — adds these columns if this table was created
+  // before operator/country classification existed.
+  await sql`ALTER TABLE satellites ADD COLUMN IF NOT EXISTS operator_name TEXT;`;
+  await sql`ALTER TABLE satellites ADD COLUMN IF NOT EXISTS operator_country TEXT;`;
+
   await sql`
     CREATE TABLE IF NOT EXISTS overflight_events (
       id            BIGSERIAL PRIMARY KEY,
@@ -25,10 +31,15 @@ export async function ensureSchema() {
 }
 
 export async function upsertSatellite(noradId: number, name: string) {
+  const { operator, country } = classifyOperator(name);
   await sql`
-    INSERT INTO satellites (norad_id, name, last_updated)
-    VALUES (${noradId}, ${name}, now())
-    ON CONFLICT (norad_id) DO UPDATE SET name = EXCLUDED.name, last_updated = now();
+    INSERT INTO satellites (norad_id, name, operator_name, operator_country, last_updated)
+    VALUES (${noradId}, ${name}, ${operator}, ${country}, now())
+    ON CONFLICT (norad_id) DO UPDATE SET
+      name = EXCLUDED.name,
+      operator_name = EXCLUDED.operator_name,
+      operator_country = EXCLUDED.operator_country,
+      last_updated = now();
   `;
 }
 
@@ -58,7 +69,8 @@ export async function firstLoggedEventDate(): Promise<Date | null> {
 
 export async function recentEvents(limit = 50) {
   const { rows } = await sql`
-    SELECT e.observed_at, e.lat, e.lon, e.alt_km, s.name, s.norad_id
+    SELECT e.observed_at, e.lat, e.lon, e.alt_km, s.name, s.norad_id,
+           s.operator_name, s.operator_country
     FROM overflight_events e
     JOIN satellites s ON s.norad_id = e.norad_id
     ORDER BY e.observed_at DESC

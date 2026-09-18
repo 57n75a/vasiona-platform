@@ -48,9 +48,32 @@ Next.js/Vercel platform:
   hypothetical scenario model (Track B: the 2020-to-now toll estimate),
   with the treaty caveat attached to every occurrence of the Track B numbers.
 
+**2026-09-18, session 6** — Renamed the dashboard/site title from "Overflight
+Monitor" to "Satellite Orbiting" across the UI (`lib/i18n.ts`), page metadata
+(`app/layout.tsx`), and documentation (README.md / README.sr.md). Added:
+- `lib/operatorLookup.ts` — heuristic classification of each tracked object's
+  operator/country from its CelesTrak catalog name (e.g. "STARLINK-1007" →
+  SpaceX/USA, "COSMOS 2251" → Russia/Roscosmos). Explicitly heuristic, not
+  authoritative registry data — flagged as such in the code and docs.
+- `lib/serbiaMapSvg.ts` — renders Serbia's real border polygon (added last
+  session) as an inline SVG map, server-side, with real logged overflight
+  events plotted as color-coded dots by operator/country.
+- Dashboard now shows: the VASIONA logo inline, a bilingual "story behind
+  VASIONA" section, the live map, a fun comparison punchline ("nations
+  already charge airlines to fly through sovereign sky — why not satellites
+  orbiting through the space above it?"), and an Operator/Country column in
+  the recent-events table.
+- `lib/db.ts` — satellites table gained `operator_name` / `operator_country`
+  columns (added via `ALTER TABLE ... ADD COLUMN IF NOT EXISTS`, safe to run
+  against the already-deployed table without data loss).
+
 ## Known simplifications carried through every version
-1. **Serbia geofence** is a lat/lon bounding box, not the real national
-   border polygon — over-counts anything clipping the box's corners.
+1. ~~**Serbia geofence** is a lat/lon bounding box~~ — **Updated:** now uses a real
+   ~130-point national border polygon (ray-casting point-in-polygon test) instead
+   of a bounding box. Note: the sourced boundary dataset includes the Kosovo
+   region as part of Serbia's territory — a status not universally recognized
+   internationally. See the comment in `lib/serbia.ts` for how to swap datasets
+   if you want the alternate boundary.
 2. **Historical ledger (2020→now)** is a statistical estimate from yearly
    satellite-population figures, not a literal per-satellite historical
    orbital reconstruction.
@@ -62,8 +85,13 @@ Next.js/Vercel platform:
    fraction of typical civil-aviation overflight fee ranges.
 
 ## Open TODOs
-- [ ] Swap bounding box for a real border polygon + PostGIS point-in-polygon
+- [x] ~~Swap bounding box for a real border polygon~~ — done, see above
 - [ ] Consider Space-Track.org as a redundant/higher-fidelity TLE source
 - [ ] Load-test the cron route against the full "active" group (~16,500 sats)
       within Vercel's function time limit; fall back to a smaller GROUP if needed
 - [ ] Decide on Vercel Postgres vs. an alternative (Neon, Supabase) for storage
+      — resolved for this deployment: using Neon via Vercel Marketplace
+- [ ] Fixed a bug where the dashboard's server component fetched its own API
+      routes over HTTP (fragile — broke behind Vercel's deployment-protection
+      login wall). Both now share logic directly via lib/ledgerService.ts and
+      lib/overheadService.ts instead of round-tripping through HTTP.

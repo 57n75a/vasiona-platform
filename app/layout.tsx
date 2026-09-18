@@ -1,9 +1,9 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "VASIONA — Air & Space Overflight Monitor / Монитор прелета",
+  title: "VASIONA — Satellite Orbiting / Орбитирање сателита",
   description:
-    "Serbian air & space overflight monitoring platform (hypothetical fee model). / Платформа за праћење прелета изнад Србије (хипотетички модел накнада).",
+    "Serbian satellite orbiting monitoring platform (hypothetical fee model). / Платформа за праћење орбитирања сателита изнад Србије (хипотетички модел накнада).",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

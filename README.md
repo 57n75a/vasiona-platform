@@ -1,4 +1,4 @@
-# VASIONA — Air & Space Overflight Monitor
+# VASIONA — Satellite Orbiting
 
 *(Српски: [README.sr.md](./README.sr.md))*
 
@@ -25,7 +25,9 @@ subscribers or investors without that caveat attached.
 |---|---|
 | TLE data (cron job) | 🟢 Real — live pull from CelesTrak |
 | SGP4 propagation | 🟢 Real — same library as the earlier browser demo, run server-side |
-| Serbia geofence | 🟡 Simplified — lat/lon bounding box, not the real border polygon |
+| Serbia geofence | 🟢 Real border polygon — ~130-point ray-casting point-in-polygon test |
+| Operator/country per satellite | 🟡 Heuristic — pattern-matched from catalog name (e.g. "STARLINK-1007" → SpaceX/USA), not authoritative registry data |
+| Live map | 🟢 Real — SVG rendered server-side from the actual border polygon, with real logged events plotted on it |
 | "Real logged" ledger numbers | 🟢 Real — actual passes this deployment has observed since it went live |
 | "Modeled 2020→now" ledger numbers | 🟡 Statistical estimate — see `lib/historicalModel.ts` |
 | Fee-per-pass, coverage factor | 🟡 Illustrative, adjustable via env vars |
@@ -40,9 +42,13 @@ app/
 lib/
   tle.ts                       CelesTrak fetch + TLE parsing
   propagate.ts                 SGP4 wrapper (satellite.js)
-  serbia.ts                    geofence (bounding box)
+  serbia.ts                    real Serbia border polygon + point-in-polygon geofence
+  serbiaMapSvg.ts              renders the border polygon + event dots as inline SVG
+  operatorLookup.ts            heuristic satellite -> operator/country classifier
   db.ts                        Postgres access layer
   historicalModel.ts           2020->now statistical estimate
+  ledgerService.ts             shared ledger logic (used by page + API, no self-fetch)
+  overheadService.ts           shared overhead-events logic (used by page + API)
   i18n.ts                      EN/SR UI dictionary
 db/schema.sql                  reference schema (also auto-created by lib/db.ts)
 docs/
