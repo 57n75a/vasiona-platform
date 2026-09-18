@@ -32,13 +32,25 @@ subscribers or investors without that caveat attached.
 | "Modeled 2020→now" ledger numbers | 🟡 Statistical estimate — see `lib/historicalModel.ts` |
 | Fee-per-pass, coverage factor | 🟡 Illustrative, adjustable via env vars |
 
+## Site structure
+- **/** — main dashboard (map, ledger, recent events, About and Contact sections)
+- **/petition** — reachable only via the nav bar, not linked from the dashboard body — a real petition (content from `docs/`-adjacent source material) proposing an Outer Space Treaty amendment, with a live signature counter (count only; names aren't published)
+
 ## Repo layout
 ```
 app/
   page.tsx                     dashboard — bilingual via ?lang=en / ?lang=sr
+  petition/page.tsx            petition page (nav-only)
+  components/
+    NavBar.tsx                 floating sticky nav (logo, About, Petition, Contact, lang toggle)
+    Footer.tsx                 site-wide footer
+    ContactForm.tsx            client component — builds a mailto: link, no email service needed
+    PetitionSignForm.tsx       client component — real POST to /api/petition/sign
+    logo.ts                    shared inline logo SVG markup
   api/cron/fetch-tles/route.ts the cron job Vercel calls on schedule
   api/overhead/route.ts        recent real logged events
   api/ledger/route.ts          combined real + modeled hypothetical ledger (bilingual via ?lang=)
+  api/petition/sign/route.ts   accepts petition sign submissions
 lib/
   tle.ts                       CelesTrak fetch + TLE parsing
   propagate.ts                 SGP4 wrapper (satellite.js)
@@ -49,6 +61,7 @@ lib/
   historicalModel.ts           2020->now statistical estimate
   ledgerService.ts             shared ledger logic (used by page + API, no self-fetch)
   overheadService.ts           shared overhead-events logic (used by page + API)
+  petitionService.ts           petition signature storage + count
   i18n.ts                      EN/SR UI dictionary
 db/schema.sql                  reference schema (also auto-created by lib/db.ts)
 docs/

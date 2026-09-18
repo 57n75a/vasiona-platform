@@ -67,6 +67,37 @@ Monitor" to "Satellite Orbiting" across the UI (`lib/i18n.ts`), page metadata
   columns (added via `ALTER TABLE ... ADD COLUMN IF NOT EXISTS`, safe to run
   against the already-deployed table without data loss).
 
+**2026-09-18, session 7** — Added site navigation and community features, plus a
+real petition page built from a user-provided policy document:
+- `app/components/NavBar.tsx` — floating sticky nav bar (logo, About, Petition,
+  Contact, language toggle), shared across the dashboard and petition page.
+- `app/components/Footer.tsx` — site-wide footer with contact email, nav links,
+  and a one-line disclaimer that this is an advocacy/concept platform, not a
+  government agency.
+- `app/components/ContactForm.tsx` — client-side contact form. Deliberately
+  built as a `mailto:` link generator rather than a server-side email sender,
+  to avoid adding a new third-party email service dependency/API key just for
+  this; it opens the visitor's own email client addressed to
+  serbvasiona@gmail.com with their message pre-filled.
+- `app/petition/page.tsx` + `app/components/PetitionSignForm.tsx` +
+  `lib/petitionService.ts` + `app/api/petition/sign/route.ts` — a real petition
+  page (linked only from the nav, not the homepage body, per request), content
+  sourced from a user-supplied petition document proposing an Outer Space
+  Treaty amendment to permit orbital overflight fees. Visitors can add
+  optional name/country/comment; only a running **count** is shown publicly —
+  names are stored but deliberately not displayed on the page, to avoid
+  publishing personal data without a more explicit consent flow than a simple
+  form checkbox would provide.
+- Homepage logo enlarged in the nav bar; a second, larger logo added to the
+  live-map card specifically, per request.
+- Caught and fixed a real bug before shipping: a stray straight `"` character
+  inside Serbian FAQ/story text broke out of its enclosing string literal
+  (same class of bug as session 5's story text) — found via `npx tsc --noEmit`
+  and `next build`, not just visual inspection. Worth noting as a pattern:
+  Serbian typographic quotes should always be „ ... ” (or escaped \" if a
+  straight quote is truly needed), never a bare " inside a double-quoted TS
+  string.
+
 ## Known simplifications carried through every version
 1. ~~**Serbia geofence** is a lat/lon bounding box~~ — **Updated:** now uses a real
    ~130-point national border polygon (ray-casting point-in-polygon test) instead

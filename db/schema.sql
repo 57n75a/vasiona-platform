@@ -20,6 +20,14 @@ CREATE TABLE IF NOT EXISTS overflight_events (
 
 CREATE INDEX IF NOT EXISTS idx_overflight_time ON overflight_events (observed_at);
 
+CREATE TABLE IF NOT EXISTS petition_signatures (
+    id          BIGSERIAL PRIMARY KEY,
+    name        TEXT,
+    country     TEXT,
+    comment     TEXT,
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 -- Optional, for when you outgrow the simplified bounding-box check in lib/serbia.ts
 -- and want to store a real border polygon + do PostGIS point-in-polygon tests instead:
 -- CREATE EXTENSION IF NOT EXISTS postgis;
