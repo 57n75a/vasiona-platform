@@ -36,9 +36,12 @@ export const dict = {
     langToggle: "Српски",
 
     // Nav
+    navBrandText: "VASIONA — OCULUS CAELI — SERBIA",
     navAbout: "About",
     navPetition: "Petition",
+    navCrowdfund: "Fund a Satellite",
     navContact: "Contact",
+    navNews: "News",
     navHome: "Dashboard",
 
     // Contact form
@@ -122,6 +125,51 @@ export const dict = {
     signFormThanks: "Thank you — your support has been counted.",
     signFormPrivacy: "Only a running total is shown publicly. Names are not published on this page.",
     signCountLabel: "people have shown support so far",
+
+    // News page
+    newsTitle: "News",
+    newsSubtitle: "Uses this project's own GitHub commit history as its news feed — always in sync with what actually shipped.",
+    newsError: "Couldn't load news right now:",
+    newsEmpty: "No commits found yet.",
+    newsViewCommit: "View commit →",
+
+    // Crowdfund page
+    cfTitle: "Fund Serbia's First Satellite",
+    cfSubtitle: "A real campaign plan for a Serbian Earth-observation CubeSat — not a live payment page yet.",
+    cfDisclaimer:
+      "⚠️ This page collects interest signals only — no payment is processed here. Actually collecting real money needs a registered fundraising structure and Serbian legal review first. See docs/CROWDFUNDING_PLAN.md for why.",
+    cfPurposeTitle: "What should it be used for?",
+    cfPurposeText:
+      "Recommendation: an Earth-observation CubeSat focused on agriculture, flood, and forestry/wildfire monitoring — real, ongoing value to Serbian farmers and emergency-management agencies, not just a symbolic gesture. This is also the standard path most nations' first satellites take, so there's a well-worn technical route to follow. A student-built ground station and university partnership can fold in an educational angle without needing a second campaign.",
+    cfCostTitle: "What this costs",
+    cfCostText: "A realistic 3U CubeSat mission — bus, payload, rideshare launch, ground station, licensing, and contingency — runs roughly $500,000 to $1,200,000. That range is normal at this planning stage; it narrows once a technical partner is chosen.",
+    cfTiersTitle: "Funding tiers (illustrative)",
+    cfTiers: [
+      { tier: "Supporter", amount: "$10+", reward: "Name on a public digital \"crew list,\" mission updates" },
+      { tier: "Contributor", amount: "$50+", reward: "Above + certificate, VASIONA sticker/patch" },
+      { tier: "Mission Partner", amount: "$250+", reward: "Above + your name etched on a plaque flown to orbit" },
+      { tier: "Founding Partner", amount: "$1,000+", reward: "Above + invitation to a launch-viewing event" },
+      { tier: "Institutional", amount: "$10,000+", reward: "Logo placement on mission materials" },
+    ],
+    cfTimelineTitle: "Realistic timeline",
+    cfTimeline: [
+      "Interest validation (this page) — 0–3 months",
+      "Legal/platform setup — 3–6 months",
+      "Campaign live — 2–3 months",
+      "Technical partner selection + design — 6–12 months",
+      "Build, test, launch manifest — 12–24 months",
+      "Total, interest page to orbit — roughly 3–4 years",
+    ],
+    cfFormTitle: "Register your interest",
+    cfCountLabel: "people interested",
+    cfTotalLabel: "indicative total (not collected)",
+    cfName: "Name (optional)",
+    cfEmail: "Email",
+    cfAmount: "Indicative amount you'd consider, USD (optional)",
+    cfComment: "Comment (optional)",
+    cfSubmit: "Register interest",
+    cfThanks: "Thank you — your interest has been recorded. This is not a payment or a binding pledge.",
+    cfPrivacy: "This registers interest only. No payment is collected. Only aggregate totals are shown publicly.",
   },
   sr: {
     title: "🛰️ ВАСИОНА — Орбитирање сателита",
@@ -158,9 +206,12 @@ export const dict = {
     langToggle: "English",
 
     // Nav
+    navBrandText: "ВАСИОНА — OCULUS CAELI — СРБИЈА",
     navAbout: "О нама",
     navPetition: "Петиција",
+    navCrowdfund: "Финансирај сателит",
     navContact: "Контакт",
+    navNews: "Вести",
     navHome: "Контролна табла",
 
     // Contact form
@@ -244,6 +295,51 @@ export const dict = {
     signFormThanks: "Хвала — ваша подршка је забележена.",
     signFormPrivacy: "Јавно се приказује само укупан број. Имена се не објављују на овој страници.",
     signCountLabel: "људи је до сада показало подршку",
+
+    // News page
+    newsTitle: "Вести",
+    newsSubtitle: "Користи историју Git commit-ова овог пројекта на GitHub-у као извор вести — увек усклађено са оним што је стварно објављено.",
+    newsError: "Тренутно није могуће учитати вести:",
+    newsEmpty: "Још нема пронађених commit-ова.",
+    newsViewCommit: "Погледај commit →",
+
+    // Crowdfund page
+    cfTitle: "Финансирање првог српског сателита",
+    cfSubtitle: "Стваран план кампање за српски CubeSat за посматрање Земље — још увек не стварна страница за плаћање.",
+    cfDisclaimer:
+      "⚠️ Ова страница прикупља само сигнале интересовања — овде се не обрађује плаћање. Стварно прикупљање новца захтева регистровану структуру за прикупљање средстава и правну проверу у Србији. Погледати docs/CROWDFUNDING_PLAN.md за детаље.",
+    cfPurposeTitle: "Чему би требало да служи?",
+    cfPurposeText:
+      "Препорука: CubeSat за посматрање Земље фокусиран на пољопривреду, поплаве и праћење шума/пожара — стварна, трајна вредност за српске пољопривреднике и агенције за ванредне ситуације, не само симболичан гест. Ово је и уобичајен пут који прате први сателити већине држава, тако да постоји добро утабан технички пут. Ђачки изграђена земаљска станица и универзитетско партнерство могу укључити образовну компоненту без потребе за другом кампањом.",
+    cfCostTitle: "Колико то кошта",
+    cfCostText: "Реалистична 3U CubeSat мисија — платформа, терет, заједничко лансирање, земаљска станица, лиценцирање и резерва — износи отприлике 500.000 до 1.200.000 $. Тај распон је нормалан у овој фази планирања; сужава се када се одабере технички партнер.",
+    cfTiersTitle: "Нивои финансирања (илустративно)",
+    cfTiers: [
+      { tier: "Присталица", amount: "10+ $", reward: "Име на јавној дигиталној „листи посаде”, извештаји о мисији" },
+      { tier: "Учесник", amount: "50+ $", reward: "Горе наведено + сертификат, VASIONA налепница/значка" },
+      { tier: "Партнер мисије", amount: "250+ $", reward: "Горе наведено + ваше име урезано на плочици послатој у орбиту" },
+      { tier: "Оснивачки партнер", amount: "1.000+ $", reward: "Горе наведено + позивница на догађај праћења лансирања" },
+      { tier: "Институционални", amount: "10.000+ $", reward: "Постављање логотипа на материјалима мисије" },
+    ],
+    cfTimelineTitle: "Реалистичан временски оквир",
+    cfTimeline: [
+      "Провера интересовања (ова страница) — 0–3 месеца",
+      "Правно/платформско успостављање — 3–6 месеци",
+      "Кампања уживо — 2–3 месеца",
+      "Избор техничког партнера + дизајн — 6–12 месеци",
+      "Изградња, тестирање, распоред лансирања — 12–24 месеца",
+      "Укупно, од странице интересовања до орбите — отприлике 3–4 године",
+    ],
+    cfFormTitle: "Пријавите своје интересовање",
+    cfCountLabel: "заинтересованих људи",
+    cfTotalLabel: "индикативан укупан износ (није прикупљен)",
+    cfName: "Име (опционо)",
+    cfEmail: "Имејл",
+    cfAmount: "Индикативан износ који бисте размотрили, у $ (опционо)",
+    cfComment: "Коментар (опционо)",
+    cfSubmit: "Пријави интересовање",
+    cfThanks: "Хвала — ваше интересовање је забележено. Ово није плаћање нити обавезујуће обећање.",
+    cfPrivacy: "Ово само региструје интересовање. Плаћање се не прикупља. Јавно се приказују само збирни износи.",
   },
 } as const;
 

@@ -94,3 +94,72 @@ export function computeHistoricalLedger(params: HistoricalModelParams): {
 function isLeap(year: number): boolean {
   return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 }
+
+/**
+ * COMPANY-LEVEL MODEL — same hypothetical-scenario caveat as above, restricted
+ * to companies whose satellite counts are publicly well-documented enough to
+ * put a real number against (unlike the country-level model, which uses
+ * total active-satellite population, this only covers named operators —
+ * "ignore unknown" per the brief, rather than lumping everything else into
+ * an estimate).
+ *
+ * Sources (approximate, rounded, year-end active counts): public reporting
+ * via CelesTrak/KeepTrack tracking data, eoPortal's Starlink constellation
+ * history, and industry coverage of OneWeb's ~648-satellite constellation
+ * completion. Iridium NEXT is a fixed 66-satellite constellation completed
+ * in 2019, effectively flat across this whole window.
+ */
+export const COMPANY_SATELLITES_BY_YEAR: Record<string, Record<number, number>> = {
+  "Starlink (SpaceX)": { 2020: 900, 2021: 1900, 2022: 3000, 2023: 5000, 2024: 6800, 2025: 9100, 2026: 10800 },
+  "OneWeb": { 2020: 74, 2021: 358, 2022: 542, 2023: 648, 2024: 648, 2025: 648, 2026: 648 },
+  "Iridium NEXT": { 2020: 66, 2021: 66, 2022: 66, 2023: 66, 2024: 66, 2025: 66, 2026: 66 },
+};
+
+export interface CompanyHistoricalParams {
+  company: string;
+  countryLonSpanDeg: number;
+  feePerPassUsd: number;
+  coverageFactor?: number;
+  orbitsPerDay?: number;
+  throughDate?: Date;
+}
+
+export function computeCompanyHistoricalLedger(params: CompanyHistoricalParams): {
+  years: YearlyEstimate[];
+  totalUsd: number;
+} {
+  const {
+    company,
+    countryLonSpanDeg,
+    feePerPassUsd,
+    coverageFactor = 0.75,
+    orbitsPerDay = 15,
+    throughDate = new Date(),
+  } = params;
+
+  const counts = COMPANY_SATELLITES_BY_YEAR[company];
+  if (!counts) throw new Error(`Unknown company: ${company}`);
+
+  const currentYear = throughDate.getUTCFullYear();
+  const years: YearlyEstimate[] = [];
+  let totalUsd = 0;
+
+  for (const [yearStr, activeSatellites] of Object.entries(counts)) {
+    const year = parseInt(yearStr, 10);
+    if (year > currentYear) continue;
+
+    const dailyPasses = activeSatellites * coverageFactor * orbitsPerDay * (countryLonSpanDeg / 360);
+
+    let daysInYear = isLeap(year) ? 366 : 365;
+    if (year === currentYear) {
+      const startOfYear = Date.UTC(year, 0, 1);
+      daysInYear = Math.max(1, Math.round((throughDate.getTime() - startOfYear) / 86400000));
+    }
+
+    const annualRevenueUsd = dailyPasses * feePerPassUsd * daysInYear;
+    years.push({ year, activeSatellites, dailyPasses, annualRevenueUsd });
+    totalUsd += annualRevenueUsd;
+  }
+
+  return { years: years.sort((a, b) => a.year - b.year), totalUsd };
+}

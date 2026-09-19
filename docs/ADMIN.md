@@ -2,9 +2,16 @@
 
 Signer names aren't shown publicly on `/petition` by design (see BUILD_LOG.md)
 — only a running count. Here's how you, as the site operator, can actually see
-who signed. Two ways, pick whichever's easier:
+who signed. Three ways, easiest first:
 
-## Method 1 — Neon's SQL Editor (no code, no secrets needed)
+## Method 1 — The hidden admin page (easiest)
+Go to `https://YOUR_DOMAIN/petition/admin`. This page isn't linked from
+anywhere in the site — the URL itself plus the password prompt are the access
+control. Enter your `ADMIN_SECRET` (same one from `.env.example` / Vercel
+env vars) and it shows a table of all signatures, with a "Download CSV"
+button. Bookmark that URL for yourself.
+
+## Method 2 — Neon's SQL Editor (no code, no secrets needed)
 1. Go to your Neon project dashboard (linked from Vercel's Storage tab, or
    directly at console.neon.tech).
 2. Open the **SQL Editor** for your database.
@@ -18,7 +25,7 @@ who signed. Two ways, pick whichever's easier:
 
 This is the simplest option and needs nothing set up in the app itself.
 
-## Method 2 — The built-in admin API endpoint
+## Method 3 — The built-in admin API endpoint (for scripting)
 A route is included at `/api/petition/list`, protected by a separate
 `ADMIN_SECRET` environment variable (set it in Vercel → Settings →
 Environment Variables — see `.env.example`; use a different value than

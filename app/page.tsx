@@ -2,7 +2,7 @@ import { getDict } from "@/lib/i18n";
 import { getLedgerData } from "@/lib/ledgerService";
 import { getOverheadEvents } from "@/lib/overheadService";
 import { classifyOperator, classifyObjectType } from "@/lib/operatorLookup";
-import { LOGO_SVG } from "@/app/components/logo";
+import { LOGO_MARK_SVG } from "@/app/components/logo";
 import NavBar from "@/app/components/NavBar";
 import Footer from "@/app/components/Footer";
 import ContactForm from "@/app/components/ContactForm";
@@ -62,14 +62,7 @@ export default async function Home({
             background: "linear-gradient(135deg, rgba(198,54,60,0.12), rgba(58,160,255,0.10))",
           }}
         >
-          <div>{t.punchline}</div>
-          <div style={{ marginTop: 8, fontSize: 13, fontWeight: 500, color: "var(--muted)", fontStyle: "italic" }}>
-            {t.punchline2}
-          </div>
-        </div>
-
-        <div className="banner" style={{ margin: "16px 0" }}>
-          {t.banner}
+          <div>{t.punchline2}</div>
         </div>
 
         <div className="card" id="about">
@@ -82,7 +75,7 @@ export default async function Home({
         <div className="card">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
             <div className="muted" style={{ marginBottom: 8 }}>{t.mapTitle}</div>
-            <div style={{ width: 72, height: 72, flexShrink: 0 }} dangerouslySetInnerHTML={{ __html: LOGO_SVG }} />
+            <div style={{ width: "28%", minWidth: 105, aspectRatio: "1 / 1", flexShrink: 0 }} dangerouslySetInnerHTML={{ __html: LOGO_MARK_SVG }} />
           </div>
           <SerbiaMap events={mapDots} lang={lang} />
           <p className="muted" style={{ textAlign: "center", marginTop: 8 }}>{t.mapCaption}</p>
@@ -169,6 +162,10 @@ export default async function Home({
           </div>
           <p className="muted" style={{ fontSize: 13, marginBottom: 14 }}>{t.contactSubtitle}</p>
           <ContactForm lang={lang} />
+        </div>
+
+        <div className="banner" style={{ margin: "20px 0 0" }}>
+          {t.banner}
         </div>
       </main>
 

@@ -1,5 +1,4 @@
 import { getDict, type Lang } from "@/lib/i18n";
-import { LOGO_SVG } from "@/app/components/logo";
 
 export default function NavBar({ lang }: { lang: Lang }) {
   const t = getDict(lang);
@@ -35,14 +34,17 @@ export default function NavBar({ lang }: { lang: Lang }) {
         backdropFilter: "blur(10px)",
       }}
     >
-      <a href={`/${qs}`} style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-        <div style={{ width: 44, height: 44, flexShrink: 0 }} dangerouslySetInnerHTML={{ __html: LOGO_SVG }} />
-        <span style={{ color: "var(--text)", fontWeight: 700, fontSize: 15, letterSpacing: 0.5 }}>VASIONA</span>
+      <a href={`/${qs}`} style={{ display: "flex", alignItems: "center", textDecoration: "none", minWidth: 0 }}>
+        <span style={{ color: "var(--text)", fontWeight: 700, fontSize: 14, letterSpacing: 0.3, lineHeight: 1.3 }}>
+          {t.navBrandText}
+        </span>
       </a>
 
       <div style={{ display: "flex", alignItems: "center", gap: 2, flexWrap: "wrap", justifyContent: "flex-end" }}>
         <a href={`/${qs}#about`} style={linkStyle}>{t.navAbout}</a>
         <a href={`/petition${qs}`} style={linkStyle}>{t.navPetition}</a>
+        <a href={`/crowdfund${qs}`} style={linkStyle}>{t.navCrowdfund}</a>
+        <a href={`/news${qs}`} style={linkStyle}>{t.navNews}</a>
         <a href={`/${qs}#contact`} style={linkStyle}>{t.navContact}</a>
         <a
           href={qsOther}

@@ -35,8 +35,11 @@ subscribers or investors without that caveat attached.
 | Fee-per-pass, coverage factor | 🟡 Illustrative, adjustable via env vars |
 
 ## Site structure
-- **/** — main dashboard (map, ledger, recent events, About and Contact sections)
-- **/petition** — reachable only via the nav bar, not linked from the dashboard body — a real petition (content from `docs/`-adjacent source material) proposing an Outer Space Treaty amendment, with a live signature counter (count only; names aren't published — see `docs/ADMIN.md` for how to actually list signers)
+- **/** — main dashboard (map, ledger, recent events, About and Contact sections; disclaimer banner now sits just above the footer)
+- **/petition** — reachable only via the nav bar — a real petition proposing an Outer Space Treaty amendment, with a live signature counter (count only; names aren't published — see `docs/ADMIN.md`)
+- **/petition/admin** — hidden (not linked anywhere), password-gated via `ADMIN_SECRET`, for viewing/exporting signatures
+- **/crowdfund** — campaign plan + interest-signup form (not a live payment page — see `docs/CROWDFUNDING_PLAN.md`) for funding Serbia's first satellite
+- **/news** — uses this repo's own GitHub commit history as a news feed
 
 ## Repo layout
 ```

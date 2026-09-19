@@ -165,6 +165,83 @@ icon facing the old way. Founding year ("2020") in the rim text kept as-is
 for now — ties to the brand's 2020 origin story used elsewhere (petition,
 footer) — but flagged as easy to remove later if it ends up feeling redundant.
 
+**2026-09-19, session 11** — Layout/content changes plus new admin and
+company-revenue tooling:
+- Moved the hypothetical-scenario disclaimer banner from just under the
+  subtitle to immediately above the footer.
+- Punchline card now shows only the "no longer benefits humanity as a whole"
+  line — the airlines/satellites framing sentence removed from display
+  (still in `lib/i18n.ts` as `punchline`, just unused in `page.tsx`, in case
+  it's wanted back later).
+- Nav bar: removed the logo icon entirely, replaced with text-only brand
+  treatment "VASIONA — OCULUS CAELI — SERBIA" (Cyrillic "ВАСИОНА —
+  OCULUS CAELI — СРБИЈА" for the Serbian nav, keeping the Latin motto as-is
+  in both — common heraldic practice, mottos don't usually get translated).
+  Footer's logo was left untouched since it wasn't mentioned — flagged as a
+  minor inconsistency worth a decision later.
+- Map card: swapped the full seal logo for a new trimmed `LOGO_MARK_SVG`
+  (globe + flag-colored Serbia + ray + satellite only — no outer rings, no
+  cream background, no rim text), sized to at least 28% of the card width
+  (comfortably over the requested 1/4 minimum) via CSS `aspect-ratio: 1/1`
+  rather than a fixed pixel size, so it scales with the responsive map.
+- New hidden page `/petition/admin` — password-gated (checks `ADMIN_SECRET`
+  against the existing `/api/petition/list` endpoint), shows a signatures
+  table and a CSV download button. Not linked from any nav/footer — the URL
+  itself is the "hidden link" half of the request, the password prompt is
+  the "admin login" half.
+- `lib/historicalModel.ts` gained `computeCompanyHistoricalLedger()` and a
+  `COMPANY_SATELLITES_BY_YEAR` table (Starlink, OneWeb, Iridium NEXT — the
+  three constellations with well-documented public historical satellite
+  counts; deliberately excludes everything else rather than guessing, per
+  "ignore unknown"). New report: `docs/COMPANY_REVENUE_MODEL.md`. CLI script
+  (`npm run estimate:historical`) updated to print both the country-level and
+  new company-level tables.
+- Footer copyright line now includes a version marker: "© Copyright VASIONA
+  2020 · v3.0".
+- `docs/BACKLOG.md` — logged two explicitly-pending, not-yet-built items
+  (crowdfunding campaign for a first Serbian satellite; a news page), with an
+  honest note that Claude can't send a proactive reminder in two weeks —
+  there's no persistent scheduling across separate conversations — so this
+  file is what makes picking it back up fast, not a promise of a spontaneous
+  follow-up.
+
+**2026-09-19, session 12** — Built the two previously-pending backlog items,
+now that they were explicitly requested (not just logged):
+- **Crowdfunding campaign** (`docs/CROWDFUNDING_PLAN.md` + `/crowdfund`):
+  gave a real recommendation on satellite purpose (Earth observation for
+  agriculture/flood/forestry monitoring, reasoned against three alternatives
+  in a comparison table) rather than just listing options. Included honest
+  scope-setting up front: real CubeSat cost ranges (~$500K–$1.2M), a realistic
+  3–4 year timeline, and — importantly — that actually collecting money needs
+  a registered fundraising structure and Serbian legal review, which this
+  build does not attempt to replace. The live page collects an **interest
+  signal only** (email, optional name/indicative amount/comment stored via
+  `lib/crowdfundService.ts` + `/api/crowdfund/pledge`) — explicitly not a
+  payment system, stated plainly on the page itself, not just in the docs.
+- **News page** (`/news` + `lib/newsService.ts`): uses the project's own
+  GitHub commit history as its news feed via the public GitHub REST API
+  (`GET /repos/{owner}/repo}/commits`), cached via Next.js's fetch
+  `revalidate` to roughly one call/hour regardless of visitor traffic (matters
+  since unauthenticated GitHub API calls are rate-limited to 60/hour/IP).
+  Repo is configurable via `GITHUB_REPO` env var, defaulting to the repo
+  this project has actually been pushed to this session. Handles repo-not-found
+  and rate-limit errors with a visible message rather than failing silently.
+- Nav bar gained two more links (Fund a Satellite, News) — now six items plus
+  the language toggle; flagged as worth watching on narrow screens even
+  though the existing flex-wrap should handle it reasonably.
+- Caught and fixed the same recurring bug pattern again while writing the new
+  Serbian dictionary strings for the crowdfund page: a straight `"` inside a
+  „...” quoted phrase broke its enclosing TS string literal. Same fix as
+  sessions 5, 7, and 11 — this is clearly a pattern worth remembering:
+  Serbian text needing quotation marks inside a double-quoted TS string must
+  use „...” (typographic), never a bare " for the close, or escape it (\").
+  Verified clean with a scripted scan plus `npx tsc --noEmit` before moving on.
+
+Also completed from the earlier request in this same session (moving the
+disclaimer banner, trimming the punchline, removing the nav logo, the map
+card's trimmed mark logo, the petition admin page, and the per-company
+revenue report) — see the session 11 entry above for those specifics.
+
 ## Known simplifications carried through every version
 1. ~~**Serbia geofence** is a lat/lon bounding box~~ — **Updated:** now uses a real
    ~130-point national border polygon (ray-casting point-in-polygon test) instead

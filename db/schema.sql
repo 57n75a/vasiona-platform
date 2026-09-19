@@ -28,6 +28,16 @@ CREATE TABLE IF NOT EXISTS petition_signatures (
     created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Crowdfunding interest signals (NOT a payment/pledge table — see docs/CROWDFUNDING_PLAN.md)
+CREATE TABLE IF NOT EXISTS crowdfund_interest (
+    id             BIGSERIAL PRIMARY KEY,
+    email          TEXT,
+    name           TEXT,
+    indicative_usd NUMERIC,
+    comment        TEXT,
+    created_at     TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 -- Optional, for when you outgrow the simplified bounding-box check in lib/serbia.ts
 -- and want to store a real border polygon + do PostGIS point-in-polygon tests instead:
 -- CREATE EXTENSION IF NOT EXISTS postgis;
