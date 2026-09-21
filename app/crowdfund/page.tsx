@@ -12,7 +12,7 @@ export default async function CrowdfundPage({
 }: {
   searchParams: { lang?: string };
 }) {
-  const lang = searchParams?.lang === "sr" ? "sr" : "en";
+  const lang = searchParams?.lang === "en" ? "en" : "sr";
   const t = getDict(lang);
 
   await ensureCrowdfundSchema();
@@ -64,6 +64,34 @@ export default async function CrowdfundPage({
               </tbody>
             </table>
           </div>
+        </div>
+
+        <div className="card" style={{ background: "linear-gradient(135deg, rgba(242,169,60,0.10), rgba(198,54,60,0.08))" }}>
+          <h2 style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: 1, color: "var(--muted)" }}>
+            {t.cfSponsorsTitle}
+          </h2>
+          <p style={{ fontSize: 14, lineHeight: 1.6 }}>{t.cfSponsorsText}</p>
+          <ul style={{ paddingLeft: 20, margin: "0 0 12px" }}>
+            {t.cfSponsorsBullets.map((item, i) => (
+              <li key={i} style={{ fontSize: 14, lineHeight: 1.6, marginBottom: 8 }}>{item}</li>
+            ))}
+          </ul>
+          <p className="muted" style={{ fontSize: 12.5, lineHeight: 1.6, marginBottom: 14 }}>{t.cfSponsorsNote}</p>
+          <a
+            href="mailto:serbvasiona@gmail.com?subject=Major%20Sponsor%20Inquiry"
+            style={{
+              display: "inline-block",
+              background: "var(--accent)",
+              color: "#fff",
+              borderRadius: 999,
+              padding: "10px 20px",
+              fontSize: 14,
+              fontWeight: 600,
+              textDecoration: "none",
+            }}
+          >
+            {t.cfSponsorsCta}
+          </a>
         </div>
 
         <div className="card">

@@ -363,6 +363,27 @@ that file locally too. This caused two failed deploys in a row (a stale
 importing an already-deleted `lib/newsService.ts`) before it was fully
 cleared. Flagging this pattern explicitly for future removal instructions.
 
+**2026-09-21, session 16** — Five small, distinct changes:
+1. Footer version bumped to v0.5.
+2. Serbian is now the default language site-wide — every page's language
+   resolution flipped from "sr only if explicitly requested" to "en only if
+   explicitly requested" (`searchParams?.lang === "en" ? "en" : "sr"`), and
+   `getDict()`'s own fallback flipped to match, so the default holds even if
+   a future call site forgets to resolve `lang` first.
+3. LinkedIn and TikTok added to the footer's social links (now 5 total; the
+   icon row got `flexWrap` added so it doesn't overflow on narrow screens).
+4. Nav brand text shortened from "VASIONA — OCULUS CAELI — SERBIA" to
+   "VASIONA — SERBIA" in both languages (motto dropped from the nav; still
+   present on the logo image itself).
+5. New "Major Local Sponsors" section on `/crowdfund`, distinct from the
+   individual crowdfunding tiers table — a direct-inquiry (mailto) sponsorship
+   path for Serbian businesses offering satellite naming rights, a custom
+   mission description, and physical labels/stickers on the spacecraft
+   itself before launch. Documented in `docs/CROWDFUNDING_PLAN.md` with the
+   same honest framing as the rest of that document (limited slots, pricing
+   negotiated per sponsor rather than fixed, coordination needed with the
+   technical build timeline).
+
 ## Known simplifications carried through every version
 1. ~~**Serbia geofence** is a lat/lon bounding box~~ — **Updated:** now uses a real
    ~130-point national border polygon (ray-casting point-in-polygon test) instead

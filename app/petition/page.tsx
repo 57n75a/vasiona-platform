@@ -12,7 +12,7 @@ export default async function PetitionPage({
 }: {
   searchParams: { lang?: string };
 }) {
-  const lang = searchParams?.lang === "sr" ? "sr" : "en";
+  const lang = searchParams?.lang === "en" ? "en" : "sr";
   const t = getDict(lang);
 
   await ensurePetitionSchema();

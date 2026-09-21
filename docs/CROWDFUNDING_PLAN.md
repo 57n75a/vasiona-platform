@@ -82,6 +82,26 @@ target.
 | Founding Partner | $1,000+ | Above + invitation to a launch-viewing event (in person if feasible, streamed otherwise) |
 | Institutional/Corporate | $10,000+ | Logo placement on mission materials, data-access discussion for agricultural/enterprise partners |
 
+### Major Local Sponsors (separate from the tiers above)
+A small number of major sponsorship slots, aimed at Serbian businesses and
+organizations, offering something the standard tiers don't: physical
+presence on the actual spacecraft. This is a direct conversation (email
+inquiry), not a self-serve checkout — naming rights and physical placement
+need coordination with the technical build timeline.
+
+What's on offer:
+- **Satellite naming rights** — the mission's official designation
+- **Custom mission description/dedication** in official materials and press communications
+- **Physical label/tag/sticker** applied to the satellite structure itself, before integration and launch
+- **Priority recognition** across VASIONA's public channels tied to the mission specifically
+
+Realistic constraints: a small CubeSat has limited physical surface area and
+a single mission narrative can only reasonably carry so many distinct
+sponsor identities — this is a handful of major partners (think low single
+digits), not an open marketplace. Pricing for this tier isn't fixed here
+deliberately; it should be negotiated per sponsor based on what they want
+(naming alone vs. naming + physical placement + press involvement).
+
 ### Timeline (realistic, not optimistic)
 | Phase | Duration | Milestone |
 |---|---|---|

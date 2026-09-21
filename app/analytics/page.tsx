@@ -30,7 +30,7 @@ export default async function AnalyticsPage({
 }: {
   searchParams: { lang?: string };
 }) {
-  const lang = searchParams?.lang === "sr" ? "sr" : "en";
+  const lang = searchParams?.lang === "en" ? "en" : "sr";
   const t = getDict(lang);
 
   const countryResults = COUNTRIES.map((c) => {

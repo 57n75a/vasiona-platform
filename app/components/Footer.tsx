@@ -5,6 +5,8 @@ const SOCIAL_LINKS = [
   { name: "X", url: "https://x.com/serbvasiona", icon: "𝕏" },
   { name: "Instagram", url: "https://www.instagram.com/serbvasiona", icon: "📷" },
   { name: "YouTube", url: "https://www.youtube.com/@SerbVasiona", icon: "▶" },
+  { name: "LinkedIn", url: "https://www.linkedin.com/company/vasiona-serbia/", icon: "in" },
+  { name: "TikTok", url: "https://www.tiktok.com/@serbvasiona", icon: "♪" },
 ];
 
 export default function Footer({ lang }: { lang: Lang }) {
@@ -58,7 +60,7 @@ export default function Footer({ lang }: { lang: Lang }) {
             <div style={{ fontSize: 13, marginBottom: 10 }}>
               <a href="mailto:serbvasiona@gmail.com" style={{ color: "var(--text)" }}>serbvasiona@gmail.com</a>
             </div>
-            <div style={{ display: "flex", gap: 12 }}>
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
               {SOCIAL_LINKS.map((s) => (
                 <a
                   key={s.name}
@@ -88,7 +90,7 @@ export default function Footer({ lang }: { lang: Lang }) {
       </div>
 
       <div className="muted" style={{ maxWidth: 900, margin: "18px auto 0", fontSize: 11.5, lineHeight: 1.5 }}>
-        <div>© Copyright VASIONA 2020 · v3.0</div>
+        <div>© Copyright VASIONA 2020 · v0.5</div>
         <div style={{ marginTop: 4 }}>{t.footerRights}</div>
       </div>
     </footer>

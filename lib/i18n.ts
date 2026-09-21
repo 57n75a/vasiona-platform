@@ -38,7 +38,7 @@ export const dict = {
     langToggle: "Српски",
 
     // Nav
-    navBrandText: "VASIONA — OCULUS CAELI — SERBIA",
+    navBrandText: "VASIONA — SERBIA",
     navAbout: "About",
     navPetition: "Petition",
     navCrowdfund: "Fund a Satellite",
@@ -157,6 +157,18 @@ export const dict = {
       { tier: "Founding Partner", amount: "$1,000+", reward: "Above + invitation to a launch-viewing event" },
       { tier: "Institutional", amount: "$10,000+", reward: "Logo placement on mission materials" },
     ],
+    cfSponsorsTitle: "Major Local Sponsors",
+    cfSponsorsText:
+      "Beyond individual crowdfunding tiers, we're opening a small number of major sponsorship slots for Serbian businesses and organizations who want their support to be physically part of the mission — not just a logo on a webpage. This is a direct conversation, not a self-serve checkout, since naming rights and physical placement need to be coordinated with the technical build.",
+    cfSponsorsBullets: [
+      "Satellite naming rights — your company/brand name (or a name you choose) becomes the mission's official designation",
+      "A custom mission description or dedication written into official mission materials and press communications",
+      "Your company's label, tag, or sticker physically applied to the satellite structure itself before integration and launch",
+      "Priority recognition across VASIONA's public channels (site, social media) tied to the mission specifically, not just general sponsorship",
+    ],
+    cfSponsorsNote:
+      "Slots are limited by the physical space available on a small CubeSat and by how many distinct sponsor identities a single mission narrative can reasonably carry — this is a handful of major partners, not an open marketplace.",
+    cfSponsorsCta: "Interested? Reach out directly",
     cfTimelineTitle: "Realistic timeline",
     cfTimeline: [
       "Interest validation (this page) — 0–3 months",
@@ -214,7 +226,7 @@ export const dict = {
     langToggle: "English",
 
     // Nav
-    navBrandText: "ВАСИОНА — OCULUS CAELI — СРБИЈА",
+    navBrandText: "ВАСИОНА — СРБИЈА",
     navAbout: "О нама",
     navPetition: "Петиција",
     navCrowdfund: "Финансирај сателит",
@@ -333,6 +345,18 @@ export const dict = {
       { tier: "Оснивачки партнер", amount: "1.000+ $", reward: "Горе наведено + позивница на догађај праћења лансирања" },
       { tier: "Институционални", amount: "10.000+ $", reward: "Постављање логотипа на материјалима мисије" },
     ],
+    cfSponsorsTitle: "Велики локални спонзори",
+    cfSponsorsText:
+      "Поред индивидуалних нивоа финансирања, отварамо ограничен број слотова за велике спонзоре — српске компаније и организације које желе да њихова подршка буде физички део мисије, не само логотип на веб страници. Ово је директан разговор, а не самоуслужна куповина, пошто права именовања и физичко постављање морају бити усклађени са техничком израдом.",
+    cfSponsorsBullets: [
+      "Права именовања сателита — назив ваше компаније/бренда (или назив по вашем избору) постаје званична ознака мисије",
+      "Прилагођен опис мисије или посвета уграђена у званичне материјале мисије и саопштења за јавност",
+      "Налепница, ознака или етикета ваше компаније физички постављена на структуру сателита пре интеграције и лансирања",
+      "Приоритетно истицање на јавним каналима ВАСИОНЕ (сајт, друштвене мреже) везано конкретно за мисију, не само опште спонзорство",
+    ],
+    cfSponsorsNote:
+      "Број слотова је ограничен физичким простором доступним на малом CubeSat-у и бројем различитих спонзорских идентитета које једна мисија разумно може да понесе — реч је о шачици великих партнера, не о отвореном тржишту.",
+    cfSponsorsCta: "Заинтересовани? Обратите нам се директно",
     cfTimelineTitle: "Реалистичан временски оквир",
     cfTimeline: [
       "Провера интересовања (ова страница) — 0–3 месеца",
@@ -356,5 +380,5 @@ export const dict = {
 } as const;
 
 export function getDict(lang: string | undefined) {
-  return lang === "sr" ? dict.sr : dict.en;
+  return lang === "en" ? dict.en : dict.sr;
 }

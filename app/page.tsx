@@ -16,7 +16,7 @@ export default async function Home({
 }: {
   searchParams: { lang?: string };
 }) {
-  const lang = searchParams?.lang === "sr" ? "sr" : "en";
+  const lang = searchParams?.lang === "en" ? "en" : "sr";
   const t = getDict(lang);
 
   const [ledger, overhead, cronStatus] = await Promise.all([
