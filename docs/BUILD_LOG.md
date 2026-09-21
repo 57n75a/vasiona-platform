@@ -242,6 +242,100 @@ disclaimer banner, trimming the punchline, removing the nav logo, the map
 card's trimmed mark logo, the petition admin page, and the per-company
 revenue report) — see the session 11 entry above for those specifics.
 
+**2026-09-19, session 13** — Replaced the logo site-wide with a user-provided
+design, added cron-run visibility, and consolidated admin tooling:
+- **New logo** (`app/components/logo.ts`): a user-uploaded seal — light-blue
+  globe with the actual Serbian state flag (coat of arms included) placed on
+  it, dashed orbit ellipse, beam to a satellite, circular "VASIONA" /
+  "OCULUS CAELI · SERBIA" rim text. The uploaded SVG's embedded flag image
+  had genuinely corrupted base64 data (invalid length, not a padding issue);
+  fixed by extracting the flag pixels directly from the user's own approved
+  PNG preview of the same design via color-boundary detection, and
+  re-embedding as valid PNG data. Verified by rendering to PNG before use.
+  One rendering artifact (rim text showing as a rainbow outline) was
+  investigated and confirmed to be a local sandbox font-fallback quirk in
+  the verification tool, not a real defect — ruled out by comparing against
+  the user's own approved preview, which shows the same text rendering
+  correctly. Two variants kept, same pattern as before: `LOGO_SVG` (full
+  seal, used in the footer and as a page-header mark on `/petition`,
+  `/crowdfund`, `/news`) and a re-derived `LOGO_MARK_SVG` (globe/flag/beam/
+  satellite only, no rim text — used in the map card). The base64 flag image
+  is embedded once and shared between both variants via a template-literal
+  interpolation rather than duplicated, to keep the file size reasonable.
+- **Cron status tracking** (`lib/cronStatusService.ts`): a single-row
+  `cron_status` table recording when the cron job last ran and its stats,
+  updated on every run regardless of whether anything was found over
+  Serbia (unlike the overflight-events table, which only has rows when
+  something WAS found — needed a separate record to answer "did the job
+  run at all"). Displayed on the dashboard next to the map title.
+- **`lib/cronRunner.ts`** — extracted the actual cron logic out of the
+  scheduled route into a shared function, so the new admin "run cron now"
+  button calls it directly rather than making the scheduled endpoint call
+  itself over HTTP — deliberately avoiding the self-fetch pattern that
+  caused a real bug earlier in this project.
+- **Consolidated admin console** (`/admin`, replacing the earlier
+  `/petition/admin`): tabs for Cron (manual trigger + result), Petition
+  (signatures + CSV), Crowdfund (interest signups + CSV) — one hidden,
+  password-gated page instead of scattered ones.
+
+**2026-09-20, session 14** — Logo finalized (this time for real), cron
+scheduling controls, analytics dashboard, crowdfunding framing fix, and news
+removal:
+- **Logo saga concluded.** After an extensive debugging session chasing what
+  looked like "missing text" in the SVG seal (see below for what that
+  actually was), the user provided a much stronger finished design — a
+  raster PNG with the Serbian double-headed eagle, globe, satellite, and
+  bold circular rim text, generated externally rather than hand-built in
+  SVG. Adopted wholesale: saved as a static asset
+  (`public/vasiona-seal.png`), palette-quantized from 1.6MB down to ~58KB
+  with no visible quality loss (this design's flat, limited color palette
+  compresses very well that way), and `app/components/logo.ts` now just
+  exports the path (`LOGO_SRC`) instead of a giant inline SVG string. Every
+  previous placement (footer, map card, petition/crowdfund/analytics page
+  headers) switched from `dangerouslySetInnerHTML` to a plain `<img>` tag —
+  simpler, smaller bundle, no more SVG-rendering edge cases to chase.
+- **What the "missing text" investigation actually found**, for the record:
+  extensive bisection (isolating arc geometry, sweep direction, large-arc
+  flags, font properties, and stroke/paint-order combinations one at a time)
+  eventually traced every "missing" observation back to two mundane causes,
+  not a real SVG or renderer bug: (1) several of the debugging test files
+  accidentally used a pure white background against pure white text —
+  simple color-matching invisibility, not a rendering failure; and (2) the
+  original design genuinely had no background shape behind pure-white rim
+  text, so on any real light background (not test-only) it would have had
+  the same problem for a real reason. A dark ring-band background (verified
+  working) was the fix in progress when the replacement design arrived and
+  made the whole SVG moot. Keeping this in the log because the debugging
+  method — bisect by removing pieces until the failing case is minimal,
+  don't trust a single rendering tool's output as ground truth, and
+  double-check your own test setup before concluding the target is broken —
+  is worth remembering even though the specific SVG it was applied to is
+  gone.
+- **Cron scheduling**: added a real, server-enforced on/off toggle
+  (`lib/cronStatusService.ts` gained `enabled`, checked at the start of
+  `runCronJob()`) exposed in the admin console's Cron tab, alongside the
+  manual trigger (which now takes a `force` option to bypass the toggle —
+  an explicit manual run should work regardless of the schedule being
+  paused). Documented plainly, in the UI itself and in `docs/ADMIN.md`, that
+  changing the actual *time of day* isn't something a runtime toggle can do
+  — Vercel Cron's schedule is fixed in `vercel.json` at deploy time, with no
+  runtime API for changing it, and Hobby-tier accounts are limited to
+  once-per-day regardless.
+- **`/analytics`** — new public page presenting the hypothetical-revenue
+  model broken down both by country and by named company (reusing
+  `lib/historicalModel.ts`), with simple inline bar visualizations. Replaces
+  the nav slot freed up by removing News.
+- **Crowdfunding framing corrected**: this is a privately funded effort run
+  by an international team (including Serbian expats), not contingent on
+  Serbian government registration or involvement — the entity can register
+  in the US or elsewhere. Serbian government participation is a welcome
+  bonus if it happens, not a prerequisite. Updated in
+  `docs/CROWDFUNDING_PLAN.md` and the live page's disclaimer text (both
+  languages).
+- **News removed entirely** per request: `/news` route, `lib/newsService.ts`,
+  the nav link, and the `GITHUB_REPO` env var all deleted.
+- **Social links added to the footer**: X, Instagram, YouTube.
+
 ## Known simplifications carried through every version
 1. ~~**Serbia geofence** is a lat/lon bounding box~~ — **Updated:** now uses a real
    ~130-point national border polygon (ray-casting point-in-polygon test) instead

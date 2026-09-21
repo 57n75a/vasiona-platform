@@ -14,6 +14,8 @@ export const dict = {
       "It started with a short 2020 concept note asking a simple question: if a country's airspace is worth charging for, why does that logic quietly stop at the edge of the atmosphere? VASIONA — Serbian for \"cosmos\" — is what that question grew into: a real, working satellite tracker built to make the idea concrete rather than rhetorical. The logo pairs Serbia's territory, highlighted in red, with a dashed sovereignty column rising from it into orbit, ringed by satellite nodes — the same vertical claim aviation has made routine for eighty years, just extended a little further up. The tracker below is real. The fee ledger next to it is a thought experiment, clearly labeled as one, showing what that extension could be worth if the world ever decided the sky's limit wasn't the limit.",
     mapTitle: "SERBIA — LIVE OVERFLIGHT MAP",
     mapCaption: "Real border polygon, real logged passes plotted as dots — hover a dot for the satellite name.",
+    lastUpdated: "Last updated",
+    lastUpdatedNever: "never yet — trigger the cron job to populate this",
     shapeLeo: "● Orbit (LEO / MEO / GEO / other)",
     shapeStation: "◆ Space station",
     shapeGnss: "■ Navigation (GNSS)",
@@ -40,8 +42,8 @@ export const dict = {
     navAbout: "About",
     navPetition: "Petition",
     navCrowdfund: "Fund a Satellite",
+    navAnalytics: "Analytics",
     navContact: "Contact",
-    navNews: "News",
     navHome: "Dashboard",
 
     // Contact form
@@ -126,18 +128,22 @@ export const dict = {
     signFormPrivacy: "Only a running total is shown publicly. Names are not published on this page.",
     signCountLabel: "people have shown support so far",
 
-    // News page
-    newsTitle: "News",
-    newsSubtitle: "Uses this project's own GitHub commit history as its news feed — always in sync with what actually shipped.",
-    newsError: "Couldn't load news right now:",
-    newsEmpty: "No commits found yet.",
-    newsViewCommit: "View commit →",
+    // Analytics page
+    analyticsTitle: "Accumulated Hypothetical Revenue Since 2020",
+    analyticsSubtitle: "Same scenario model as the dashboard ledger — broken down by country and by named company.",
+    analyticsDisclaimer: "⚠️ These are hypothetical scenario totals — no legal basis exists today for actually collecting satellite overflight fees. See docs/BUSINESS_PLAN.md and docs/COMPANY_REVENUE_MODEL.md.",
+    analyticsByCountryTitle: "By Country",
+    analyticsByCountryNote: "Modeled using each country's total active-satellite exposure (all operators combined), not just named companies.",
+    analyticsByCompanyTitle: "By Company (Over Serbia)",
+    analyticsByCompanyNote: "Restricted to operators with well-documented historical satellite counts — unclassified/unknown objects are excluded rather than estimated.",
+    analyticsCompanyCombined: "Combined (known companies)",
+    analyticsMethodNote: "Method: yearly active-satellite counts × $25/pass × 75% coverage factor × 15 orbits/day × (country longitude span ÷ 360°), summed 2020 through today. See lib/historicalModel.ts and docs/COMPANY_REVENUE_MODEL.md for the full assumptions and how to regenerate these numbers.",
 
     // Crowdfund page
     cfTitle: "Fund Serbia's First Satellite",
     cfSubtitle: "A real campaign plan for a Serbian Earth-observation CubeSat — not a live payment page yet.",
     cfDisclaimer:
-      "⚠️ This page collects interest signals only — no payment is processed here. Actually collecting real money needs a registered fundraising structure and Serbian legal review first. See docs/CROWDFUNDING_PLAN.md for why.",
+      "⚠️ This page collects interest signals only — no payment is processed here. This is envisioned as a privately funded project (international team, including Serbian expats; the entity doesn't need to be Serbia-registered) — not dependent on Serbian government involvement, though a formal partnership would be a welcome bonus if Serbia chooses to partake. See docs/CROWDFUNDING_PLAN.md.",
     cfPurposeTitle: "What should it be used for?",
     cfPurposeText:
       "Recommendation: an Earth-observation CubeSat focused on agriculture, flood, and forestry/wildfire monitoring — real, ongoing value to Serbian farmers and emergency-management agencies, not just a symbolic gesture. This is also the standard path most nations' first satellites take, so there's a well-worn technical route to follow. A student-built ground station and university partnership can fold in an educational angle without needing a second campaign.",
@@ -184,6 +190,8 @@ export const dict = {
       "Све је почело кратком концептуалном белешком из 2020. која поставља једноставно питање: ако се ваздушни простор државе наплаћује, зашто та логика тихо престаје на ивици атмосфере? ВАСИОНА — реч која значи космос/универзум — израсла је из тог питања: стваран, функционалан систем праћења сателита направљен да идеју учини конкретном, а не само реториком. Логотип спаја територију Србије, истакнуту црвеном бојом, са испрекиданом „колоном суверенитета” која се пружа од ње ка орбити, окружену чворовима сателита — иста та вертикална тврдња коју је ваздухопловство учинило уобичајеном последњих осамдесет година, само мало продужена навише. Систем праћења испод је стваран. Табела накнада поред њега је мисаони експеримент, јасно означен као такав, који показује колико би то продужење могло вредети када би свет икада одлучио да небо ипак није граница.",
     mapTitle: "СРБИЈА — КАРТА ПРЕЛЕТА УЖИВО",
     mapCaption: "Стваран полигон границе, стварно забележени прелети приказани као тачке — задржите показивач на тачки за назив сателита.",
+    lastUpdated: "Последње ажурирање",
+    lastUpdatedNever: "још никада — покрените cron задатак да бисте попунили ово",
     shapeLeo: "● Орбита (LEO / MEO / GEO / остало)",
     shapeStation: "◆ Свемирска станица",
     shapeGnss: "■ Навигација (GNSS)",
@@ -210,8 +218,8 @@ export const dict = {
     navAbout: "О нама",
     navPetition: "Петиција",
     navCrowdfund: "Финансирај сателит",
+    navAnalytics: "Аналитика",
     navContact: "Контакт",
-    navNews: "Вести",
     navHome: "Контролна табла",
 
     // Contact form
@@ -296,18 +304,22 @@ export const dict = {
     signFormPrivacy: "Јавно се приказује само укупан број. Имена се не објављују на овој страници.",
     signCountLabel: "људи је до сада показало подршку",
 
-    // News page
-    newsTitle: "Вести",
-    newsSubtitle: "Користи историју Git commit-ова овог пројекта на GitHub-у као извор вести — увек усклађено са оним што је стварно објављено.",
-    newsError: "Тренутно није могуће учитати вести:",
-    newsEmpty: "Још нема пронађених commit-ова.",
-    newsViewCommit: "Погледај commit →",
+    // Analytics page
+    analyticsTitle: "Акумулирани хипотетички приход од 2020.",
+    analyticsSubtitle: "Исти сценарио модел као на контролној табли — приказан по државама и по именованим компанијама.",
+    analyticsDisclaimer: "⚠️ Ово су хипотетички сценарио износи — тренутно не постоји правни основ за стварну наплату накнада за прелет сателита. Погледати docs/BUSINESS_PLAN.md и docs/COMPANY_REVENUE_MODEL.md.",
+    analyticsByCountryTitle: "По државама",
+    analyticsByCountryNote: "Моделовано на основу укупне изложености активним сателитима сваке државе (сви оператори заједно), не само именоване компаније.",
+    analyticsByCompanyTitle: "По компанијама (изнад Србије)",
+    analyticsByCompanyNote: "Ограничено на операторе са добро документованим историјским бројем сателита — некласификовани/непознати објекти су изостављени, а не процењени.",
+    analyticsCompanyCombined: "Укупно (познате компаније)",
+    analyticsMethodNote: "Метод: годишњи број активних сателита × 25 $/прелет × 75% фактор покривености × 15 орбита/дан × (распон географске дужине државе ÷ 360°), сабрано од 2020. до данас. Погледати lib/historicalModel.ts и docs/COMPANY_REVENUE_MODEL.md за све претпоставке и начин поновног израчунавања.",
 
     // Crowdfund page
     cfTitle: "Финансирање првог српског сателита",
     cfSubtitle: "Стваран план кампање за српски CubeSat за посматрање Земље — још увек не стварна страница за плаћање.",
     cfDisclaimer:
-      "⚠️ Ова страница прикупља само сигнале интересовања — овде се не обрађује плаћање. Стварно прикупљање новца захтева регистровану структуру за прикупљање средстава и правну проверу у Србији. Погледати docs/CROWDFUNDING_PLAN.md за детаље.",
+      "⚠️ Ова страница прикупља само сигнале интересовања — овде се не обрађује плаћање. Ово је замишљено као приватно финансиран пројекат (међународни тим, укључујући српску дијаспору; ентитет не мора бити регистрован у Србији) — не зависи од учешћа српске владе, мада би формално партнерство било добродошао бонус уколико Србија одлучи да се укључи. Погледати docs/CROWDFUNDING_PLAN.md.",
     cfPurposeTitle: "Чему би требало да служи?",
     cfPurposeText:
       "Препорука: CubeSat за посматрање Земље фокусиран на пољопривреду, поплаве и праћење шума/пожара — стварна, трајна вредност за српске пољопривреднике и агенције за ванредне ситуације, не само симболичан гест. Ово је и уобичајен пут који прате први сателити већине држава, тако да постоји добро утабан технички пут. Ђачки изграђена земаљска станица и универзитетско партнерство могу укључити образовну компоненту без потребе за другом кампањом.",

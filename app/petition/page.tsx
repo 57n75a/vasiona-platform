@@ -3,6 +3,7 @@ import { ensurePetitionSchema, getSignatureCount } from "@/lib/petitionService";
 import NavBar from "@/app/components/NavBar";
 import Footer from "@/app/components/Footer";
 import PetitionSignForm from "@/app/components/PetitionSignForm";
+import { LOGO_SRC } from "@/app/components/logo";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +23,9 @@ export default async function PetitionPage({
       <NavBar lang={lang} />
 
       <main style={{ maxWidth: 780, margin: "0 auto", padding: "0 20px 20px" }}>
-        <div className="card">
+        <div className="card" style={{ textAlign: "center" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={LOGO_SRC} alt="VASIONA" style={{ width: 140, margin: "0 auto 12px", borderRadius: "50%" }} />
           <h1 style={{ fontSize: 20, lineHeight: 1.4, margin: "0 0 8px" }}>{t.petitionTitle}</h1>
           <p className="muted" style={{ fontSize: 13, margin: 0 }}>{t.petitionTo}</p>
         </div>

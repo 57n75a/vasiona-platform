@@ -3,6 +3,7 @@ import { ensureCrowdfundSchema, getInterestSummary } from "@/lib/crowdfundServic
 import NavBar from "@/app/components/NavBar";
 import Footer from "@/app/components/Footer";
 import CrowdfundInterestForm from "@/app/components/CrowdfundInterestForm";
+import { LOGO_SRC } from "@/app/components/logo";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +23,9 @@ export default async function CrowdfundPage({
       <NavBar lang={lang} />
 
       <main style={{ maxWidth: 780, margin: "0 auto", padding: "0 20px 20px" }}>
-        <div className="card">
+        <div className="card" style={{ textAlign: "center" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={LOGO_SRC} alt="VASIONA" style={{ width: 140, margin: "0 auto 12px", borderRadius: "50%" }} />
           <h1 style={{ fontSize: 20, margin: "0 0 8px" }}>{t.cfTitle}</h1>
           <p className="muted" style={{ fontSize: 13, margin: 0 }}>{t.cfSubtitle}</p>
         </div>

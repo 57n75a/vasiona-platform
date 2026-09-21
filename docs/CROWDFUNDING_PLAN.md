@@ -1,27 +1,28 @@
 # VASIONA — Crowdfunding Plan: Serbia's First National Satellite
 Draft v0.1 · September 2026
 
-## 0. The honest part first
-Actually collecting real money from the public for this needs more than a
-web page — most jurisdictions (Serbia included) have rules around public
-fundraising, and depending on structure (donations vs. rewards vs. anything
-resembling equity/returns), consumer-protection and possibly securities law
-can apply. The practical path most first-satellite crowdfunding efforts
-actually take is one of:
-- Partner with an established platform (Kickstarter, Indiegogo, GoFundMe)
-  that already handles payment processing, KYC, and dispute handling — you
-  don't build that yourself
-- Set up through a registered nonprofit/foundation entity, which is also
-  usually a prerequisite for the tax-deductible framing many space-education
-  campaigns use
-- Get Serbian legal counsel on public-fundraising rules before taking a
-  single real payment
+## 0. What kind of project this actually is
+This is envisioned as a **privately funded project**, run by an international
+team (including Serbian expats), not something requiring Serbian government
+involvement or registration. The entity behind it does not need to be
+registered in Serbia — the US or another jurisdiction convenient for an
+international team is equally workable, and in practice more common for
+crowdfunding-platform compatibility (Kickstarter/Indiegogo have specific
+country requirements for campaign creators). If the Serbian government ever
+chooses to formally partake — co-sponsoring, providing regulatory support,
+or partnering directly — that's a welcome bonus that would strengthen the
+"benefit of the Serbian people" framing, not a prerequisite.
 
-So what's built here is a **campaign plan and a public interest-signal page**
-— visitors can register interest and an indicative pledge amount, which is
-useful for proving demand before you approach a platform or a legal
-structure, but it is explicitly **not** a live payment system. The site says
-this plainly, not just this doc.
+What's still true regardless of structure:
+- Actually collecting real money from the public needs an established
+  crowdfunding platform (Kickstarter, Indiegogo, GoFundMe) or a registered
+  entity to receive funds — whichever jurisdiction that ends up in, get
+  actual legal counsel there before taking a single real payment.
+- What's built here is a **campaign plan and a public interest-signal page**
+  — visitors can register interest and an indicative pledge amount, useful
+  for proving demand before committing to a platform or entity structure,
+  but explicitly **not** a live payment system. The site says this plainly,
+  not just this doc.
 
 ## 1. What should the satellite actually be used for?
 **Recommendation: Earth observation, focused on agriculture, flood, and
@@ -85,7 +86,7 @@ target.
 | Phase | Duration | Milestone |
 |---|---|---|
 | Interest validation (this page) | 0–3 months | Gauge real demand via interest signups before committing to a platform |
-| Legal/platform setup | 3–6 months | Choose fundraising platform or register a foundation; Serbian legal review |
+| Legal/platform setup | 3–6 months | Choose fundraising platform or register an entity (US or elsewhere, per the team's convenience); legal review in whichever jurisdiction that ends up in |
 | Campaign live | 2–3 months | Actual fundraising push |
 | Technical partner selection + design | 6–12 months | RFP to CubeSat integrators, payload finalization |
 | Build, test, launch manifest | 12–24 months | Standard CubeSat development cycle |
@@ -95,15 +96,16 @@ target.
 | Risk | Notes |
 |---|---|
 | Funding shortfall | CubeSat crowdfunding campaigns commonly raise a fraction of full mission cost — plan for a hybrid model (crowdfunding + government/university/corporate co-sponsorship) rather than 100% public funding |
-| Regulatory | Serbian public-fundraising law, ITU frequency coordination, launch-provider export controls — all real, all need actual legal counsel, not assumptions from this document |
+| Regulatory | Public-fundraising law, ITU frequency coordination, launch-provider export controls, all in whichever jurisdiction(s) the entity and campaign actually operate in — real, needs actual legal counsel there, not assumptions from this document. If Serbia partakes formally, Serbian regulatory questions (satellite data use by Serbian agencies, any government co-sponsorship terms) would apply on top of that. |
 | Technical | First-satellite failure rates are non-trivial industry-wide — set expectations accordingly in campaign messaging (be honest that space is hard) |
 | Platform dependency | If VASIONA's own tracking data ever factors into this (e.g. positioning it as related to VASIONA's mission), keep the two initiatives clearly separated in messaging — funders are backing a public-service satellite, not a policy-advocacy platform |
 
 ## 5. Next steps
 - [ ] Decide: pursue this via an established crowdfunding platform vs. a
       registered foundation (affects everything downstream)
-- [ ] Get actual Serbian legal counsel on public fundraising before
-      collecting any real payments
+- [ ] Get actual legal counsel in whichever jurisdiction the entity ends up
+      registered in, on public fundraising rules there, before collecting
+      any real payments
 - [ ] Use the site's interest-signup page (see below) to gauge real demand
       for a few months before committing further
 - [ ] Reach out to CubeSat integrators (there are several established firms

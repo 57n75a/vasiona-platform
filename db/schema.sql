@@ -38,6 +38,18 @@ CREATE TABLE IF NOT EXISTS crowdfund_interest (
     created_at     TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Tracks when the cron job last ran (single row, id always 1) — separate from
+-- overflight_events since that table only gets rows when something WAS found.
+CREATE TABLE IF NOT EXISTS cron_status (
+    id               INTEGER PRIMARY KEY DEFAULT 1,
+    last_run_at      TIMESTAMPTZ,
+    catalog_size     INTEGER,
+    checked          INTEGER,
+    failed           INTEGER,
+    over_serbia      INTEGER,
+    CONSTRAINT single_row CHECK (id = 1)
+);
+
 -- Optional, for when you outgrow the simplified bounding-box check in lib/serbia.ts
 -- and want to store a real border polygon + do PostGIS point-in-polygon tests instead:
 -- CREATE EXTENSION IF NOT EXISTS postgis;

@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { fetchTleGroup } from "@/lib/tle";
-import { currentSubPoint } from "@/lib/propagate";
-import { isOverSerbia } from "@/lib/serbia";
-import { ensureSchema, upsertSatellite, logOverflight } from "@/lib/db";
+import { runCronJob } from "@/lib/cronRunner";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60; // seconds — raise on Pro plan if the catalog group is large
@@ -25,51 +22,13 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
-  const group = process.env.CELESTRAK_GROUP || "active";
-  const startedAt = new Date();
-
-  await ensureSchema();
-
-  let tles;
   try {
-    tles = await fetchTleGroup(group);
+    const result = await runCronJob();
+    return NextResponse.json(result);
   } catch (err: any) {
     return NextResponse.json(
-      { error: "tle_fetch_failed", detail: String(err?.message ?? err) },
+      { error: "cron_run_failed", detail: String(err?.message ?? err) },
       { status: 502 }
     );
   }
-
-  let checked = 0;
-  let overSerbia = 0;
-  let failed = 0;
-
-  for (const tle of tles) {
-    checked++;
-    const point = currentSubPoint(tle, startedAt);
-    if (!point) {
-      failed++;
-      continue;
-    }
-    if (isOverSerbia(point.lat, point.lon)) {
-      overSerbia++;
-      await upsertSatellite(tle.noradId, tle.name, point.altKm);
-      await logOverflight({
-        noradId: tle.noradId,
-        lat: point.lat,
-        lon: point.lon,
-        altKm: point.altKm,
-        observedAt: startedAt,
-      });
-    }
-  }
-
-  return NextResponse.json({
-    ranAt: startedAt.toISOString(),
-    group,
-    catalogSize: tles.length,
-    checked,
-    failed,
-    overSerbiaRightNow: overSerbia,
-  });
 }

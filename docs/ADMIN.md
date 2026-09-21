@@ -1,57 +1,50 @@
-# Listing petition signatures
+# Admin console
 
-Signer names aren't shown publicly on `/petition` by design (see BUILD_LOG.md)
-— only a running count. Here's how you, as the site operator, can actually see
-who signed. Three ways, easiest first:
+`https://YOUR_DOMAIN/admin` — not linked from anywhere in the site; the URL
+itself plus the password prompt are the access control. Log in with your
+`ADMIN_SECRET` (same value as in `.env.example` / Vercel env vars).
 
-## Method 1 — The hidden admin page (easiest)
-Go to `https://YOUR_DOMAIN/petition/admin`. This page isn't linked from
-anywhere in the site — the URL itself plus the password prompt are the access
-control. Enter your `ADMIN_SECRET` (same one from `.env.example` / Vercel
-env vars) and it shows a table of all signatures, with a "Download CSV"
-button. Bookmark that URL for yourself.
+Three tabs:
+- **Cron** — a real on/off toggle for the daily job (enforced server-side —
+  the scheduled run checks it and skips its work when off), the actual
+  configured schedule for reference, and a "Run cron now" button that
+  triggers the job immediately regardless of the toggle. See the note below
+  on why the toggle can't change the *time* the job runs.
+- **Petition** — table of everyone who's registered support on `/petition`,
+  plus a CSV download button.
+- **Crowdfund** — table of everyone who's registered interest on
+  `/crowdfund`, plus a CSV download button.
 
-## Method 2 — Neon's SQL Editor (no code, no secrets needed)
-1. Go to your Neon project dashboard (linked from Vercel's Storage tab, or
-   directly at console.neon.tech).
-2. Open the **SQL Editor** for your database.
-3. Run:
-   ```sql
-   SELECT name, country, comment, created_at
-   FROM petition_signatures
-   ORDER BY created_at DESC;
-   ```
-4. Neon's editor lets you export the result as CSV directly from that screen.
+## A real limitation, stated plainly
+The on/off toggle is genuinely enforced — flip it off and the scheduled job
+will skip its work. But **changing what time of day it runs isn't something
+this panel can do**: Vercel Cron's schedule is fixed in `vercel.json` at
+deploy time, and Vercel doesn't offer a way to change a cron schedule at
+runtime via API on any plan. To change the time, edit the `schedule` string
+in `vercel.json` and redeploy (see DEPLOY.md). Hobby-tier accounts are also
+limited to once-per-day schedules regardless of what time is chosen.
 
-This is the simplest option and needs nothing set up in the app itself.
+## Why this design
+- The public pages (`/petition`, `/crowdfund`) show a running **count**
+  only — names/emails aren't published. This console is how you, the site
+  operator, actually see who signed up.
+- The "Run cron now" button uses a separate endpoint
+  (`/api/admin/run-cron`, checked against `ADMIN_SECRET`) rather than
+  reusing the scheduled cron's own endpoint — keeps the two secrets
+  (`CRON_SECRET` for Vercel's scheduler, `ADMIN_SECRET` for you) independent.
+- If you'd rather script this than click through a UI, the underlying
+  endpoints (`/api/petition/list`, `/api/crowdfund/list`, both accepting
+  `?format=csv`, and `POST /api/admin/run-cron`) all take the same
+  `Authorization: Bearer YOUR_ADMIN_SECRET` header directly — see
+  DEPLOY.md for a `curl` example of the cron one.
 
-## Method 3 — The built-in admin API endpoint (for scripting)
-A route is included at `/api/petition/list`, protected by a separate
-`ADMIN_SECRET` environment variable (set it in Vercel → Settings →
-Environment Variables — see `.env.example`; use a different value than
-`CRON_SECRET`, don't reuse it).
-
-**As JSON:**
-```bash
-curl -H "Authorization: Bearer YOUR_ADMIN_SECRET" \
-  https://YOUR_DOMAIN/api/petition/list
-```
-
-**As a downloadable CSV** (open this URL in a browser with the header set via
-a tool like `curl -O`, or use an HTTP client that lets you set headers):
-```bash
-curl -H "Authorization: Bearer YOUR_ADMIN_SECRET" \
-  "https://YOUR_DOMAIN/api/petition/list?format=csv" \
-  -o petition_signatures.csv
-```
-
-If `ADMIN_SECRET` isn't set at all, this endpoint always returns 401 — there's
-no accidental open-by-default state.
+## Alternative: Neon's SQL Editor
+No code needed — go to your Neon project dashboard → SQL Editor, and query
+`petition_signatures` or `crowdfund_interest` directly. Neon's editor also
+lets you export results as CSV from that screen.
 
 ## A privacy note
-Whichever method you use, treat the exported list as personal data — people
-gave their name/country/comment expecting it to be counted, not published.
-If you ever do want to publicly display signer names (e.g. a "supporters"
-wall), that's a bigger decision than this endpoint's scope — it would need
-its own explicit opt-in on the sign form first, not just adding a list to the
-page.
+Treat exported data as personal data — people gave their name/email/comment
+expecting it to be counted, not published. If you ever want a public
+"supporters" wall, that needs its own explicit opt-in on the forms first,
+not just adding a list to a page.

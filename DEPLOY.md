@@ -62,6 +62,14 @@ After deploying:
 ```bash
 curl -H "Authorization: Bearer YOUR_CRON_SECRET" https://<your-app>.vercel.app/api/cron/fetch-tles
 ```
+
+Alternatively, use the admin console at `https://<your-app>.vercel.app/admin`
+(log in with `ADMIN_SECRET`) and click "Run cron now" on the Cron tab — same
+effect, no terminal needed. Or hit the same endpoint that button calls
+directly:
+```bash
+curl -X POST -H "Authorization: Bearer YOUR_ADMIN_SECRET" https://<your-app>.vercel.app/api/admin/run-cron
+```
 This runs the same logic Vercel Cron will run on schedule — use it to verify
 the pipeline (CelesTrak fetch → propagate → geofence → Postgres insert) before
 waiting for the schedule.

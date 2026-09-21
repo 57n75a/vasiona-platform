@@ -44,7 +44,7 @@ export default function NavBar({ lang }: { lang: Lang }) {
         <a href={`/${qs}#about`} style={linkStyle}>{t.navAbout}</a>
         <a href={`/petition${qs}`} style={linkStyle}>{t.navPetition}</a>
         <a href={`/crowdfund${qs}`} style={linkStyle}>{t.navCrowdfund}</a>
-        <a href={`/news${qs}`} style={linkStyle}>{t.navNews}</a>
+        <a href={`/analytics${qs}`} style={linkStyle}>{t.navAnalytics}</a>
         <a href={`/${qs}#contact`} style={linkStyle}>{t.navContact}</a>
         <a
           href={qsOther}

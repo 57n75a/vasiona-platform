@@ -33,43 +33,60 @@ subscribers or investors without that caveat attached.
 | "Real logged" ledger numbers | 🟢 Real — actual passes this deployment has observed since it went live |
 | "Modeled 2020→now" ledger numbers | 🟡 Statistical estimate — see `lib/historicalModel.ts` |
 | Fee-per-pass, coverage factor | 🟡 Illustrative, adjustable via env vars |
+| Cron on/off toggle | 🟢 Real — server-enforced in `runCronJob()`, not just a UI switch |
+| Cron schedule *time* | 🔴 Fixed in `vercel.json` at deploy time — no runtime API for this on any Vercel plan |
+| Crowdfunding interest signups | 🟢 Real — stored in Postgres; explicitly not a payment system (see `docs/CROWDFUNDING_PLAN.md`) |
+| Per-company revenue breakdown | 🟡 Restricted to companies with well-documented historical satellite counts — unknowns excluded, not estimated |
 
 ## Site structure
 - **/** — main dashboard (map, ledger, recent events, About and Contact sections; disclaimer banner now sits just above the footer)
 - **/petition** — reachable only via the nav bar — a real petition proposing an Outer Space Treaty amendment, with a live signature counter (count only; names aren't published — see `docs/ADMIN.md`)
-- **/petition/admin** — hidden (not linked anywhere), password-gated via `ADMIN_SECRET`, for viewing/exporting signatures
-- **/crowdfund** — campaign plan + interest-signup form (not a live payment page — see `docs/CROWDFUNDING_PLAN.md`) for funding Serbia's first satellite
-- **/news** — uses this repo's own GitHub commit history as a news feed
+- **/admin** — consolidated hidden admin console (Cron toggle/manual-trigger, Petition list, Crowdfund list)
+- **/crowdfund** — campaign plan + interest-signup form (not a live payment page — see `docs/CROWDFUNDING_PLAN.md`) for funding a privately-run first Serbian satellite
+- **/analytics** — public hypothetical-revenue breakdown by country and by named company
 
 ## Repo layout
 ```
+public/
+  vasiona-seal.png              the logo — static asset, ~58KB, palette-quantized
 app/
-  page.tsx                     dashboard — bilingual via ?lang=en / ?lang=sr
-  petition/page.tsx            petition page (nav-only)
+  page.tsx                      dashboard — bilingual via ?lang=en / ?lang=sr
+  petition/page.tsx             petition page (nav-only)
+  crowdfund/page.tsx            crowdfunding campaign + interest-signup form
+  analytics/page.tsx            public hypothetical-revenue breakdown (by country & company)
+  admin/page.tsx                hidden, password-gated console (cron toggle/trigger, petition list, crowdfund list)
   components/
-    NavBar.tsx                 floating sticky nav (logo, About, Petition, Contact, lang toggle)
-    Footer.tsx                 site-wide footer
-    ContactForm.tsx            client component — builds a mailto: link, no email service needed
-    PetitionSignForm.tsx       client component — real POST to /api/petition/sign
-    SerbiaMap.tsx               interactive client map — hover tooltips, color + shape legends
-    logo.ts                    shared inline seal-style logo SVG markup
-  api/cron/fetch-tles/route.ts the cron job Vercel calls on schedule
-  api/overhead/route.ts        recent real logged events
-  api/ledger/route.ts          combined real + modeled hypothetical ledger (bilingual via ?lang=)
-  api/petition/sign/route.ts   accepts petition sign submissions
-  api/petition/list/route.ts   admin-only: lists/exports signatures (separate ADMIN_SECRET)
+    NavBar.tsx                  floating sticky nav (text-only brand, About, Petition, Fund a Satellite, Analytics, Contact, lang toggle)
+    Footer.tsx                  site-wide footer (logo, nav links, social links)
+    ContactForm.tsx             client component — builds a mailto: link, no email service needed
+    PetitionSignForm.tsx        client component — real POST to /api/petition/sign
+    CrowdfundInterestForm.tsx   client component — real POST to /api/crowdfund/pledge
+    SerbiaMap.tsx                interactive client map — hover tooltips, color + shape legends
+    logo.ts                     exports the path to the static logo image (public/vasiona-seal.png)
+  api/cron/fetch-tles/route.ts  the cron job Vercel calls on schedule (skips work if toggled off)
+  api/overhead/route.ts         recent real logged events
+  api/ledger/route.ts           combined real + modeled hypothetical ledger (bilingual via ?lang=)
+  api/petition/sign/route.ts    accepts petition sign submissions
+  api/petition/list/route.ts    admin-only: lists/exports signatures
+  api/crowdfund/pledge/route.ts accepts crowdfunding interest signups
+  api/crowdfund/list/route.ts   admin-only: lists/exports interest signups
+  api/admin/run-cron/route.ts   admin-only: manually triggers the cron job (bypasses the toggle)
+  api/admin/cron-settings/route.ts admin-only: reads/sets the cron on/off toggle
 lib/
-  tle.ts                       CelesTrak fetch + TLE parsing
-  propagate.ts                 SGP4 wrapper (satellite.js)
-  serbia.ts                    real Serbia border polygon + point-in-polygon geofence
-  serbiaMapSvg.ts              shared pure projection math (used by the map component)
-  operatorLookup.ts            operator/country classifier (bucketed colors) + object-type classifier (LEO/MEO/GEO, station, GNSS)
-  db.ts                        Postgres access layer
-  historicalModel.ts           2020->now statistical estimate
-  ledgerService.ts             shared ledger logic (used by page + API, no self-fetch)
-  overheadService.ts           shared overhead-events logic (used by page + API)
-  petitionService.ts           petition signature storage, count, and admin listing
-  i18n.ts                      EN/SR UI dictionary
+  tle.ts                        CelesTrak fetch + TLE parsing
+  propagate.ts                  SGP4 wrapper (satellite.js)
+  serbia.ts                     real Serbia border polygon + point-in-polygon geofence
+  serbiaMapSvg.ts                shared pure projection math (used by the map component)
+  operatorLookup.ts             operator/country classifier (bucketed colors) + object-type classifier (LEO/MEO/GEO, station, GNSS)
+  db.ts                         Postgres access layer
+  historicalModel.ts            2020->now statistical estimate, by country and by named company
+  cronRunner.ts                 shared cron logic (called by both the scheduled and admin-triggered routes)
+  cronStatusService.ts          tracks last cron run + the on/off toggle
+  crowdfundService.ts           crowdfunding interest storage
+  ledgerService.ts              shared ledger logic (used by page + API, no self-fetch)
+  overheadService.ts            shared overhead-events logic (used by page + API)
+  petitionService.ts            petition signature storage, count, and admin listing
+  i18n.ts                       EN/SR UI dictionary
 db/schema.sql                  reference schema (also auto-created by lib/db.ts)
 docs/
   BRAND_PACKAGE.md / .sr.md
