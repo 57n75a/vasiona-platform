@@ -17,12 +17,14 @@ export async function ensureCronStatusSchema() {
 }
 
 export async function getCronEnabled(): Promise<boolean> {
+  await ensureCronStatusSchema();
   const { rows } = await sql`SELECT enabled FROM cron_status WHERE id = 1;`;
   // No row yet means the job has never run and never been toggled — default enabled.
   return rows[0]?.enabled ?? true;
 }
 
 export async function setCronEnabled(enabled: boolean) {
+  await ensureCronStatusSchema();
   await sql`
     INSERT INTO cron_status (id, enabled)
     VALUES (1, ${enabled})
@@ -38,6 +40,7 @@ export interface CronRunStats {
 }
 
 export async function recordCronRun(stats: CronRunStats) {
+  await ensureCronStatusSchema();
   await sql`
     INSERT INTO cron_status (id, last_run_at, catalog_size, checked, failed, over_serbia)
     VALUES (1, now(), ${stats.catalogSize}, ${stats.checked}, ${stats.failed}, ${stats.overSerbia})
@@ -60,6 +63,7 @@ export interface CronStatus {
 }
 
 export async function getCronStatus(): Promise<CronStatus> {
+  await ensureCronStatusSchema();
   const { rows } = await sql`SELECT * FROM cron_status WHERE id = 1;`;
   const row = rows[0];
   if (!row) {

@@ -336,6 +336,33 @@ removal:
   the nav link, and the `GITHUB_REPO` env var all deleted.
 - **Social links added to the footer**: X, Instagram, YouTube.
 
+**2026-09-21, session 15** — Fixed a real production bug reported after
+deploy: the dashboard crashed with a server-side exception because
+`getCronStatus()` (called directly from `app/page.tsx`) queried the
+`cron_status` table without ever ensuring it existed first — on a fresh
+deployment where the cron job hadn't run yet and nobody had visited `/admin`
+(both of which do call `ensureCronStatusSchema()`), that table genuinely
+didn't exist, and the `SELECT` threw. This was an inconsistency with the
+rest of the codebase's established pattern (every other service function
+that reads from a table it owns calls its own `ensureXSchema()` first,
+rather than relying on callers to remember to). Fixed by making
+`getCronStatus()`, `getCronEnabled()`, `setCronEnabled()`, and
+`recordCronRun()` all self-sufficient. Also audited the two other
+similarly-shaped newer services (`crowdfundService.ts`, `petitionService.ts`)
+for the same gap and applied the same defensive fix there too, even though
+their current call sites happened to already call `ensureXSchema()`
+correctly — better that it can't regress later if a new call site forgets to.
+The two oldest, most-used services (`ledgerService.ts`, `overheadService.ts`)
+already followed this pattern correctly and needed no change.
+
+Also worth noting from this session: a zip-based file delivery only adds/
+overwrites files, it never deletes ones that are no longer present — so
+"file X was removed" instructions require the person to manually delete
+that file locally too. This caused two failed deploys in a row (a stale
+`app/news/page.tsx` referencing removed i18n keys, then the same file still
+importing an already-deleted `lib/newsService.ts`) before it was fully
+cleared. Flagging this pattern explicitly for future removal instructions.
+
 ## Known simplifications carried through every version
 1. ~~**Serbia geofence** is a lat/lon bounding box~~ — **Updated:** now uses a real
    ~130-point national border polygon (ray-casting point-in-polygon test) instead

@@ -22,6 +22,7 @@ function clip(s: unknown, max: number): string | null {
 }
 
 export async function addSignature(input: { name?: unknown; country?: unknown; comment?: unknown }) {
+  await ensurePetitionSchema();
   const name = clip(input.name, 120);
   const country = clip(input.country, 80);
   const comment = clip(input.comment, 500);
@@ -35,11 +36,13 @@ export async function addSignature(input: { name?: unknown; country?: unknown; c
 }
 
 export async function getSignatureCount(): Promise<number> {
+  await ensurePetitionSchema();
   const { rows } = await sql`SELECT COUNT(*)::int AS count FROM petition_signatures;`;
   return rows[0]?.count ?? 0;
 }
 
 export async function listSignatures(limit = 1000) {
+  await ensurePetitionSchema();
   const { rows } = await sql`
     SELECT id, name, country, comment, created_at
     FROM petition_signatures

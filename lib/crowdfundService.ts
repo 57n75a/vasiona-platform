@@ -23,6 +23,7 @@ function clip(s: unknown, max: number): string | null {
 }
 
 export async function addInterest(input: { email?: unknown; name?: unknown; indicativeUsd?: unknown; comment?: unknown }) {
+  await ensureCrowdfundSchema();
   const email = clip(input.email, 200);
   const name = clip(input.name, 120);
   const comment = clip(input.comment, 500);
@@ -40,6 +41,7 @@ export async function addInterest(input: { email?: unknown; name?: unknown; indi
 }
 
 export async function getInterestSummary(): Promise<{ count: number; indicativeTotalUsd: number }> {
+  await ensureCrowdfundSchema();
   const { rows } = await sql`
     SELECT COUNT(*)::int AS count, COALESCE(SUM(indicative_usd), 0)::numeric AS total
     FROM crowdfund_interest;
@@ -51,6 +53,7 @@ export async function getInterestSummary(): Promise<{ count: number; indicativeT
 }
 
 export async function listInterest(limit = 5000) {
+  await ensureCrowdfundSchema();
   const { rows } = await sql`
     SELECT id, name, email, indicative_usd, comment, created_at
     FROM crowdfund_interest
