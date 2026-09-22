@@ -48,6 +48,9 @@ read it as a factual claim rather than a pitch — see BUSINESS_PLAN.md for exac
 where that line is.
 
 ## Domain
+**Final domain: `vasiona.org`** (set 2026-09-21). Public contact: `info@vasiona.org`.
+The `.rs` candidates below were the original shortlist and are kept for reference only.
+
 `.rs` candidates to check yourself at rnids.rs/en/whois (I can't run a live automated
 check from here):
 1. `vasiona.rs`

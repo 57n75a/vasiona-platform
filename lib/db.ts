@@ -36,9 +36,13 @@ export async function ensureSchema() {
       name        TEXT,
       country     TEXT,
       comment     TEXT,
+      email       TEXT,
+      contact_consent BOOLEAN NOT NULL DEFAULT false,
       created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
     );
   `;
+  await sql`ALTER TABLE petition_signatures ADD COLUMN IF NOT EXISTS email TEXT;`;
+  await sql`ALTER TABLE petition_signatures ADD COLUMN IF NOT EXISTS contact_consent BOOLEAN NOT NULL DEFAULT false;`;
 }
 
 export async function upsertSatellite(noradId: number, name: string, altKm: number | null = null) {

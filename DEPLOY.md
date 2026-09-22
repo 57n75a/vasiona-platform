@@ -60,21 +60,21 @@ limit on lower plans. Options if the cron run times out:
 ## 7. First deploy & manual test
 After deploying:
 ```bash
-curl -H "Authorization: Bearer YOUR_CRON_SECRET" https://<your-app>.vercel.app/api/cron/fetch-tles
+curl -H "Authorization: Bearer YOUR_CRON_SECRET" https://vasiona.org/api/cron/fetch-tles
 ```
 
-Alternatively, use the admin console at `https://<your-app>.vercel.app/admin`
+Alternatively, use the admin console at `https://vasiona.org/admin`
 (log in with `ADMIN_SECRET`) and click "Run cron now" on the Cron tab — same
 effect, no terminal needed. Or hit the same endpoint that button calls
 directly:
 ```bash
-curl -X POST -H "Authorization: Bearer YOUR_ADMIN_SECRET" https://<your-app>.vercel.app/api/admin/run-cron
+curl -X POST -H "Authorization: Bearer YOUR_ADMIN_SECRET" https://vasiona.org/api/admin/run-cron
 ```
 This runs the same logic Vercel Cron will run on schedule — use it to verify
 the pipeline (CelesTrak fetch → propagate → geofence → Postgres insert) before
 waiting for the schedule.
 
-Then open `https://<your-app>.vercel.app/` for the dashboard.
+Then open `https://vasiona.org/` for the dashboard.
 
 ## 8. Swapping in a real Serbia border polygon (recommended before relying on this)
 `lib/serbia.ts` currently uses a simplified bounding box. For production
@@ -82,3 +82,28 @@ accuracy, replace it with a real polygon (e.g. from Natural Earth or GADM)
 and a point-in-polygon check — the `db/schema.sql` file has a commented-out
 PostGIS table (`country_borders`) as a starting point if you want to store
 the polygon in Postgres instead of hardcoding it in `lib/serbia.ts`.
+
+## 9. Custom domain: vasiona.org
+The public site lives at **https://vasiona.org** (`lib/site.ts` is the single
+source of truth for the domain and the contact address).
+
+1. Vercel project → **Settings → Domains** → add `vasiona.org` and `www.vasiona.org`;
+   set `www` to redirect to the apex (`vasiona.org`).
+2. At your DNS provider, add the records Vercel shows for each domain (normally an
+   `A` record for the apex and a `CNAME` for `www` — copy the exact values from the
+   Vercel dashboard, they can change).
+3. Wait for Vercel to show the domain as *Valid* and to issue the HTTPS certificate.
+4. Optional: keep the old `*.vercel.app` URL as a redirect target — Vercel does this
+   automatically once the custom domain is set as primary.
+
+## 10. Contact mailbox: info@vasiona.org
+Every contact link, the contact form, the sponsor inquiry button and the footer now
+point to **info@vasiona.org**. Make sure the mailbox (or an alias/forwarder) exists at
+your mail provider — nothing on the site creates it. Petition and crowdfunding
+sign-ups now also collect an email address (with consent) so you can reach out:
+export them from the admin console (CSV includes `email` and `contact_consent`).
+
+## 11. Supporter kit (ZIP under /crowdfund)
+`public/vasiona-support-kit.zip` is served as a static file and linked from the very
+bottom of the crowdfunding page. See `docs/SUPPORT_KIT.md` for what is inside and how
+to refresh it.

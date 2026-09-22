@@ -7,6 +7,8 @@ import { getDict } from "@/lib/i18n";
 export default function PetitionSignForm({ lang, initialCount }: { lang: Lang; initialCount: number }) {
   const t = getDict(lang);
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [consent, setConsent] = useState(false);
   const [country, setCountry] = useState("");
   const [comment, setComment] = useState("");
   const [count, setCount] = useState(initialCount);
@@ -22,14 +24,23 @@ export default function PetitionSignForm({ lang, initialCount }: { lang: Lang; i
       const res = await fetch("/api/petition/sign", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, country, comment }),
+        body: JSON.stringify({ name, email, contactConsent: consent, country, comment }),
       });
-      if (!res.ok) throw new Error(`status ${res.status}`);
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(
+          data?.error === "invalid_email"
+            ? t.formErrorEmail
+            : data?.error === "consent_required"
+            ? t.formErrorConsent
+            : t.formErrorGeneric
+        );
+        return;
+      }
       if (typeof data.count === "number") setCount(data.count);
       setSubmitted(true);
     } catch {
-      setError("Something went wrong — please try again.");
+      setError(t.formErrorGeneric);
     } finally {
       setSubmitting(false);
     }
@@ -64,6 +75,15 @@ export default function PetitionSignForm({ lang, initialCount }: { lang: Lang; i
           />
           <input
             style={inputStyle}
+            type="email"
+            autoComplete="email"
+            placeholder={t.signFormEmail}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            style={inputStyle}
             type="text"
             placeholder={t.signFormCountry}
             value={country}
@@ -75,6 +95,16 @@ export default function PetitionSignForm({ lang, initialCount }: { lang: Lang; i
             value={comment}
             onChange={(e) => setComment(e.target.value)}
           />
+          <label style={{ display: "flex", gap: 8, alignItems: "flex-start", textAlign: "left", fontSize: 12.5, lineHeight: 1.5, marginBottom: 12, cursor: "pointer" }}>
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+              required
+              style={{ marginTop: 3, flexShrink: 0 }}
+            />
+            <span>{t.formConsent}</span>
+          </label>
           <button
             type="submit"
             disabled={submitting}

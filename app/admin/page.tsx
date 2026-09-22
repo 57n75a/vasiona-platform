@@ -5,8 +5,10 @@ import { useState } from "react";
 interface Signature {
   id: number;
   name: string | null;
+  email: string | null;
   country: string | null;
   comment: string | null;
+  contact_consent: boolean | null;
   created_at: string;
 }
 
@@ -16,6 +18,7 @@ interface InterestRow {
   email: string | null;
   indicative_usd: number | null;
   comment: string | null;
+  contact_consent: boolean | null;
   created_at: string;
 }
 
@@ -255,14 +258,16 @@ export default function AdminPage() {
               </div>
               <div className="card" style={{ overflowX: "auto" }}>
                 <table>
-                  <thead><tr><th>When</th><th>Name</th><th>Country</th><th>Comment</th></tr></thead>
+                  <thead><tr><th>When</th><th>Name</th><th>Email</th><th>Country</th><th>Comment</th><th>May contact</th></tr></thead>
                   <tbody>
                     {signatures.map((s) => (
                       <tr key={s.id}>
                         <td>{new Date(s.created_at).toISOString()}</td>
                         <td>{s.name || <span className="muted">—</span>}</td>
+                        <td>{s.email || <span className="muted">—</span>}</td>
                         <td>{s.country || <span className="muted">—</span>}</td>
                         <td>{s.comment || <span className="muted">—</span>}</td>
+                        <td>{s.contact_consent ? "yes" : <span className="muted">no</span>}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -283,7 +288,7 @@ export default function AdminPage() {
               </div>
               <div className="card" style={{ overflowX: "auto" }}>
                 <table>
-                  <thead><tr><th>When</th><th>Name</th><th>Email</th><th>Indicative $</th><th>Comment</th></tr></thead>
+                  <thead><tr><th>When</th><th>Name</th><th>Email</th><th>Indicative $</th><th>Comment</th><th>May contact</th></tr></thead>
                   <tbody>
                     {interest.map((r) => (
                       <tr key={r.id}>
@@ -292,6 +297,7 @@ export default function AdminPage() {
                         <td>{r.email || <span className="muted">—</span>}</td>
                         <td>{r.indicative_usd != null ? `$${Number(r.indicative_usd).toLocaleString()}` : <span className="muted">—</span>}</td>
                         <td>{r.comment || <span className="muted">—</span>}</td>
+                        <td>{r.contact_consent ? "yes" : <span className="muted">no</span>}</td>
                       </tr>
                     ))}
                   </tbody>

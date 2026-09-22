@@ -1,18 +1,22 @@
 import { sql } from "@vercel/postgres";
+import { normalizeEmail, type FormError } from "@/lib/validation";
 
 // This is an INTEREST SIGNAL, not a payment or a binding pledge — no money
 // changes hands here. See docs/CROWDFUNDING_PLAN.md section 0 for why.
 export async function ensureCrowdfundSchema() {
   await sql`
     CREATE TABLE IF NOT EXISTS crowdfund_interest (
-      id            BIGSERIAL PRIMARY KEY,
-      email         TEXT,
-      name          TEXT,
-      indicative_usd NUMERIC,
-      comment       TEXT,
-      created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+      id              BIGSERIAL PRIMARY KEY,
+      email           TEXT,
+      name            TEXT,
+      indicative_usd  NUMERIC,
+      comment         TEXT,
+      contact_consent BOOLEAN NOT NULL DEFAULT false,
+      created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
     );
   `;
+  await sql`ALTER TABLE crowdfund_interest ADD COLUMN IF NOT EXISTS contact_consent BOOLEAN NOT NULL DEFAULT false;`;
+  await sql`CREATE INDEX IF NOT EXISTS idx_crowdfund_email ON crowdfund_interest (lower(email));`;
 }
 
 function clip(s: unknown, max: number): string | null {
@@ -22,9 +26,30 @@ function clip(s: unknown, max: number): string | null {
   return trimmed.slice(0, max);
 }
 
-export async function addInterest(input: { email?: unknown; name?: unknown; indicativeUsd?: unknown; comment?: unknown }) {
+export type AddInterestResult =
+  | ({ ok: true } & { count: number; indicativeTotalUsd: number })
+  | { ok: false; error: FormError };
+
+/**
+ * Records an interest signal. Email and explicit consent to be contacted are
+ * required so VASIONA can follow up when the campaign moves forward. Emails are
+ * never published — only aggregate totals are.
+ *
+ * One entry per email: a repeat submission is accepted but not counted twice
+ * and never overwrites the original row.
+ */
+export async function addInterest(input: {
+  email?: unknown;
+  name?: unknown;
+  indicativeUsd?: unknown;
+  comment?: unknown;
+  contactConsent?: unknown;
+}): Promise<AddInterestResult> {
+  const email = normalizeEmail(input.email);
+  if (!email) return { ok: false, error: "invalid_email" };
+  if (input.contactConsent !== true) return { ok: false, error: "consent_required" };
+
   await ensureCrowdfundSchema();
-  const email = clip(input.email, 200);
   const name = clip(input.name, 120);
   const comment = clip(input.comment, 500);
   const indicativeUsd =
@@ -32,12 +57,15 @@ export async function addInterest(input: { email?: unknown; name?: unknown; indi
       ? Math.min(input.indicativeUsd, 1_000_000)
       : null;
 
-  await sql`
-    INSERT INTO crowdfund_interest (email, name, indicative_usd, comment)
-    VALUES (${email}, ${name}, ${indicativeUsd}, ${comment});
-  `;
+  const existing = await sql`SELECT id FROM crowdfund_interest WHERE lower(email) = ${email} LIMIT 1;`;
+  if (existing.rows.length === 0) {
+    await sql`
+      INSERT INTO crowdfund_interest (email, name, indicative_usd, comment, contact_consent)
+      VALUES (${email}, ${name}, ${indicativeUsd}, ${comment}, true);
+    `;
+  }
 
-  return getInterestSummary();
+  return { ok: true, ...(await getInterestSummary()) };
 }
 
 export async function getInterestSummary(): Promise<{ count: number; indicativeTotalUsd: number }> {
@@ -55,7 +83,7 @@ export async function getInterestSummary(): Promise<{ count: number; indicativeT
 export async function listInterest(limit = 5000) {
   await ensureCrowdfundSchema();
   const { rows } = await sql`
-    SELECT id, name, email, indicative_usd, comment, created_at
+    SELECT id, name, email, indicative_usd, comment, contact_consent, created_at
     FROM crowdfund_interest
     ORDER BY created_at DESC
     LIMIT ${limit};

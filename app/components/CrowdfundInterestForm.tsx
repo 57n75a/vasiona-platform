@@ -15,6 +15,7 @@ export default function CrowdfundInterestForm({
 }) {
   const t = getDict(lang);
   const [email, setEmail] = useState("");
+  const [consent, setConsent] = useState(false);
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [comment, setComment] = useState("");
@@ -32,15 +33,24 @@ export default function CrowdfundInterestForm({
       const res = await fetch("/api/crowdfund/pledge", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, name, indicativeUsd: amount ? Number(amount) : null, comment }),
+        body: JSON.stringify({ email, name, indicativeUsd: amount ? Number(amount) : null, comment, contactConsent: consent }),
       });
-      if (!res.ok) throw new Error(`status ${res.status}`);
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(
+          data?.error === "invalid_email"
+            ? t.formErrorEmail
+            : data?.error === "consent_required"
+            ? t.formErrorConsent
+            : t.formErrorGeneric
+        );
+        return;
+      }
       if (typeof data.count === "number") setCount(data.count);
       if (typeof data.indicativeTotalUsd === "number") setTotal(data.indicativeTotalUsd);
       setSubmitted(true);
     } catch {
-      setError("Something went wrong — please try again.");
+      setError(t.formErrorGeneric);
     } finally {
       setSubmitting(false);
     }
@@ -75,7 +85,7 @@ export default function CrowdfundInterestForm({
       ) : (
         <form onSubmit={handleSubmit}>
           <input style={inputStyle} type="text" placeholder={t.cfName} value={name} onChange={(e) => setName(e.target.value)} />
-          <input style={inputStyle} type="email" placeholder={t.cfEmail} value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input style={inputStyle} type="email" autoComplete="email" placeholder={t.cfEmail} value={email} onChange={(e) => setEmail(e.target.value)} required />
           <input
             style={inputStyle}
             type="number"
@@ -90,6 +100,16 @@ export default function CrowdfundInterestForm({
             value={comment}
             onChange={(e) => setComment(e.target.value)}
           />
+          <label style={{ display: "flex", gap: 8, alignItems: "flex-start", fontSize: 12.5, lineHeight: 1.5, marginBottom: 12, cursor: "pointer" }}>
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+              required
+              style={{ marginTop: 3, flexShrink: 0 }}
+            />
+            <span>{t.formConsent}</span>
+          </label>
           <button
             type="submit"
             disabled={submitting}

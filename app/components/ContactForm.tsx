@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { Lang } from "@/lib/i18n";
 import { getDict } from "@/lib/i18n";
+import { CONTACT_EMAIL } from "@/lib/site";
 
 export default function ContactForm({ lang }: { lang: Lang }) {
   const t = getDict(lang);
@@ -16,7 +17,7 @@ export default function ContactForm({ lang }: { lang: Lang }) {
     const body = encodeURIComponent(
       `${message}\n\n---\nFrom: ${name || "(no name given)"}\nReply-to: ${email || "(no email given)"}`
     );
-    window.location.href = `mailto:serbvasiona@gmail.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
   }
 
   const inputStyle: React.CSSProperties = {

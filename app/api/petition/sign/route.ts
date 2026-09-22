@@ -13,11 +13,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "invalid_json" }, { status: 400 });
   }
 
-  const count = await addSignature({
+  const result = await addSignature({
     name: body?.name,
     country: body?.country,
     comment: body?.comment,
+    email: body?.email,
+    contactConsent: body?.contactConsent === true,
   });
 
-  return NextResponse.json({ success: true, count });
+  if (!result.ok) {
+    return NextResponse.json({ error: result.error }, { status: 400 });
+  }
+  return NextResponse.json({ success: true, count: result.count });
 }

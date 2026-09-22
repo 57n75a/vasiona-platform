@@ -25,8 +25,11 @@ CREATE TABLE IF NOT EXISTS petition_signatures (
     name        TEXT,
     country     TEXT,
     comment     TEXT,
+    email       TEXT,               -- required by the form; never shown publicly
+    contact_consent BOOLEAN NOT NULL DEFAULT false,
     created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+CREATE INDEX IF NOT EXISTS idx_petition_email ON petition_signatures (lower(email));
 
 -- Crowdfunding interest signals (NOT a payment/pledge table — see docs/CROWDFUNDING_PLAN.md)
 CREATE TABLE IF NOT EXISTS crowdfund_interest (
@@ -35,8 +38,10 @@ CREATE TABLE IF NOT EXISTS crowdfund_interest (
     name           TEXT,
     indicative_usd NUMERIC,
     comment        TEXT,
+    contact_consent BOOLEAN NOT NULL DEFAULT false,
     created_at     TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+CREATE INDEX IF NOT EXISTS idx_crowdfund_email ON crowdfund_interest (lower(email));
 
 -- Tracks when the cron job last ran (single row, id always 1) — separate from
 -- overflight_events since that table only gets rows when something WAS found.

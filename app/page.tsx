@@ -7,6 +7,7 @@ import NavBar from "@/app/components/NavBar";
 import Footer from "@/app/components/Footer";
 import ContactForm from "@/app/components/ContactForm";
 import SerbiaMap, { type MapDot } from "@/app/components/SerbiaMap";
+import { CumulativeTotalChart, SatellitesChart } from "@/app/components/GrowthCharts";
 import { getCronStatus } from "@/lib/cronStatusService";
 
 export const dynamic = "force-dynamic";
@@ -18,6 +19,7 @@ export default async function Home({
 }) {
   const lang = searchParams?.lang === "en" ? "en" : "sr";
   const t = getDict(lang);
+  const qs = `?lang=${lang}`;
 
   const [ledger, overhead, cronStatus] = await Promise.all([
     getLedgerData(lang),
@@ -72,6 +74,12 @@ export default async function Home({
             {t.aboutTitle}
           </div>
           <p style={{ fontSize: 14, lineHeight: 1.6, margin: 0 }}>{t.aboutText}</p>
+          <p style={{ fontSize: 14, lineHeight: 1.6, margin: "12px 0 0" }}>
+            {t.aboutText2}{" "}
+            <a href={`/crowdfund${qs}`} style={{ color: "var(--accent)", fontWeight: 600, whiteSpace: "nowrap" }}>
+              {t.aboutCta}
+            </a>
+          </p>
         </div>
 
         <div className="card">
@@ -107,10 +115,33 @@ export default async function Home({
             {ledger.realLogged.events} ($
             {Math.round(ledger.realLogged.totalUsd).toLocaleString()})
           </div>
+
+          <div style={{ marginTop: 18, borderTop: "1px solid var(--border)", paddingTop: 14 }}>
+            <div className="muted" style={{ marginBottom: 8, textTransform: "uppercase", fontSize: 11.5, letterSpacing: 1 }}>
+              {t.chartCumTitle}
+            </div>
+            <CumulativeTotalChart
+              years={ledger.modeledEstimate.years}
+              lang={lang}
+              labels={{ annual: t.chartCumLegendAnnual, cumulative: t.chartCumLegendCum }}
+              partialLast={
+                ledger.modeledEstimate.years.length > 0 &&
+                ledger.modeledEstimate.years[ledger.modeledEstimate.years.length - 1].year >= new Date().getUTCFullYear()
+              }
+            />
+            <div className="muted" style={{ fontSize: 11.5, marginTop: 6 }}>* {t.chartCumNote}</div>
+          </div>
         </div>
 
         <div className="card">
           <div className="muted" style={{ marginBottom: 8 }}>{t.yearlyBreakdown}</div>
+          <div className="muted" style={{ marginBottom: 8, fontSize: 11.5, letterSpacing: 0.5 }}>{t.chartSatsTitle}</div>
+          <SatellitesChart
+            years={ledger.modeledEstimate.years}
+            lang={lang}
+            labels={{ growth: t.chartSatsGrowth, cagr: t.chartSatsCagr, yoy: t.chartYoY }}
+          />
+          <div className="muted" style={{ fontSize: 11.5, margin: "4px 0 14px" }}>{t.chartSatsNote}</div>
           <div style={{ overflowX: "auto" }}>
             <table>
               <thead>

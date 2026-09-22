@@ -384,6 +384,34 @@ cleared. Flagging this pattern explicitly for future removal instructions.
    negotiated per sponsor rather than fixed, coordination needed with the
    technical build timeline).
 
+## 2026-09-21 — v0.6
+1. **Domain** is now `vasiona.org`; contact address is `info@vasiona.org` (was
+   serbvasiona@gmail.com). Both live in `lib/site.ts` and are used by the footer,
+   contact form, sponsor button, i18n copy and page metadata (`metadataBase`,
+   Open Graph). See `DEPLOY.md` section 9-10 for the Vercel/DNS/mailbox steps.
+2. **Footer** shows `vasiona.org` and `info@vasiona.org`.
+3. **Email capture** on `/petition` (new) and `/crowdfund` (already had one): email is
+   required, plus an explicit consent checkbox ("VASIONA may contact me"). Stored in
+   `email` + `contact_consent` (columns added idempotently), one entry per email,
+   never published. Admin tables and CSV exports include both columns.
+4. **Home page charts** (dependency-free SVG, `app/components/GrowthCharts.tsx`):
+   cumulative modeled total by year (annual bars + cumulative line) under
+   "HYPOTHETICAL TOTAL, 2020 → NOW", and active satellites per year with
+   year-over-year growth, total multiple and CAGR under "MODELED YEARLY BREAKDOWN".
+5. **Supporter kit**: `public/vasiona-support-kit.zip`, linked from the very bottom of
+   `/crowdfund` (logo, brochure, posters/flyers, stickers, QR codes, social images).
+   See `docs/SUPPORT_KIT.md`.
+
+## 2026-09-22 — v0.7
+1. **"The story behind VASIONA" / "Прича иза ВАСИОНЕ"** (home page `#about`) now has a
+   second paragraph bridging to the first-satellite idea: an early-stage plan to help
+   finance, design and build Serbia's first satellite (CubeSat), explicitly labeled as
+   not-yet-funded. Ends with a link to `/crowdfund` (`t.aboutText2` + `t.aboutCta` in
+   `lib/i18n.ts`, rendered in `app/page.tsx`).
+2. Supporter-kit brochure (`public/vasiona-support-kit.zip` → `02-brosura/`) got the same
+   bridging sentence on its story page, so it flows into the existing "Serbia's first
+   satellite" page that follows it. Kit re-zipped; size unchanged (~18 MB).
+
 ## Known simplifications carried through every version
 1. ~~**Serbia geofence** is a lat/lon bounding box~~ — **Updated:** now uses a real
    ~130-point national border polygon (ray-casting point-in-polygon test) instead

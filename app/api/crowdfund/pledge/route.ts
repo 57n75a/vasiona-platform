@@ -13,12 +13,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "invalid_json" }, { status: 400 });
   }
 
-  const summary = await addInterest({
+  const result = await addInterest({
     email: body?.email,
     name: body?.name,
     indicativeUsd: typeof body?.indicativeUsd === "string" ? parseFloat(body.indicativeUsd) : body?.indicativeUsd,
     comment: body?.comment,
+    contactConsent: body?.contactConsent === true,
   });
 
-  return NextResponse.json({ success: true, ...summary });
+  if (!result.ok) {
+    return NextResponse.json({ error: result.error }, { status: 400 });
+  }
+  return NextResponse.json({ success: true, count: result.count, indicativeTotalUsd: result.indicativeTotalUsd });
 }

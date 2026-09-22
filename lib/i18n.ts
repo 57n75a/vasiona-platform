@@ -1,3 +1,5 @@
+import { CONTACT_EMAIL } from "./site";
+
 export type Lang = "en" | "sr";
 
 export const dict = {
@@ -12,6 +14,9 @@ export const dict = {
     aboutTitle: "The story behind VASIONA",
     aboutText:
       "It started with a short 2020 concept note asking a simple question: if a country's airspace is worth charging for, why does that logic quietly stop at the edge of the atmosphere? VASIONA — Serbian for \"cosmos\" — is what that question grew into: a real, working satellite tracker built to make the idea concrete rather than rhetorical. The logo pairs Serbia's territory, highlighted in red, with a dashed sovereignty column rising from it into orbit, ringed by satellite nodes — the same vertical claim aviation has made routine for eighty years, just extended a little further up. The tracker below is real. The fee ledger next to it is a thought experiment, clearly labeled as one, showing what that extension could be worth if the world ever decided the sky's limit wasn't the limit.",
+    aboutText2:
+      "That question now has a second chapter: an idea to help finance, design and build Serbia's first satellite — a small CubeSat that would put a Serbian-flagged system into orbit, rather than only tracking everyone else's. It's an early-stage idea, not a funded program yet, built around a realistic budget and timeline rather than a symbolic gesture.",
+    aboutCta: "See the plan and register your interest →",
     mapTitle: "SERBIA — LIVE OVERFLIGHT MAP",
     mapCaption: "Real border polygon, real logged passes plotted as dots — hover a dot for the satellite name.",
     lastUpdated: "Last updated",
@@ -48,7 +53,7 @@ export const dict = {
 
     // Contact form
     contactTitle: "Get in touch",
-    contactSubtitle: "Questions, feedback, or interested in this as a policy platform? This opens your email client addressed to serbvasiona@gmail.com.",
+    contactSubtitle: `Questions, feedback, or interested in this as a policy platform? This opens your email client addressed to ${CONTACT_EMAIL}.`,
     contactName: "Your name",
     contactEmail: "Your email",
     contactMessage: "Message",
@@ -125,7 +130,8 @@ export const dict = {
     signFormComment: "Comment (optional)",
     signFormSubmit: "Add my support",
     signFormThanks: "Thank you — your support has been counted.",
-    signFormPrivacy: "Only a running total is shown publicly. Names are not published on this page.",
+    signFormEmail: "Email (required — so we can reach out about the project)",
+    signFormPrivacy: `Only a running total is shown publicly. Names and email addresses are not published. To have your data removed, write to ${CONTACT_EMAIL}.`,
     signCountLabel: "people have shown support so far",
 
     // Analytics page
@@ -182,12 +188,43 @@ export const dict = {
     cfCountLabel: "people interested",
     cfTotalLabel: "indicative total (not collected)",
     cfName: "Name (optional)",
-    cfEmail: "Email",
+    cfEmail: "Email (required — so we can reach out)",
     cfAmount: "Indicative amount you'd consider, USD (optional)",
     cfComment: "Comment (optional)",
     cfSubmit: "Register interest",
     cfThanks: "Thank you — your interest has been recorded. This is not a payment or a binding pledge.",
-    cfPrivacy: "This registers interest only. No payment is collected. Only aggregate totals are shown publicly.",
+    cfPrivacy: `This registers interest only. No payment is collected. Only aggregate totals are shown publicly; your email is never published. To have your data removed, write to ${CONTACT_EMAIL}.`,
+    formConsent: "I agree that VASIONA may contact me at this email address about the project. My email is never published.",
+    formErrorEmail: "Please enter a valid email address.",
+    formErrorConsent: "Please tick the box to confirm we may contact you.",
+    formErrorGeneric: "Something went wrong — please try again.",
+
+    // Supporter kit (crowdfunding page, bottom)
+    kitTitle: "Supporter kit — download & print",
+    kitIntro:
+      "Help spread the word. This free kit has everything you need to print and share VASIONA: the logo, a brochure, posters and flyers, stickers, QR codes and ready-made social media images.",
+    kitContents: [
+      "Logo in several versions (PNG — transparent, white and dark backgrounds)",
+      "Brochure — A4, 4 pages (Serbian and English)",
+      "Poster (A3 / A4) and flyer (A5) with QR codes (Serbian and English)",
+      "Printable sticker sheet",
+      "QR codes for vasiona.org, the petition and the crowdfunding page",
+      "Social media images and ready-to-post captions",
+    ],
+    kitButton: "Download the kit (ZIP)",
+    kitNote:
+      "Free to print and share in support of the project. Please keep the logo unaltered and keep the note that VASIONA is a concept platform, not a government agency, and that no payment is collected.",
+
+    // Charts (home page)
+    chartCumTitle: "Cumulative modeled total, year by year",
+    chartCumLegendAnnual: "Annual (model)",
+    chartCumLegendCum: "Cumulative",
+    chartCumNote: "Hypothetical scenario — not real revenue. The last year is pro-rated up to the platform start date.",
+    chartSatsTitle: "Active satellites per year (model input)",
+    chartSatsGrowth: "Growth since 2020",
+    chartSatsCagr: "average annual growth",
+    chartSatsNote: "Publicly reported year-end estimates, rounded (see lib/historicalModel.ts). The last bar is the current estimate.",
+    chartYoY: "year over year",
   },
   sr: {
     title: "🛰️ ВАСИОНА — Орбитирање сателита",
@@ -200,6 +237,9 @@ export const dict = {
     aboutTitle: "Прича иза ВАСИОНЕ",
     aboutText:
       "Све је почело кратком концептуалном белешком из 2020. која поставља једноставно питање: ако се ваздушни простор државе наплаћује, зашто та логика тихо престаје на ивици атмосфере? ВАСИОНА — реч која значи космос/универзум — израсла је из тог питања: стваран, функционалан систем праћења сателита направљен да идеју учини конкретном, а не само реториком. Логотип спаја територију Србије, истакнуту црвеном бојом, са испрекиданом „колоном суверенитета” која се пружа од ње ка орбити, окружену чворовима сателита — иста та вертикална тврдња коју је ваздухопловство учинило уобичајеном последњих осамдесет година, само мало продужена навише. Систем праћења испод је стваран. Табела накнада поред њега је мисаони експеримент, јасно означен као такав, који показује колико би то продужење могло вредети када би свет икада одлучио да небо ипак није граница.",
+    aboutText2:
+      "То питање сада има и други део приче: идеју да се помогне у финансирању, дизајну и изградњи првог српског сателита — малог CubeSat-а који би у орбиту поставио систем под српском заставом, а не само пратио туђе. То је идеја у раној фази, још увек не и финансиран програм, заснована на реалном буџету и временском оквиру, а не на симболичном гесту.",
+    aboutCta: "Погледај план и пријави интересовање →",
     mapTitle: "СРБИЈА — КАРТА ПРЕЛЕТА УЖИВО",
     mapCaption: "Стваран полигон границе, стварно забележени прелети приказани као тачке — задржите показивач на тачки за назив сателита.",
     lastUpdated: "Последње ажурирање",
@@ -236,7 +276,7 @@ export const dict = {
 
     // Contact form
     contactTitle: "Ступите у контакт",
-    contactSubtitle: "Питања, повратне информације, или интересовање за ово као политичку платформу? Ово отвара ваш имејл клијент упућен на serbvasiona@gmail.com.",
+    contactSubtitle: `Питања, повратне информације, или интересовање за ово као политичку платформу? Ово отвара ваш имејл клијент упућен на ${CONTACT_EMAIL}.`,
     contactName: "Ваше име",
     contactEmail: "Ваш имејл",
     contactMessage: "Порука",
@@ -313,7 +353,8 @@ export const dict = {
     signFormComment: "Коментар (опционо)",
     signFormSubmit: "Додај моју подршку",
     signFormThanks: "Хвала — ваша подршка је забележена.",
-    signFormPrivacy: "Јавно се приказује само укупан број. Имена се не објављују на овој страници.",
+    signFormEmail: "Имејл (обавезно — да бисмо вас контактирали у вези пројекта)",
+    signFormPrivacy: `Јавно се приказује само укупан број. Имена и имејл адресе се не објављују. За брисање ваших података пишите на ${CONTACT_EMAIL}.`,
     signCountLabel: "људи је до сада показало подршку",
 
     // Analytics page
@@ -370,12 +411,43 @@ export const dict = {
     cfCountLabel: "заинтересованих људи",
     cfTotalLabel: "индикативан укупан износ (није прикупљен)",
     cfName: "Име (опционо)",
-    cfEmail: "Имејл",
+    cfEmail: "Имејл (обавезно — да бисмо вас контактирали)",
     cfAmount: "Индикативан износ који бисте размотрили, у $ (опционо)",
     cfComment: "Коментар (опционо)",
     cfSubmit: "Пријави интересовање",
     cfThanks: "Хвала — ваше интересовање је забележено. Ово није плаћање нити обавезујуће обећање.",
-    cfPrivacy: "Ово само региструје интересовање. Плаћање се не прикупља. Јавно се приказују само збирни износи.",
+    cfPrivacy: `Ово само региструје интересовање. Плаћање се не прикупља. Јавно се приказују само збирни износи; ваш имејл се никада не објављује. За брисање ваших података пишите на ${CONTACT_EMAIL}.`,
+    formConsent: "Слажем се да ме ВАСИОНА контактира на ову имејл адресу у вези пројекта. Мој имејл се никада не објављује.",
+    formErrorEmail: "Унесите исправну имејл адресу.",
+    formErrorConsent: "Означите поље којим потврђујете да вас можемо контактирати.",
+    formErrorGeneric: "Дошло је до грешке — покушајте поново.",
+
+    // Пакет за подршку (страница за финансирање, на дну)
+    kitTitle: "Пакет за подршку — преузми и одштампај",
+    kitIntro:
+      "Помозите да се прича прошири. Овај бесплатан пакет садржи све што вам треба да одштампате и поделите ВАСИОНУ: лого, брошуру, плакате и флајере, налепнице, QR кодове и готове слике за друштвене мреже.",
+    kitContents: [
+      "Лого у више верзија (PNG — провидна, бела и тамна позадина)",
+      "Брошура — А4, 4 странице (српски и енглески)",
+      "Плакат (А3 / А4) и флајер (А5) са QR кодовима (српски и енглески)",
+      "Лист налепница за штампу",
+      "QR кодови за vasiona.org, петицију и страницу за финансирање",
+      "Слике за друштвене мреже и готови текстови за објаве",
+    ],
+    kitButton: "Преузми пакет (ZIP)",
+    kitNote:
+      "Слободно штампајте и делите у циљу подршке пројекту. Молимо да лого не мењате и да задржите напомену да је ВАСИОНА концептуална платформа, а не државна агенција, и да се плаћање не прикупља.",
+
+    // Графикони (почетна страница)
+    chartCumTitle: "Кумулативни моделовани збир по годинама",
+    chartCumLegendAnnual: "Годишње (модел)",
+    chartCumLegendCum: "Кумулативно",
+    chartCumNote: "Хипотетички сценарио — није стваран приход. Последња година је сразмерно обрачуната до датума покретања платформе.",
+    chartSatsTitle: "Активни сателити по годинама (улаз модела)",
+    chartSatsGrowth: "Раст од 2020.",
+    chartSatsCagr: "просечан годишњи раст",
+    chartSatsNote: "Јавно објављене процене на крају године, заокружене (видети lib/historicalModel.ts). Последњи стубац је тренутна процена.",
+    chartYoY: "у односу на претходну годину",
   },
 } as const;
 

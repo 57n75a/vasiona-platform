@@ -10,7 +10,7 @@ function isAuthorized(req: NextRequest): boolean {
 }
 
 function toCsv(rows: any[]): string {
-  const headers = ["id", "name", "email", "indicative_usd", "comment", "created_at"];
+  const headers = ["id", "name", "email", "indicative_usd", "comment", "contact_consent", "created_at"];
   const escape = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
   const lines = [headers.join(",")];
   for (const row of rows) {

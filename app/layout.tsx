@@ -1,9 +1,22 @@
 import "./globals.css";
+import { SITE_URL } from "@/lib/site";
+
+const TITLE = "VASIONA — Satellite Orbiting / Орбитирање сателита";
+const DESCRIPTION =
+  "Serbian satellite orbiting monitoring platform (hypothetical fee model). / Платформа за праћење орбитирања сателита изнад Србије (хипотетички модел накнада).";
 
 export const metadata = {
-  title: "VASIONA — Satellite Orbiting / Орбитирање сателита",
-  description:
-    "Serbian satellite orbiting monitoring platform (hypothetical fee model). / Платформа за праћење орбитирања сателита изнад Србије (хипотетички модел накнада).",
+  metadataBase: new URL(SITE_URL),
+  title: TITLE,
+  description: DESCRIPTION,
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    url: SITE_URL,
+    siteName: "VASIONA",
+    type: "website",
+    images: ["/vasiona-seal.png"],
+  },
 };
 
 export const viewport = {

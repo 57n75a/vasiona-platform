@@ -1,5 +1,6 @@
 import { getDict, type Lang } from "@/lib/i18n";
 import { LOGO_SRC } from "@/app/components/logo";
+import { CONTACT_EMAIL, SITE_DOMAIN, SITE_URL } from "@/lib/site";
 
 const SOCIAL_LINKS = [
   { name: "X", url: "https://x.com/serbvasiona", icon: "𝕏" },
@@ -57,8 +58,9 @@ export default function Footer({ lang }: { lang: Lang }) {
             <div className="muted" style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>
               {t.footerContact}
             </div>
-            <div style={{ fontSize: 13, marginBottom: 10 }}>
-              <a href="mailto:serbvasiona@gmail.com" style={{ color: "var(--text)" }}>serbvasiona@gmail.com</a>
+            <div style={{ fontSize: 13, marginBottom: 10, display: "flex", flexDirection: "column", gap: 4 }}>
+              <a href={SITE_URL} style={{ color: "var(--text)", fontWeight: 600 }}>{SITE_DOMAIN}</a>
+              <a href={`mailto:${CONTACT_EMAIL}`} style={{ color: "var(--text)" }}>{CONTACT_EMAIL}</a>
             </div>
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
               {SOCIAL_LINKS.map((s) => (
@@ -90,7 +92,7 @@ export default function Footer({ lang }: { lang: Lang }) {
       </div>
 
       <div className="muted" style={{ maxWidth: 900, margin: "18px auto 0", fontSize: 11.5, lineHeight: 1.5 }}>
-        <div>© Copyright VASIONA 2020 · v0.5</div>
+        <div>© Copyright VASIONA 2020 · {SITE_DOMAIN} · v0.6</div>
         <div style={{ marginTop: 4 }}>{t.footerRights}</div>
       </div>
     </footer>
