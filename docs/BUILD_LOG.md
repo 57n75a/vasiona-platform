@@ -412,6 +412,83 @@ cleared. Flagging this pattern explicitly for future removal instructions.
    bridging sentence on its story page, so it flows into the existing "Serbia's first
    satellite" page that follows it. Kit re-zipped; size unchanged (~18 MB).
 
+## 2026-09-22 — v0.8: "the live map doesn't update" (СРБИЈА — КАРТА ПРЕЛЕТА УЖИВО)
+
+**Root cause.** `lib/cronRunner.ts` checked a *single instant* (`new Date()` at
+the moment the job runs) against the full "active" CelesTrak catalog
+(10,000+ objects today), strictly sequentially, with no time budget, and only
+wrote `cron_status.last_run_at` **after the entire loop finished**. Two ways
+that fails silently:
+- Serbia is small; a LEO satellite's ground track crosses it in well under a
+  minute. Checking one instant makes "did this run find anything?" mostly
+  luck — a run can legitimately complete and correctly find zero satellites
+  overhead at that exact millisecond.
+- Scanning 10,000+ objects one at a time, with no time budget, risks
+  exceeding the platform's function-timeout ceiling (`maxDuration = 60` in
+  the route files — but confirm your actual Vercel plan allows that; see
+  DEPLOY.md). If the platform kills the function mid-loop, `recordCronRun()`
+  — the line that updates `lastRunAt` — never runs. That is indistinguishable
+  from "nothing happened" on the homepage: no error, no new dots, no new
+  timestamp, and a `curl` to the endpoint just hangs until you give up.
+
+**Fix, in `lib/cronRunner.ts` / `lib/propagate.ts` / `lib/tle.ts`:**
+1. **Inclination pre-filter.** `tleInclinationDeg()` reads a satellite's
+   inclination straight out of TLE line 2 text — no propagation needed. A
+   satellite's ground track never reaches a latitude above
+   `min(inclination, 180 - inclination)`, so anything under ~40° (Serbia sits
+   at 41.8-46.2°N) is skipped before ever building a satrec. This alone
+   removes most of the geostationary belt and other low-inclination traffic
+   from the work the request has to do.
+2. **Time-window sampling.** Instead of one instant, each surviving candidate
+   is sampled at `CRON_STEP_SECONDS` intervals (default 15s) across
+   `CRON_WINDOW_SECONDS` (default 240s = 4 minutes) — 17 chances instead of 1.
+   Matters even more given Vercel Hobby-tier accounts can only schedule this
+   job once a day (`app/api/admin/cron-settings/route.ts` already noted this).
+3. **Hard time budget, always-write status.** The whole fetch+scan is wrapped
+   so it bails out at `CRON_TIME_BUDGET_MS` (default 45s, comfortably under
+   the 60s `maxDuration`) and marks the result `truncated: true` rather than
+   letting the platform kill it. `recordCronRun()` now runs unconditionally
+   after that block (success, error, or truncation) — `lastRunAt` always
+   moves on every invocation, full stop.
+4. **Richer, honest response JSON.** `checked`, `candidatesAfterInclinationFilter`,
+   `matchedThisRun`, `matchedSatellites` (names), `windowSeconds`, `stepSeconds`,
+   `durationMs`, and `truncated`/`error` when relevant — so a manual `curl` or
+   the admin console's "Run now" immediately shows what happened instead of
+   an ambiguous empty result.
+5. `fetchTleGroup()` now takes an `AbortSignal` and fails fast (clear error
+   message) on a stalled CelesTrak response instead of hanging toward the
+   platform's own timeout.
+
+**If the map still looks stale after this, check (roughly in order):**
+- You're hitting the **same production deployment** the site itself reads
+  from. `vasiona-platform.vercel.app` should still be an alias for the same
+  project as `vasiona.org`, but confirm in the Vercel dashboard — a project
+  rename or a second project would silently write to a different database.
+  Prefer testing against `https://vasiona.org/api/cron/fetch-tles` directly.
+- Cron might be toggled off in the admin console (`cron_status.enabled =
+  false`). A plain `curl` to `/api/cron/fetch-tles` will then return almost
+  instantly with `skipped: true` — the admin console's "Run now" bypasses
+  this (`force: true`), a raw `curl` does not.
+- `CRON_SECRET` (for the scheduled/curl endpoint) and `ADMIN_SECRET` (for the
+  admin console) must match what's set in Vercel's Project Settings →
+  Environment Variables for the environment you're hitting.
+- Check your actual Vercel plan's serverless function timeout — `maxDuration
+  = 60` in the route files is a request, not a guarantee; some plans cap
+  lower. If so, lower `CRON_TIME_BUDGET_MS` (env var) to match.
+
+## 2026-09-22 — v0.9: cooldown on the admin "Run cron now" button
+Manual runs now gray the button out for 4 minutes after each one finishes
+(`RUN_COOLDOWN_MS` in `app/admin/page.tsx`), with a live "Available in m:ss"
+countdown, so an impatient click (or several) can't fire off overlapping
+runs. Seeded from the server's real `cron_status.last_run_at` via a new
+read-only endpoint (`app/api/admin/cron-status/route.ts`), so reloading the
+admin page mid-cooldown still shows the correct remaining time instead of
+resetting to "available". This is a UI courtesy only — the underlying
+`/api/admin/run-cron` and `/api/cron/fetch-tles` endpoints are not
+rate-limited server-side; a direct `curl` with the right secret still works
+any time. Adjust `RUN_COOLDOWN_MS` if 4 minutes isn't the right number for
+your CelesTrak/DB load.
+
 ## Known simplifications carried through every version
 1. ~~**Serbia geofence** is a lat/lon bounding box~~ — **Updated:** now uses a real
    ~130-point national border polygon (ray-casting point-in-polygon test) instead

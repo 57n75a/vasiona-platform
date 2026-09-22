@@ -14,15 +14,27 @@ export interface TleRecord {
  * script/style host list for that sandbox, which is exactly why the earlier
  * artifact demo used a baked-in snapshot TLE instead of a live fetch.
  */
-export async function fetchTleGroup(group = "active"): Promise<TleRecord[]> {
+export async function fetchTleGroup(group = "active", signal?: AbortSignal): Promise<TleRecord[]> {
   const url = `https://celestrak.org/NORAD/elements/gp.php?GROUP=${encodeURIComponent(
     group
   )}&FORMAT=tle`;
 
-  const res = await fetch(url, {
-    // Cron runs are infrequent; no need to cache aggressively at the fetch layer.
-    cache: "no-store",
-  });
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      // Cron runs are infrequent; no need to cache aggressively at the fetch layer.
+      cache: "no-store",
+      signal,
+    });
+  } catch (err) {
+    // A hung/slow CelesTrak response should fail fast and clearly (the caller
+    // sets a timeout on `signal`) rather than silently eating the cron job's
+    // whole time budget — see lib/cronRunner.ts.
+    if (err instanceof Error && err.name === "AbortError") {
+      throw new Error("CelesTrak fetch timed out");
+    }
+    throw err;
+  }
 
   if (!res.ok) {
     throw new Error(`CelesTrak fetch failed: ${res.status} ${res.statusText}`);

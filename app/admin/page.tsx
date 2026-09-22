@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Signature {
   id: number;
@@ -24,6 +24,21 @@ interface InterestRow {
 
 type Tab = "cron" | "petition" | "crowdfund";
 
+// A manual run can genuinely take up to ~45s (see CRON_TIME_BUDGET_MS in
+// lib/cronRunner.ts) and hits both CelesTrak and the DB fairly hard —
+// disabling the button for a few minutes afterward stops someone (or an
+// impatient double-click) from firing off several overlapping runs in a row.
+// Purely a UI courtesy: the underlying endpoint isn't rate-limited server-side,
+// so a direct curl still works any time.
+const RUN_COOLDOWN_MS = 4 * 60 * 1000; // 4 minutes
+
+function formatCountdown(ms: number): string {
+  const total = Math.max(0, Math.ceil(ms / 1000));
+  const m = Math.floor(total / 60);
+  const s = total % 60;
+  return `${m}:${s.toString().padStart(2, "0")}`;
+}
+
 export default function AdminPage() {
   const [secret, setSecret] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
@@ -38,6 +53,22 @@ export default function AdminPage() {
   const [cronEnabled, setCronEnabledState] = useState<boolean | null>(null);
   const [configuredSchedule, setConfiguredSchedule] = useState<string>("");
   const [toggling, setToggling] = useState(false);
+  const [cooldownUntil, setCooldownUntil] = useState<number | null>(null);
+  const [now, setNow] = useState<number>(() => Date.now());
+
+  // Ticks once a second only while a cooldown is actually active, so the
+  // "Available in m:ss" label counts down live instead of needing a refresh.
+  useEffect(() => {
+    if (!cooldownUntil) return;
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [cooldownUntil]);
+
+  const cooldownRemainingMs = cooldownUntil ? cooldownUntil - now : 0;
+  const cooldownActive = cooldownRemainingMs > 0;
+  useEffect(() => {
+    if (cooldownUntil && !cooldownActive) setCooldownUntil(null);
+  }, [cooldownActive, cooldownUntil]);
 
   async function authedFetch(path: string, opts: RequestInit = {}) {
     return fetch(path, {
@@ -66,12 +97,24 @@ export default function AdminPage() {
       setInterest(cfData.interest ?? []);
       setLoggedIn(true);
 
-      // Fetch cron settings too, now that we have a confirmed-good secret
-      const csRes = await fetch("/api/admin/cron-settings", { headers: { Authorization: `Bearer ${secret}` } });
+      // Fetch cron settings + last-run status too, now that we have a
+      // confirmed-good secret — status seeds the cooldown so a page reload
+      // shortly after a run still shows the countdown instead of resetting it.
+      const [csRes, statusRes] = await Promise.all([
+        fetch("/api/admin/cron-settings", { headers: { Authorization: `Bearer ${secret}` } }),
+        fetch("/api/admin/cron-status", { headers: { Authorization: `Bearer ${secret}` } }),
+      ]);
       if (csRes.ok) {
         const csData = await csRes.json();
         setCronEnabledState(csData.enabled);
         setConfiguredSchedule(csData.configuredSchedule);
+      }
+      if (statusRes.ok) {
+        const statusData = await statusRes.json();
+        if (statusData.lastRunAt) {
+          const until = new Date(statusData.lastRunAt).getTime() + RUN_COOLDOWN_MS;
+          if (until > Date.now()) setCooldownUntil(until);
+        }
       }
     } catch {
       setError("Something went wrong. Check ADMIN_SECRET is set on the server.");
@@ -91,6 +134,10 @@ export default function AdminPage() {
       setCronResult({ error: "request_failed" });
     } finally {
       setCronRunning(false);
+      // Start the cooldown from when the run actually finished, not from
+      // when it was kicked off — a run can take up to ~45s on its own.
+      setCooldownUntil(Date.now() + RUN_COOLDOWN_MS);
+      setNow(Date.now());
     }
   }
 
@@ -222,12 +269,31 @@ export default function AdminPage() {
               <div className="muted" style={{ margin: "18px 0 10px", textTransform: "uppercase", fontSize: 12, letterSpacing: 1 }}>
                 Manual Trigger
               </div>
-              <p style={{ fontSize: 13, marginBottom: 14 }}>
-                Runs the job right now regardless of the toggle above. Full "active" catalog can take a while —
-                this waits for it to finish.
+              <p style={{ fontSize: 13, marginBottom: 6 }}>
+                Runs the job right now regardless of the toggle above. Samples a short window per candidate satellite
+                (see docs/BUILD_LOG.md) and always finishes within ~45s — it won't hang.
               </p>
-              <button onClick={handleRunCron} disabled={cronRunning} style={{ ...buttonStyle, opacity: cronRunning ? 0.7 : 1 }}>
-                {cronRunning ? "Running… (this can take a minute)" : "Run cron now"}
+              <p className="muted" style={{ fontSize: 12, marginBottom: 14 }}>
+                To avoid firing off overlapping runs, this button re-enables{" "}
+                {Math.round(RUN_COOLDOWN_MS / 60000)} minutes after each one finishes. The underlying endpoint itself
+                has no such limit — a direct <code>curl</code> with <code>CRON_SECRET</code> works any time.
+              </p>
+              <button
+                onClick={handleRunCron}
+                disabled={cronRunning || cooldownActive}
+                style={{
+                  ...buttonStyle,
+                  opacity: cronRunning || cooldownActive ? 0.55 : 1,
+                  cursor: cronRunning || cooldownActive ? "not-allowed" : "pointer",
+                  background: cooldownActive && !cronRunning ? "var(--border)" : buttonStyle.background,
+                  color: cooldownActive && !cronRunning ? "var(--text)" : buttonStyle.color,
+                }}
+              >
+                {cronRunning
+                  ? "Running… (usually under a minute)"
+                  : cooldownActive
+                  ? `Available in ${formatCountdown(cooldownRemainingMs)}`
+                  : "Run cron now"}
               </button>
               {cronResult && (
                 <pre
