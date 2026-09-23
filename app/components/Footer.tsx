@@ -92,7 +92,7 @@ export default function Footer({ lang }: { lang: Lang }) {
       </div>
 
       <div className="muted" style={{ maxWidth: 900, margin: "18px auto 0", fontSize: 11.5, lineHeight: 1.5 }}>
-        <div>© Copyright VASIONA 2020 · {SITE_DOMAIN} · v0.6</div>
+        <div>© Copyright VASIONA 2020 · {SITE_DOMAIN} · v0.7.1</div>
         <div style={{ marginTop: 4 }}>{t.footerRights}</div>
       </div>
     </footer>

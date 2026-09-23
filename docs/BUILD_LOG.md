@@ -489,6 +489,28 @@ rate-limited server-side; a direct `curl` with the right secret still works
 any time. Adjust `RUN_COOLDOWN_MS` if 4 minutes isn't the right number for
 your CelesTrak/DB load.
 
+## 2026-09-22 — v0.10: tracked run duration + average, in the admin console
+Answering "what's the average time to run a cron job?" required actually
+recording it — `durationMs` was previously only in a single run's response
+JSON, never persisted. Now:
+- New `cron_run_log` table (see `ensureCronStatusSchema` in
+  `lib/cronStatusService.ts`) — one row per run, keeping the most recent 200
+  (duration, catalog size, checked/candidates/failed/matched, truncated,
+  error). `cron_status` (the single "current state" row) also gained a
+  `duration_ms` column for the last run alone.
+- `lib/cronRunner.ts` now passes `durationMs`, `candidates`, `truncated` and
+  `error` into `recordCronRun()`, so every run — including truncated or
+  failed ones — gets logged, not just clean successes.
+- `getCronRunHistory(limit)` computes two averages over the returned runs:
+  `averageDurationMsCleanOnly` (excludes truncated/errored runs — the more
+  meaningful number) and `averageDurationMs` (all runs, outliers included).
+- `/api/admin/cron-status` (GET, ADMIN_SECRET-protected) now returns both the
+  current status and this history in one response.
+- Admin console: a "Run History" panel under the manual-trigger button shows
+  both averages plus a table of the last 20 runs (when, duration, checked,
+  matched, and a truncated/error note). Refreshes automatically after every
+  manual run and on page load.
+
 ## Known simplifications carried through every version
 1. ~~**Serbia geofence** is a lat/lon bounding box~~ — **Updated:** now uses a real
    ~130-point national border polygon (ray-casting point-in-polygon test) instead

@@ -183,8 +183,12 @@ export async function runCronJob(options: { force?: boolean } = {}): Promise<Cro
   await recordCronRun({
     catalogSize,
     checked,
+    candidates,
     failed,
     overSerbia: matchedThisRun,
+    durationMs,
+    truncated,
+    error: runError,
   });
 
   return {

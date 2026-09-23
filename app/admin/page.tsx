@@ -55,6 +55,7 @@ export default function AdminPage() {
   const [toggling, setToggling] = useState(false);
   const [cooldownUntil, setCooldownUntil] = useState<number | null>(null);
   const [now, setNow] = useState<number>(() => Date.now());
+  const [cronHistory, setCronHistory] = useState<any>(null);
 
   // Ticks once a second only while a cooldown is actually active, so the
   // "Available in m:ss" label counts down live instead of needing a refresh.
@@ -77,6 +78,18 @@ export default function AdminPage() {
     });
   }
 
+  async function fetchCronStatus() {
+    const res = await fetch("/api/admin/cron-status", { headers: { Authorization: `Bearer ${secret}` } });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data.lastRunAt) {
+      const until = new Date(data.lastRunAt).getTime() + RUN_COOLDOWN_MS;
+      if (until > Date.now()) setCooldownUntil(until);
+    }
+    setCronHistory(data.history ?? null);
+    return data;
+  }
+
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -97,25 +110,16 @@ export default function AdminPage() {
       setInterest(cfData.interest ?? []);
       setLoggedIn(true);
 
-      // Fetch cron settings + last-run status too, now that we have a
+      // Fetch cron settings + last-run status/history too, now that we have a
       // confirmed-good secret — status seeds the cooldown so a page reload
       // shortly after a run still shows the countdown instead of resetting it.
-      const [csRes, statusRes] = await Promise.all([
-        fetch("/api/admin/cron-settings", { headers: { Authorization: `Bearer ${secret}` } }),
-        fetch("/api/admin/cron-status", { headers: { Authorization: `Bearer ${secret}` } }),
-      ]);
+      const csRes = await fetch("/api/admin/cron-settings", { headers: { Authorization: `Bearer ${secret}` } });
       if (csRes.ok) {
         const csData = await csRes.json();
         setCronEnabledState(csData.enabled);
         setConfiguredSchedule(csData.configuredSchedule);
       }
-      if (statusRes.ok) {
-        const statusData = await statusRes.json();
-        if (statusData.lastRunAt) {
-          const until = new Date(statusData.lastRunAt).getTime() + RUN_COOLDOWN_MS;
-          if (until > Date.now()) setCooldownUntil(until);
-        }
-      }
+      await fetchCronStatus();
     } catch {
       setError("Something went wrong. Check ADMIN_SECRET is set on the server.");
     } finally {
@@ -138,6 +142,7 @@ export default function AdminPage() {
       // when it was kicked off — a run can take up to ~45s on its own.
       setCooldownUntil(Date.now() + RUN_COOLDOWN_MS);
       setNow(Date.now());
+      fetchCronStatus(); // pulls the just-finished run into cronHistory
     }
   }
 
@@ -308,6 +313,64 @@ export default function AdminPage() {
                 >
                   {JSON.stringify(cronResult, null, 2)}
                 </pre>
+              )}
+
+              {cronHistory && cronHistory.runs?.length > 0 && (
+                <div style={{ marginTop: 20 }}>
+                  <div className="muted" style={{ textTransform: "uppercase", fontSize: 12, letterSpacing: 1, marginBottom: 8 }}>
+                    Run History (last {cronHistory.runs.length})
+                  </div>
+                  <div style={{ display: "flex", gap: 24, marginBottom: 10, flexWrap: "wrap" }}>
+                    <div>
+                      <div style={{ fontSize: 20, fontWeight: 700 }}>
+                        {cronHistory.averageDurationMsCleanOnly !== null
+                          ? `${(cronHistory.averageDurationMsCleanOnly / 1000).toFixed(1)}s`
+                          : "—"}
+                      </div>
+                      <div className="muted" style={{ fontSize: 11.5 }}>average duration (clean runs)</div>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 20, fontWeight: 700 }}>
+                        {cronHistory.averageDurationMs !== null ? `${(cronHistory.averageDurationMs / 1000).toFixed(1)}s` : "—"}
+                      </div>
+                      <div className="muted" style={{ fontSize: 11.5 }}>average duration (all runs, incl. truncated/errored)</div>
+                    </div>
+                  </div>
+                  <div style={{ overflowX: "auto" }}>
+                    <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+                      <thead>
+                        <tr>
+                          <th style={{ textAlign: "left", padding: "4px 8px" }}>When</th>
+                          <th style={{ textAlign: "right", padding: "4px 8px" }}>Duration</th>
+                          <th style={{ textAlign: "right", padding: "4px 8px" }}>Checked</th>
+                          <th style={{ textAlign: "right", padding: "4px 8px" }}>Matched</th>
+                          <th style={{ textAlign: "left", padding: "4px 8px" }}>Note</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {cronHistory.runs.map((r: any, i: number) => (
+                          <tr key={i} style={{ borderTop: "1px solid var(--border)" }}>
+                            <td style={{ padding: "4px 8px" }}>{new Date(r.ranAt).toISOString().replace("T", " ").slice(0, 19)} UTC</td>
+                            <td style={{ padding: "4px 8px", textAlign: "right" }}>
+                              {r.durationMs !== null ? `${(r.durationMs / 1000).toFixed(1)}s` : "—"}
+                            </td>
+                            <td style={{ padding: "4px 8px", textAlign: "right" }}>{r.checked ?? "—"}</td>
+                            <td style={{ padding: "4px 8px", textAlign: "right" }}>{r.matched ?? "—"}</td>
+                            <td style={{ padding: "4px 8px" }}>
+                              {r.error ? (
+                                <span style={{ color: "var(--accent)" }}>error: {r.error}</span>
+                              ) : r.truncated ? (
+                                <span className="muted">truncated (time budget)</span>
+                              ) : (
+                                ""
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               )}
             </div>
           )}
