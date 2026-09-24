@@ -9,6 +9,7 @@ import Footer from "@/app/components/Footer";
 import { LOGO_SRC } from "@/app/components/logo";
 
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 const FEE_PER_PASS_USD = 25;
 const COUNTRIES = [

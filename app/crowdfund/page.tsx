@@ -7,6 +7,7 @@ import { LOGO_SRC } from "@/app/components/logo";
 import { CONTACT_EMAIL, SUPPORT_KIT_PATH, SUPPORT_KIT_SIZE_MB } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 export default async function CrowdfundPage({
   searchParams,

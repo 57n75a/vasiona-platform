@@ -1,4 +1,4 @@
-import { sql } from "@vercel/postgres";
+import { sql } from "@/lib/pg";
 
 export async function ensureCronStatusSchema() {
   await sql`

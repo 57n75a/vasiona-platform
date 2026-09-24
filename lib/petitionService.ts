@@ -1,4 +1,4 @@
-import { sql } from "@vercel/postgres";
+import { sql } from "@/lib/pg";
 import { normalizeEmail, type FormError } from "@/lib/validation";
 
 export async function ensurePetitionSchema() {

@@ -1,4 +1,4 @@
-import { sql } from "@vercel/postgres";
+import { sql } from "@/lib/pg";
 import { fetchTleText, parseTleText, type TleRecord } from "@/lib/tle";
 
 // CelesTrak refreshes each group every 2 hours and answers 403 to anyone who

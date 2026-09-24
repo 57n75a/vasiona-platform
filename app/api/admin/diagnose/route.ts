@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "node:crypto";
-import { sql } from "@vercel/postgres";
+import { sql } from "@/lib/pg";
 
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 // Bump this whenever the cron/TLE code changes so a response from this route
 // also proves which version of the code is actually serving the request.

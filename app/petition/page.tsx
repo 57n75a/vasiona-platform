@@ -6,6 +6,7 @@ import PetitionSignForm from "@/app/components/PetitionSignForm";
 import { LOGO_SRC } from "@/app/components/logo";
 
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 export default async function PetitionPage({
   searchParams,

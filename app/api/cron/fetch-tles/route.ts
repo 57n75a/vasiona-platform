@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { runCronJob } from "@/lib/cronRunner";
 
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 export const maxDuration = 60; // seconds — raise on Pro plan if the catalog group is large
 
 /**

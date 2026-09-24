@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ensurePetitionSchema, addSignature } from "@/lib/petitionService";
 
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 export async function POST(req: NextRequest) {
   await ensurePetitionSchema();

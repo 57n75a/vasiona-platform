@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ensureCronStatusSchema, getCronEnabled, setCronEnabled } from "@/lib/cronStatusService";
 
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 function isAuthorized(req: NextRequest): boolean {
   const secret = process.env.ADMIN_SECRET;

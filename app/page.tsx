@@ -11,6 +11,7 @@ import { CumulativeTotalChart, SatellitesChart } from "@/app/components/GrowthCh
 import { getCronStatus } from "@/lib/cronStatusService";
 
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 export default async function Home({
   searchParams,

@@ -1,4 +1,4 @@
-import { sql } from "@vercel/postgres";
+import { sql } from "@/lib/pg";
 import { classifyOperator, classifyObjectType } from "@/lib/operatorLookup";
 
 export async function ensureSchema() {
