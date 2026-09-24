@@ -2,7 +2,7 @@ import { fetchTleGroup } from "@/lib/tle";
 import { buildSatrec, subPointAt, tleInclinationDeg } from "@/lib/propagate";
 import { isOverSerbia } from "@/lib/serbia";
 import { ensureSchema, upsertSatellite, logOverflight } from "@/lib/db";
-import { ensureCronStatusSchema, recordCronRun, getCronEnabled } from "@/lib/cronStatusService";
+import { ensureCronStatusSchema, recordCronRun, getCronEnabled, getCronStatus } from "@/lib/cronStatusService";
 
 // Serbia's polygon spans roughly 41.8-46.2°N. A satellite's ground track never
 // reaches a latitude higher than min(inclination, 180 - inclination), so
@@ -59,6 +59,17 @@ export interface CronRunResult {
   skipped?: boolean;
   reason?: string;
   error?: string;
+  /**
+   * Set by re-reading cron_status immediately after writing it. If this is
+   * false, the write genuinely didn't take (or something else overwrote it
+   * within milliseconds) — a real backend bug. If it's true here but the
+   * public homepage still shows an old "last updated" time, the write is
+   * fine and the problem is downstream of the database (caching, a stale
+   * deployment, or the browser/CDN serving an old page) — see
+   * docs/BUILD_LOG.md, "the live map still isn't updating (round 2)".
+   */
+  statusWriteConfirmed?: boolean;
+  statusRowLastRunAt?: string | null;
 }
 
 /**
@@ -191,6 +202,22 @@ export async function runCronJob(options: { force?: boolean } = {}): Promise<Cro
     error: runError,
   });
 
+  // Read back what was just written, through the exact same function the
+  // public homepage uses (getCronStatus). If this doesn't show a lastRunAt
+  // from (essentially) right now, the write itself is the problem. If it
+  // does, but the public page still looks stale, the write is fine and
+  // something downstream (caching, a stale deployment, the browser) is at
+  // fault — this one field is what tells the two apart.
+  let statusWriteConfirmed = false;
+  let statusRowLastRunAt: string | null = null;
+  try {
+    const confirmedStatus = await getCronStatus();
+    statusRowLastRunAt = confirmedStatus.lastRunAt ? confirmedStatus.lastRunAt.toISOString() : null;
+    statusWriteConfirmed = confirmedStatus.lastRunAt !== null && Date.now() - confirmedStatus.lastRunAt.getTime() < 30_000;
+  } catch {
+    // Leave statusWriteConfirmed = false — the read itself failing is worth knowing about too.
+  }
+
   return {
     ranAt: startedAt.toISOString(),
     group,
@@ -206,5 +233,7 @@ export async function runCronJob(options: { force?: boolean } = {}): Promise<Cro
     durationMs,
     ...(truncated ? { truncated } : {}),
     ...(runError ? { error: runError } : {}),
+    statusWriteConfirmed,
+    statusRowLastRunAt,
   };
 }

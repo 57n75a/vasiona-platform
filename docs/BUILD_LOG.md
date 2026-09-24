@@ -511,6 +511,61 @@ JSON, never persisted. Now:
   matched, and a truncated/error note). Refreshes automatically after every
   manual run and on page load.
 
+## 2026-09-22 — v0.11: "the live map still isn't updating" (round 2) — investigation + diagnostics
+
+Reported symptom: the admin console's Run History clearly shows manual runs
+succeeding (`checked: 15987, matched: 31`, a few seconds each — the v0.8 fix
+worked), but the homepage's "Последње ажурирање" under СРБИЈА — КАРТА
+ПРЕЛЕТА УЖИВО stayed stuck at that day's 03:27 UTC — the scheduled run's
+time — never advancing to match any of the later manual runs.
+
+**Traced as far as static analysis allows.** `recordCronRun()` (in
+`lib/cronStatusService.ts`) does two `sql` statements in sequence: an
+`INSERT ... ON CONFLICT (id) DO UPDATE` on the single-row `cron_status` table,
+then an `INSERT` into `cron_run_log`. Both routes (`/api/cron/fetch-tles` and
+`/api/admin/run-cron`) call the exact same `runCronJob()` → `recordCronRun()`
+path, and both wrap it in a try/catch that would return a 502 with a visible
+error if either statement threw. Since the admin console's Run History (fed
+by `cron_run_log`) shows clean 200-OK results with no error, the `cron_status`
+UPSERT — which runs *before* the log insert in the same function call, with
+nothing between them — must also have executed without throwing. In other
+words: everything I can verify from the code says the write should have
+succeeded. I could not reproduce this without access to the live deployment
+or its Postgres instance, so rather than guess further, this update adds the
+instrumentation needed to tell, from the very next run, which side of the
+write/read boundary the problem is actually on:
+
+1. **Self-verifying writes.** `runCronJob()` now re-reads `getCronStatus()`
+   immediately after `recordCronRun()` and reports `statusWriteConfirmed`
+   (true only if the row's `lastRunAt` is within the last 30s) and
+   `statusRowLastRunAt` in the response. The admin console shows this as a
+   green/red banner right under the manual-trigger button after every run.
+   - If it's ever red: the write itself is failing — a real, previously
+     invisible backend bug, now caught the moment it happens instead of
+     silently vanishing.
+   - If it's consistently green, but the *public* homepage still shows an
+     old time: the database write is provably fine, and the problem is
+     downstream — most likely (a) a browser cache on whatever tab is being
+     used to check (try a hard refresh / private window), (b) a stale CDN
+     edge-cache entry left over from before `app/page.tsx` had
+     `export const dynamic = "force-dynamic"` (it does, and has for several
+     versions — a fresh production deployment should force Vercel to drop
+     any such entry), or (c) the admin session and the public site being on
+     two different deployments/environments (e.g. a Preview URL vs.
+     Production) that don't share the same Postgres database — worth
+     double-checking the exact URL the admin console was opened from.
+2. **A permanent "Cron Status — as the public homepage reads it" panel** in
+   the admin console (`/api/admin/cron-status`, unchanged endpoint), with a
+   "Refresh (no run)" button that re-reads `cron_status` on demand *without*
+   triggering a new run — so it can be compared directly against what
+   vasiona.org shows, at the same moment, without a run being the variable.
+
+**Next time this comes up:** trigger one manual run, read the green/red
+banner, and if it's green, compare its timestamp against vasiona.org after a
+hard refresh. That single comparison will say definitively which of the two
+explanations above it is, which this session could not determine without
+deployment access.
+
 ## Known simplifications carried through every version
 1. ~~**Serbia geofence** is a lat/lon bounding box~~ — **Updated:** now uses a real
    ~130-point national border polygon (ray-casting point-in-polygon test) instead

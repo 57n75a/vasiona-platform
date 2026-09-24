@@ -63,6 +63,16 @@ export interface CronRunStats {
   error?: string;
 }
 
+/**
+ * Writes both the "current state" row (cron_status, id=1) and an append-only
+ * history row (cron_run_log). These are two separate statements, not one
+ * transaction — if you're investigating "the log shows a run but the status
+ * row didn't move", check the caller: lib/cronRunner.ts re-reads
+ * getCronStatus() immediately after calling this and reports whether the
+ * timestamp it just wrote is actually the one that comes back (see
+ * `statusWriteConfirmed` in CronRunResult) specifically to catch this class
+ * of bug without needing direct DB access.
+ */
 export async function recordCronRun(stats: CronRunStats) {
   await ensureCronStatusSchema();
   await sql`

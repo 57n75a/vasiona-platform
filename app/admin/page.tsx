@@ -56,6 +56,7 @@ export default function AdminPage() {
   const [cooldownUntil, setCooldownUntil] = useState<number | null>(null);
   const [now, setNow] = useState<number>(() => Date.now());
   const [cronHistory, setCronHistory] = useState<any>(null);
+  const [rawStatus, setRawStatus] = useState<any>(null);
 
   // Ticks once a second only while a cooldown is actually active, so the
   // "Available in m:ss" label counts down live instead of needing a refresh.
@@ -87,6 +88,16 @@ export default function AdminPage() {
       if (until > Date.now()) setCooldownUntil(until);
     }
     setCronHistory(data.history ?? null);
+    setRawStatus({
+      lastRunAt: data.lastRunAt,
+      catalogSize: data.catalogSize,
+      checked: data.checked,
+      failed: data.failed,
+      overSerbia: data.overSerbia,
+      durationMs: data.durationMs,
+      enabled: data.enabled,
+      fetchedAt: new Date().toISOString(),
+    });
     return data;
   }
 
@@ -272,6 +283,60 @@ export default function AdminPage() {
               </p>
 
               <div className="muted" style={{ margin: "18px 0 10px", textTransform: "uppercase", fontSize: 12, letterSpacing: 1 }}>
+                Cron Status — as the public homepage reads it
+              </div>
+              <div
+                style={{
+                  background: "var(--bg2)",
+                  border: "1px solid var(--border)",
+                  borderRadius: 8,
+                  padding: 12,
+                  fontSize: 12.5,
+                  marginBottom: 14,
+                }}
+              >
+                {rawStatus ? (
+                  <>
+                    <div>
+                      <strong>Last run (per cron_status):</strong>{" "}
+                      {rawStatus.lastRunAt
+                        ? new Date(rawStatus.lastRunAt).toISOString().replace("T", " ").slice(0, 19) + " UTC"
+                        : "never"}
+                    </div>
+                    <div style={{ marginTop: 4 }}>
+                      catalogSize={rawStatus.catalogSize ?? "—"} · checked={rawStatus.checked ?? "—"} · failed=
+                      {rawStatus.failed ?? "—"} · overSerbia={rawStatus.overSerbia ?? "—"} · durationMs=
+                      {rawStatus.durationMs ?? "—"} · enabled={String(rawStatus.enabled)}
+                    </div>
+                    <div className="muted" style={{ marginTop: 6, fontSize: 11 }}>
+                      Fetched from the server just now, at{" "}
+                      {new Date(rawStatus.fetchedAt).toISOString().replace("T", " ").slice(0, 19)} UTC. If this
+                      matches what vasiona.org shows under "Последње ажурирање" (hard-refresh that page to rule out a
+                      browser cache), the two are reading the same data — compare this line's timestamp against
+                      the Run History table below after your next manual run.
+                    </div>
+                  </>
+                ) : (
+                  <span className="muted">Loading…</span>
+                )}
+                <button
+                  onClick={() => fetchCronStatus()}
+                  style={{
+                    marginTop: 10,
+                    background: "transparent",
+                    border: "1px solid var(--border)",
+                    color: "var(--text)",
+                    borderRadius: 6,
+                    padding: "4px 10px",
+                    fontSize: 12,
+                    cursor: "pointer",
+                  }}
+                >
+                  Refresh (no run)
+                </button>
+              </div>
+
+              <div className="muted" style={{ margin: "18px 0 10px", textTransform: "uppercase", fontSize: 12, letterSpacing: 1 }}>
                 Manual Trigger
               </div>
               <p style={{ fontSize: 13, marginBottom: 6 }}>
@@ -301,18 +366,38 @@ export default function AdminPage() {
                   : "Run cron now"}
               </button>
               {cronResult && (
-                <pre
-                  style={{
-                    marginTop: 14,
-                    padding: 12,
-                    background: "var(--bg2)",
-                    borderRadius: 8,
-                    fontSize: 12,
-                    overflowX: "auto",
-                  }}
-                >
-                  {JSON.stringify(cronResult, null, 2)}
-                </pre>
+                <>
+                  {"statusWriteConfirmed" in cronResult && (
+                    <div
+                      style={{
+                        marginTop: 14,
+                        padding: "10px 12px",
+                        borderRadius: 8,
+                        fontSize: 13,
+                        fontWeight: 600,
+                        background: cronResult.statusWriteConfirmed ? "rgba(61,220,132,0.12)" : "rgba(198,54,60,0.12)",
+                        border: `1px solid ${cronResult.statusWriteConfirmed ? "var(--good)" : "var(--accent)"}`,
+                        color: cronResult.statusWriteConfirmed ? "var(--good)" : "var(--accent)",
+                      }}
+                    >
+                      {cronResult.statusWriteConfirmed
+                        ? "✓ cron_status write confirmed — the homepage should now show this run's time."
+                        : "✗ cron_status write NOT confirmed — see statusRowLastRunAt below. If the public page still shows an old time after this, that's a real bug worth digging into further."}
+                    </div>
+                  )}
+                  <pre
+                    style={{
+                      marginTop: 10,
+                      padding: 12,
+                      background: "var(--bg2)",
+                      borderRadius: 8,
+                      fontSize: 12,
+                      overflowX: "auto",
+                    }}
+                  >
+                    {JSON.stringify(cronResult, null, 2)}
+                  </pre>
+                </>
               )}
 
               {cronHistory && cronHistory.runs?.length > 0 && (
