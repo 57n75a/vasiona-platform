@@ -1,4 +1,4 @@
-import { fetchTleGroup } from "@/lib/tle";
+import { loadTles, type TleSource } from "@/lib/tleCache";
 import { buildSatrec, subPointAt, tleInclinationDeg } from "@/lib/propagate";
 import { isOverSerbia } from "@/lib/serbia";
 import { ensureSchema, upsertSatellite, logOverflight } from "@/lib/db";
@@ -70,6 +70,15 @@ export interface CronRunResult {
    */
   statusWriteConfirmed?: boolean;
   statusRowLastRunAt?: string | null;
+  /**
+   * Where the TLE catalog came from: "network" (fresh CelesTrak download),
+   * "cache" (copy under 2h old in Postgres — no download made), or "stale-cache"
+   * (CelesTrak refused/timed out, so the last good copy was used; see
+   * tleNetworkError). See lib/tleCache.ts for why.
+   */
+  tleSource?: TleSource;
+  tleFetchedAt?: string;
+  tleNetworkError?: string;
 }
 
 /**
@@ -121,13 +130,20 @@ export async function runCronJob(options: { force?: boolean } = {}): Promise<Cro
   let truncated = false;
   let catalogSize = 0;
   let runError: string | undefined;
+  let tleSource: TleSource | undefined;
+  let tleFetchedAt: string | undefined;
+  let tleNetworkError: string | undefined;
 
   try {
     const controller = new AbortController();
     const fetchTimeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
     let tles;
     try {
-      tles = await fetchTleGroup(group, controller.signal);
+      const loaded = await loadTles(group, controller.signal);
+      tles = loaded.tles;
+      tleSource = loaded.source;
+      tleFetchedAt = loaded.fetchedAt.toISOString();
+      tleNetworkError = loaded.networkError;
     } finally {
       clearTimeout(fetchTimeout);
     }
@@ -199,7 +215,9 @@ export async function runCronJob(options: { force?: boolean } = {}): Promise<Cro
     overSerbia: matchedThisRun,
     durationMs,
     truncated,
-    error: runError,
+    // A fallback to cached TLEs isn't a failed run, but it's worth a visible
+    // note in the admin run history so a blocked CelesTrak IP doesn't go unseen.
+    error: runError ?? (tleNetworkError ? `warning: used cached TLEs — ${tleNetworkError}` : undefined),
   });
 
   // Read back what was just written, through the exact same function the
@@ -233,6 +251,8 @@ export async function runCronJob(options: { force?: boolean } = {}): Promise<Cro
     durationMs,
     ...(truncated ? { truncated } : {}),
     ...(runError ? { error: runError } : {}),
+    ...(tleSource ? { tleSource, tleFetchedAt } : {}),
+    ...(tleNetworkError ? { tleNetworkError } : {}),
     statusWriteConfirmed,
     statusRowLastRunAt,
   };

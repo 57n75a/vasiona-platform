@@ -14,7 +14,7 @@ export interface TleRecord {
  * script/style host list for that sandbox, which is exactly why the earlier
  * artifact demo used a baked-in snapshot TLE instead of a live fetch.
  */
-export async function fetchTleGroup(group = "active", signal?: AbortSignal): Promise<TleRecord[]> {
+export async function fetchTleText(group = "active", signal?: AbortSignal): Promise<string> {
   const url = `https://celestrak.org/NORAD/elements/gp.php?GROUP=${encodeURIComponent(
     group
   )}&FORMAT=tle`;
@@ -37,11 +37,23 @@ export async function fetchTleGroup(group = "active", signal?: AbortSignal): Pro
   }
 
   if (!res.ok) {
-    throw new Error(`CelesTrak fetch failed: ${res.status} ${res.statusText}`);
+    // CelesTrak answers 403 (with a plain-text explanation) when the same group
+    // is downloaded again before its 2-hourly refresh, or when an IP is blocked
+    // for over-fetching. Surface that text instead of just "403 Forbidden".
+    let detail = "";
+    try {
+      detail = (await res.text()).replace(/\s+/g, " ").trim().slice(0, 160);
+    } catch {
+      // body unreadable — status line alone is fine
+    }
+    throw new Error(`CelesTrak fetch failed: ${res.status} ${res.statusText}${detail ? ` — ${detail}` : ""}`);
   }
 
-  const text = await res.text();
-  return parseTleText(text);
+  return res.text();
+}
+
+export async function fetchTleGroup(group = "active", signal?: AbortSignal): Promise<TleRecord[]> {
+  return parseTleText(await fetchTleText(group, signal));
 }
 
 export function parseTleText(text: string): TleRecord[] {
