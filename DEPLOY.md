@@ -36,9 +36,9 @@ Project Settings → Environment Variables → add (see `.env.example`):
 - `CELESTRAK_GROUP` (default `active`) — see note below on plan limits.
 
 ## 5. Cron schedule
-`vercel.json` is already set to run daily at 03:00 UTC:
+`vercel.json` is already set to run daily at 06:00 UTC (08:00 Belgrade summer time, 07:00 in winter — Vercel cron is UTC-only; Hobby runs it at some point within that hour):
 ```json
-{ "crons": [{ "path": "/api/cron/fetch-tles", "schedule": "0 3 * * *" }] }
+{ "crons": [{ "path": "/api/cron/fetch-tles", "schedule": "0 6 * * *" }] }
 ```
 - **Hobby plan:** Vercel restricts cron frequency on the free tier — check
   your current plan's limits before setting anything more frequent than
