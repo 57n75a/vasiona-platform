@@ -1,0 +1,35 @@
+{
+  "app": {
+    "[project]/app/_not-found/page": [
+      "static/media/71fbf9c08529c2a5-s.p.2fpqrm51ez0iq.woff2",
+      "static/media/8c2eb9ceedecfc8e-s.p.23aeddxv5enbo.woff2"
+    ],
+    "[project]/app/admin/page": [
+      "static/media/71fbf9c08529c2a5-s.p.2fpqrm51ez0iq.woff2",
+      "static/media/8c2eb9ceedecfc8e-s.p.23aeddxv5enbo.woff2"
+    ],
+    "[project]/app/analytics/page": [
+      "static/media/71fbf9c08529c2a5-s.p.2fpqrm51ez0iq.woff2",
+      "static/media/8c2eb9ceedecfc8e-s.p.23aeddxv5enbo.woff2"
+    ],
+    "[project]/app/crowdfund/page": [
+      "static/media/71fbf9c08529c2a5-s.p.2fpqrm51ez0iq.woff2",
+      "static/media/8c2eb9ceedecfc8e-s.p.23aeddxv5enbo.woff2"
+    ],
+    "[project]/app/page": [
+      "static/media/71fbf9c08529c2a5-s.p.2fpqrm51ez0iq.woff2",
+      "static/media/8c2eb9ceedecfc8e-s.p.23aeddxv5enbo.woff2"
+    ],
+    "[project]/app/petition/admin/page": [
+      "static/media/71fbf9c08529c2a5-s.p.2fpqrm51ez0iq.woff2",
+      "static/media/8c2eb9ceedecfc8e-s.p.23aeddxv5enbo.woff2"
+    ],
+    "[project]/app/petition/page": [
+      "static/media/71fbf9c08529c2a5-s.p.2fpqrm51ez0iq.woff2",
+      "static/media/8c2eb9ceedecfc8e-s.p.23aeddxv5enbo.woff2"
+    ]
+  },
+  "appUsingSizeAdjust": true,
+  "pages": {},
+  "pagesUsingSizeAdjust": false
+}

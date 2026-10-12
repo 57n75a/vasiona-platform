@@ -566,6 +566,80 @@ hard refresh. That single comparison will say definitively which of the two
 explanations above it is, which this session could not determine without
 deployment access.
 
+## 2026-09-24 — v0.12: restyled /petition and /crowdfund to match the new.vasiona.org redesign
+
+**Context worth knowing before deploying this.** A separate repo,
+`57n75a/new.vasiona.org`, is a from-scratch marketing redesign of vasiona.org
+(live preview: new-vasiona-org.vercel.app). It's a strong, editorial-feeling
+single-page site — numbered sections ("01 / ВИЗИЈА"), a big serif headline,
+card grids, an interactive fee-per-pass slider, gold-accented dollar
+figures, a numbered "Пут до орбите" step list. Important: **that redesign's
+own README says it ships with 20 static saved records and no database or
+payment collection by default** — its own `/petition`, `/analytics` and
+`/crowdfund` links point at `legacy.vasiona.org`, i.e. it doesn't replace
+this app's real forms, it fronts them. If the plan is to actually deploy
+that repo to vasiona.org, **this app (with the real Postgres-backed
+petition/crowdfund forms, email+consent capture, and the live cron-fed map)
+needs to keep running somewhere — most likely as `legacy.vasiona.org`, with
+`NEXT_PUBLIC_LEGACY_SITE_URL` on the new site pointed at it.** That's a
+deployment/DNS decision, not something this update makes on its own.
+
+**What this update actually does:** restyles the *existing, fully
+functional* `/petition` and `/crowdfund` pages in *this* app to match that
+visual language — hero with a numbered eyebrow, display-serif (Lora,
+matching the marketing kit) headlines, numbered sections via CSS counters
+(`.numbered-sections` / `.section-num` — add or reorder sections without
+renumbering anything by hand), a feature-card grid, a gold-accented
+`.stat-card` for the cost figure, `.tier-card` grid replacing the old plain
+table for funding tiers, and a `.step-list` (numbered circles, connecting
+line) replacing the old `<ol>` for both the petition's "what we ask" list
+and the crowdfund timeline — matching new.vasiona.org's own step-list
+pattern almost exactly. All existing content, i18n strings, the real sign/
+interest forms (email + consent), and the supporter-kit download block are
+functionally untouched — this is a pure restyle, no copy was invented or
+changed. New shared primitives are in `app/globals.css` (`--gold`, `.hero`,
+`.eyebrow`, `.feature-grid`, `.stat-card`, `.tier-grid`, `.step-list`) and
+available to reuse if other pages get the same treatment later.
+
+**Not done:** the homepage, NavBar and Footer keep their existing look —
+only `/petition` and `/crowdfund` were in scope. `next/font/google`'s Lora
+is now loaded once in `app/layout.tsx` (as `--font-display`), so it's
+available anywhere without adding another font.
+
+## 2026-10 — v0.13: the real fix for "live map not updating", plus TLE caching
+
+Two files landed from outside this session (you shared them after I'd been
+investigating the map-staleness bug with diagnostics rather than a root-cause
+fix) — integrated here:
+
+1. **`lib/pg.ts`** — wraps `@vercel/postgres`'s `sql` with
+   `unstable_noStore()`. This is the actual root cause of the v0.11
+   investigation: `@vercel/postgres` sends queries over `fetch()`, which
+   Next.js 14 patches and can cache indefinitely — even inside a
+   `force-dynamic` page — so the homepage kept re-serving an old SELECT
+   result while writes elsewhere went through fine. Every file that queries
+   the database directly (`lib/db.ts`, `lib/cronStatusService.ts`,
+   `lib/petitionService.ts`, `lib/crowdfundService.ts`) now imports `sql`
+   from `@/lib/pg` instead of `@vercel/postgres` directly. The v0.11
+   diagnostics (`statusWriteConfirmed` etc.) stay in place — they're still
+   useful for catching a *different* class of bug, just no longer needed to
+   explain this one.
+2. **`lib/tleCache.ts`** — keeps the last successful CelesTrak download in
+   Postgres (`tle_cache` table) and only re-fetches once it's over 2 hours
+   old, matching CelesTrak's own refresh window. CelesTrak 403s repeat
+   downloads of the same group sooner than that, and Vercel's shared egress
+   IPs meant back-to-back manual "Run cron now" clicks could trip it. Falls
+   back to a stored copy (up to 3 days old) if the network fetch fails.
+   `lib/cronRunner.ts` now calls `loadTles()` instead of fetching directly,
+   and the admin console shows which path a run actually took (cache /
+   network / stale-cache) right under the status-write confirmation banner.
+3. **`lib/tle.ts`** gained `fetchTleText()` — the fetch-only half of the old
+   `fetchTleGroup()`, split out so `tleCache.ts` can cache the raw response
+   text and call the existing `parseTleText()` on cache hits without
+   touching the network. `fetchTleGroup()` itself is unchanged in behavior
+   (now just `fetchTleText` + `parseTleText` composed) and nothing that
+   already called it needed to change.
+
 ## Known simplifications carried through every version
 1. ~~**Serbia geofence** is a lat/lon bounding box~~ — **Updated:** now uses a real
    ~130-point national border polygon (ray-casting point-in-polygon test) instead

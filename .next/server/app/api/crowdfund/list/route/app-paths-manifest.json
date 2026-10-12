@@ -1,0 +1,3 @@
+{
+  "/api/crowdfund/list/route": "app/api/crowdfund/list/route.js"
+}

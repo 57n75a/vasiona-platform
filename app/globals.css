@@ -7,6 +7,8 @@
   --muted: #a7b0e0;
   --accent: #c6363c;
   --good: #3ddc84;
+  --gold: #f2a93c;
+  --font-display: "Lora", Georgia, serif;
 }
 
 * { box-sizing: border-box; }
@@ -42,6 +44,211 @@ th { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spa
 .num-big { font-size: 26px; font-weight: 800; color: var(--good); }
 .muted { color: var(--muted); font-size: 12px; }
 
+/* ------------------------------------------------------------------ */
+/* Hero / numbered-section language — shared by /petition and         */
+/* /crowdfund, matching the visual pattern of the new.vasiona.org      */
+/* redesign (numbered eyebrows, display-serif headlines, card grids,   */
+/* chip tags, numbered step lists) while keeping this app's existing   */
+/* navy/red palette and card system rather than replacing it.          */
+/* ------------------------------------------------------------------ */
+
+.hero {
+  text-align: center;
+  padding: 38px 20px 30px;
+  margin-bottom: 8px;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 1.25;
+  margin: 0 0 12px;
+}
+
+.hero-sub {
+  color: var(--muted);
+  font-size: 14.5px;
+  line-height: 1.6;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+/* Wrap a page's body sections in <div className="numbered-sections"> and
+   give each section <div className="section eyebrow-num">; the "0N / " part
+   of the eyebrow is generated from CSS counters so sections can be added,
+   removed or reordered without renumbering anything by hand. */
+.numbered-sections { counter-reset: section; }
+.section-num { counter-increment: section; }
+.section-num .eyebrow::before { content: "0" counter(section) " / "; }
+
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 21px;
+  line-height: 1.35;
+  margin: 0 0 12px;
+  color: var(--text);
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 4px 0 16px;
+}
+
+.feature-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.feature-card .label {
+  font-weight: 700;
+  font-size: 13.5px;
+  margin-bottom: 4px;
+}
+
+.feature-card .desc {
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 4px;
+}
+
+.chip {
+  display: inline-block;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: 12.5px;
+  color: var(--text);
+  background: var(--bg2);
+  white-space: nowrap;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, rgba(242, 169, 60, 0.14), rgba(198, 54, 60, 0.08));
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+}
+
+.stat-card .stat-label {
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.stat-card .stat-value {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 26px;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.tier-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+  margin: 4px 0;
+}
+
+.tier-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.tier-card .tier-amount {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+
+.tier-card .tier-name {
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.tier-card .tier-reward {
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.step-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: step;
+}
+
+.step-list li {
+  counter-increment: step;
+  position: relative;
+  padding: 4px 0 20px 46px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.step-list li:last-child { padding-bottom: 0; }
+
+.step-list li::before {
+  content: counter(step, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 2px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--gold);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg2);
+}
+
+.step-list li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 15px;
+  top: 32px;
+  width: 1px;
+  height: calc(100% - 22px);
+  background: var(--border);
+}
+
 /* Mobile breakpoint — cards get tighter padding, type scales down slightly,
    nav wraps to two lines gracefully instead of overflowing. */
 @media (max-width: 600px) {
@@ -50,6 +257,10 @@ th { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spa
   th, td { padding: 6px 4px; }
   .num-big { font-size: 22px; }
   h1 { font-size: 17px !important; }
+  .hero { padding: 28px 14px 22px; }
+  .hero-title { font-size: 24px; }
+  .section-title { font-size: 18px; }
+  .stat-card .stat-value { font-size: 22px; }
 }
 
 @media (max-width: 420px) {

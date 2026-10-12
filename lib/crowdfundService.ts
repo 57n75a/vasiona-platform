@@ -1,3 +1,6 @@
+// @/lib/pg wraps @vercel/postgres's sql with unstable_noStore() so every
+// query bypasses Next's fetch-level Data Cache — see that file for why
+// (the "live map wasn't updating" bug this fixes at the root).
 import { sql } from "@/lib/pg";
 import { normalizeEmail, type FormError } from "@/lib/validation";
 

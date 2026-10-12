@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "functions": {
+    "/api/admin/run-cron": {
+      "maxDuration": 60
+    },
+    "/api/cron/fetch-tles": {
+      "maxDuration": 60
+    }
+  }
+}

@@ -1,0 +1,3 @@
+{
+  "/api/cron/fetch-tles/route": "app/api/cron/fetch-tles/route.js"
+}

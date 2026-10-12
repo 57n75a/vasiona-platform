@@ -1,4 +1,4 @@
-import { loadTles, type TleSource } from "@/lib/tleCache";
+import { loadTles } from "@/lib/tleCache";
 import { buildSatrec, subPointAt, tleInclinationDeg } from "@/lib/propagate";
 import { isOverSerbia } from "@/lib/serbia";
 import { ensureSchema, upsertSatellite, logOverflight } from "@/lib/db";
@@ -59,6 +59,11 @@ export interface CronRunResult {
   skipped?: boolean;
   reason?: string;
   error?: string;
+  /** Where this run's TLE catalog actually came from — see lib/tleCache.ts. */
+  tleSource?: "cache" | "network" | "stale-cache";
+  tleFetchedAt?: string;
+  /** Set only when tleSource is "stale-cache": why the network fetch didn't happen. */
+  tleNetworkError?: string;
   /**
    * Set by re-reading cron_status immediately after writing it. If this is
    * false, the write genuinely didn't take (or something else overwrote it
@@ -70,15 +75,6 @@ export interface CronRunResult {
    */
   statusWriteConfirmed?: boolean;
   statusRowLastRunAt?: string | null;
-  /**
-   * Where the TLE catalog came from: "network" (fresh CelesTrak download),
-   * "cache" (copy under 2h old in Postgres — no download made), or "stale-cache"
-   * (CelesTrak refused/timed out, so the last good copy was used; see
-   * tleNetworkError). See lib/tleCache.ts for why.
-   */
-  tleSource?: TleSource;
-  tleFetchedAt?: string;
-  tleNetworkError?: string;
 }
 
 /**
@@ -130,7 +126,7 @@ export async function runCronJob(options: { force?: boolean } = {}): Promise<Cro
   let truncated = false;
   let catalogSize = 0;
   let runError: string | undefined;
-  let tleSource: TleSource | undefined;
+  let tleSource: "cache" | "network" | "stale-cache" | undefined;
   let tleFetchedAt: string | undefined;
   let tleNetworkError: string | undefined;
 
@@ -139,6 +135,12 @@ export async function runCronJob(options: { force?: boolean } = {}): Promise<Cro
     const fetchTimeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
     let tles;
     try {
+      // loadTles() (lib/tleCache.ts) keeps the last good CelesTrak download in
+      // Postgres and only goes back to the network once it's >2h old —
+      // CelesTrak 403s repeat downloads of the same group sooner than that,
+      // and Vercel's shared egress IPs mean back-to-back manual "Run cron
+      // now" clicks used to be able to trip that. tleSource/tleFetchedAt
+      // below surface which path this run actually took.
       const loaded = await loadTles(group, controller.signal);
       tles = loaded.tles;
       tleSource = loaded.source;
@@ -215,9 +217,7 @@ export async function runCronJob(options: { force?: boolean } = {}): Promise<Cro
     overSerbia: matchedThisRun,
     durationMs,
     truncated,
-    // A fallback to cached TLEs isn't a failed run, but it's worth a visible
-    // note in the admin run history so a blocked CelesTrak IP doesn't go unseen.
-    error: runError ?? (tleNetworkError ? `warning: used cached TLEs — ${tleNetworkError}` : undefined),
+    error: runError,
   });
 
   // Read back what was just written, through the exact same function the
@@ -251,7 +251,8 @@ export async function runCronJob(options: { force?: boolean } = {}): Promise<Cro
     durationMs,
     ...(truncated ? { truncated } : {}),
     ...(runError ? { error: runError } : {}),
-    ...(tleSource ? { tleSource, tleFetchedAt } : {}),
+    ...(tleSource ? { tleSource } : {}),
+    ...(tleFetchedAt ? { tleFetchedAt } : {}),
     ...(tleNetworkError ? { tleNetworkError } : {}),
     statusWriteConfirmed,
     statusRowLastRunAt,

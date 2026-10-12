@@ -1,0 +1,186 @@
+{
+  "version": 3,
+  "pages404": true,
+  "appType": "app",
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "priority": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, no-cache, must-revalidate, max-age=0"
+        },
+        {
+          "key": "Pragma",
+          "value": "no-cache"
+        }
+      ],
+      "regex": "^/(?:/)?$"
+    }
+  ],
+  "onMatchHeaders": [],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_global-error",
+      "regex": "^/_global\\-error(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_global\\-error(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/admin",
+      "regex": "^/admin(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin(?:/)?$"
+    },
+    {
+      "page": "/analytics",
+      "regex": "^/analytics(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/analytics(?:/)?$"
+    },
+    {
+      "page": "/api/admin/cron-settings",
+      "regex": "^/api/admin/cron\\-settings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/cron\\-settings(?:/)?$"
+    },
+    {
+      "page": "/api/admin/cron-status",
+      "regex": "^/api/admin/cron\\-status(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/cron\\-status(?:/)?$"
+    },
+    {
+      "page": "/api/admin/diagnose",
+      "regex": "^/api/admin/diagnose(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/diagnose(?:/)?$"
+    },
+    {
+      "page": "/api/admin/run-cron",
+      "regex": "^/api/admin/run\\-cron(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/run\\-cron(?:/)?$"
+    },
+    {
+      "page": "/api/cron/fetch-tles",
+      "regex": "^/api/cron/fetch\\-tles(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/cron/fetch\\-tles(?:/)?$"
+    },
+    {
+      "page": "/api/crowdfund/list",
+      "regex": "^/api/crowdfund/list(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/crowdfund/list(?:/)?$"
+    },
+    {
+      "page": "/api/crowdfund/pledge",
+      "regex": "^/api/crowdfund/pledge(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/crowdfund/pledge(?:/)?$"
+    },
+    {
+      "page": "/api/crowdfund/summary",
+      "regex": "^/api/crowdfund/summary(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/crowdfund/summary(?:/)?$"
+    },
+    {
+      "page": "/api/ledger",
+      "regex": "^/api/ledger(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/ledger(?:/)?$"
+    },
+    {
+      "page": "/api/overhead",
+      "regex": "^/api/overhead(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/overhead(?:/)?$"
+    },
+    {
+      "page": "/api/petition/count",
+      "regex": "^/api/petition/count(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/petition/count(?:/)?$"
+    },
+    {
+      "page": "/api/petition/list",
+      "regex": "^/api/petition/list(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/petition/list(?:/)?$"
+    },
+    {
+      "page": "/api/petition/sign",
+      "regex": "^/api/petition/sign(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/petition/sign(?:/)?$"
+    },
+    {
+      "page": "/crowdfund",
+      "regex": "^/crowdfund(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/crowdfund(?:/)?$"
+    },
+    {
+      "page": "/petition",
+      "regex": "^/petition(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/petition(?:/)?$"
+    },
+    {
+      "page": "/petition/admin",
+      "regex": "^/petition/admin(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/petition/admin(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments",
+    "clientParamParsing": false,
+    "dynamicRSCPrerender": false
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}

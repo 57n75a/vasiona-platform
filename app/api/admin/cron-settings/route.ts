@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { ensureCronStatusSchema, getCronEnabled, setCronEnabled } from "@/lib/cronStatusService";
 
 export const dynamic = "force-dynamic";
-export const fetchCache = "force-no-store";
 
 function isAuthorized(req: NextRequest): boolean {
   const secret = process.env.ADMIN_SECRET;
@@ -22,7 +21,7 @@ export async function GET(req: NextRequest) {
     // it requires editing that file and redeploying; Vercel doesn't support
     // changing a cron's schedule at runtime via API, and Hobby-tier accounts
     // are limited to once-per-day schedules regardless.
-    configuredSchedule: "0 6 * * * (06:00 UTC daily = ~08:00 Belgrade in summer, ~07:00 in winter; set in vercel.json)",
+    configuredSchedule: "0 3 * * * (03:00 UTC daily, set in vercel.json)",
   });
 }
 

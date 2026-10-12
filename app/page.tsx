@@ -9,10 +9,8 @@ import ContactForm from "@/app/components/ContactForm";
 import SerbiaMap, { type MapDot } from "@/app/components/SerbiaMap";
 import { CumulativeTotalChart, SatellitesChart } from "@/app/components/GrowthCharts";
 import { getCronStatus } from "@/lib/cronStatusService";
-import { cronBelgradeTime } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
-export const fetchCache = "force-no-store";
 
 export default async function Home({
   searchParams,
@@ -93,9 +91,6 @@ export default async function Home({
                 {cronStatus.lastRunAt
                   ? new Date(cronStatus.lastRunAt).toISOString().replace("T", " ").slice(0, 19) + " UTC"
                   : t.lastUpdatedNever}
-              </div>
-              <div className="muted" style={{ fontSize: 11 }}>
-                {t.updateSchedule.replace("{time}", cronBelgradeTime())}
               </div>
             </div>
             {/* eslint-disable-next-line @next/next/no-img-element */}

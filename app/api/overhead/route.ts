@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { getOverheadEvents } from "@/lib/overheadService";
 
 export const dynamic = "force-dynamic";
-export const fetchCache = "force-no-store";
 
 export async function GET() {
   const data = await getOverheadEvents(100);

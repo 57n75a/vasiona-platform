@@ -385,6 +385,21 @@ export default function AdminPage() {
                         : "✗ cron_status write NOT confirmed — see statusRowLastRunAt below. If the public page still shows an old time after this, that's a real bug worth digging into further."}
                     </div>
                   )}
+                  {cronResult.tleSource && (
+                    <div className="muted" style={{ marginTop: 8, fontSize: 12.5 }}>
+                      TLE catalog: <strong>{cronResult.tleSource}</strong>
+                      {cronResult.tleSource === "cache" && " (reused last download — under 2h old, no CelesTrak hit)"}
+                      {cronResult.tleSource === "network" && " (fresh CelesTrak download)"}
+                      {cronResult.tleSource === "stale-cache" && " (network failed — fell back to a stored copy)"}
+                      {cronResult.tleFetchedAt && ` · from ${new Date(cronResult.tleFetchedAt).toISOString().replace("T", " ").slice(0, 19)} UTC`}
+                      {cronResult.tleNetworkError && (
+                        <>
+                          {" "}
+                          · network error: {cronResult.tleNetworkError}
+                        </>
+                      )}
+                    </div>
+                  )}
                   <pre
                     style={{
                       marginTop: 10,

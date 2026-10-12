@@ -1,0 +1,24 @@
+module.exports=[[90500,e=>{let t=["https://new.vasiona.org","https://www.new.vasiona.org","http://localhost:3000","http://127.0.0.1:3000"];function r(e){return e&&t.includes(e)?{"Access-Control-Allow-Origin":e,"Access-Control-Allow-Methods":"GET, POST, OPTIONS","Access-Control-Allow-Headers":"Content-Type","Access-Control-Max-Age":"86400",Vary:"Origin"}:{}}e.s(["x",0,r,"t",0,function(e){return new Response(null,{status:204,headers:r(e.headers.get("origin"))})}])},23645,e=>{var t=e.i(70967),r=e.i(72783);async function n(){await t.f`
+    CREATE TABLE IF NOT EXISTS crowdfund_interest (
+      id              BIGSERIAL PRIMARY KEY,
+      email           TEXT,
+      name            TEXT,
+      indicative_usd  NUMERIC,
+      comment         TEXT,
+      contact_consent BOOLEAN NOT NULL DEFAULT false,
+      created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+  `,await t.f`ALTER TABLE crowdfund_interest ADD COLUMN IF NOT EXISTS contact_consent BOOLEAN NOT NULL DEFAULT false;`,await t.f`CREATE INDEX IF NOT EXISTS idx_crowdfund_email ON crowdfund_interest (lower(email));`}function s(e,t){if("string"!=typeof e)return null;let r=e.trim();return r?r.slice(0,t):null}async function i(e){let i=(0,r.f)(e.email);if(!i)return{ok:!1,error:"invalid_email"};if(!0!==e.contactConsent)return{ok:!1,error:"consent_required"};await n();let o=s(e.name,120),c=s(e.comment,500),u="number"==typeof e.indicativeUsd&&isFinite(e.indicativeUsd)&&e.indicativeUsd>=0?Math.min(e.indicativeUsd,1e6):null;return 0===(await t.f`SELECT id FROM crowdfund_interest WHERE lower(email) = ${i} LIMIT 1;`).rows.length&&await t.f`
+      INSERT INTO crowdfund_interest (email, name, indicative_usd, comment, contact_consent)
+      VALUES (${i}, ${o}, ${u}, ${c}, true);
+    `,{ok:!0,...await a()}}async function a(){await n();let{rows:e}=await t.f`
+    SELECT COUNT(*)::int AS count, COALESCE(SUM(indicative_usd), 0)::numeric AS total
+    FROM crowdfund_interest;
+  `;return{count:e[0]?.count??0,indicativeTotalUsd:Number(e[0]?.total??0)}}async function o(e=5e3){await n();let{rows:r}=await t.f`
+    SELECT id, name, email, indicative_usd, comment, contact_consent, created_at
+    FROM crowdfund_interest
+    ORDER BY created_at DESC
+    LIMIT ${e};
+  `;return r}e.s(["u",0,i,"Q",0,n,"q",0,a,"W",0,o])},72783,e=>{e.s(["f",0,function(e){if("string"!=typeof e)return null;let t=e.trim().toLowerCase();return t.length<5||t.length>200||!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(t)?null:t}])}],874,(e,t,r)=>{t.exports=e.x("buffer",()=>require("buffer"))},54799,(e,t,r)=>{t.exports=e.x("crypto",()=>require("crypto"))},27699,(e,t,r)=>{t.exports=e.x("events",()=>require("events"))},22734,(e,t,r)=>{t.exports=e.x("fs",()=>require("fs"))},21517,(e,t,r)=>{t.exports=e.x("http",()=>require("http"))},24836,(e,t,r)=>{t.exports=e.x("https",()=>require("https"))},4446,(e,t,r)=>{t.exports=e.x("net",()=>require("net"))},70406,(e,t,r)=>{t.exports=e.x("next/dist/compiled/@opentelemetry/api",()=>require("next/dist/compiled/@opentelemetry/api"))},18622,(e,t,r)=>{t.exports=e.x("next/dist/compiled/next-server/app-page-turbo.runtime.prod.js",()=>require("next/dist/compiled/next-server/app-page-turbo.runtime.prod.js"))},20635,(e,t,r)=>{t.exports=e.x("next/dist/server/app-render/action-async-storage.external.js",()=>require("next/dist/server/app-render/action-async-storage.external.js"))},24725,(e,t,r)=>{t.exports=e.x("next/dist/server/app-render/after-task-async-storage.external.js",()=>require("next/dist/server/app-render/after-task-async-storage.external.js"))},56704,(e,t,r)=>{t.exports=e.x("next/dist/server/app-render/work-async-storage.external.js",()=>require("next/dist/server/app-render/work-async-storage.external.js"))},32319,(e,t,r)=>{t.exports=e.x("next/dist/server/app-render/work-unit-async-storage.external.js",()=>require("next/dist/server/app-render/work-unit-async-storage.external.js"))},59043,(e,t,r)=>{t.exports=e.x("next/dist/server/runtime-reacts.external.js",()=>require("next/dist/server/runtime-reacts.external.js"))},93695,(e,t,r)=>{t.exports=e.x("next/dist/shared/lib/no-fallback-error.external.js",()=>require("next/dist/shared/lib/no-fallback-error.external.js"))},81111,(e,t,r)=>{t.exports=e.x("node:stream",()=>require("node:stream"))},46786,(e,t,r)=>{t.exports=e.x("os",()=>require("os"))},14747,(e,t,r)=>{t.exports=e.x("path",()=>require("path"))},88947,(e,t,r)=>{t.exports=e.x("stream",()=>require("stream"))},55004,(e,t,r)=>{t.exports=e.x("tls",()=>require("tls"))},92509,(e,t,r)=>{t.exports=e.x("url",()=>require("url"))},24361,(e,t,r)=>{t.exports=e.x("util",()=>require("util"))},6461,(e,t,r)=>{t.exports=e.x("zlib",()=>require("zlib"))}];
+
+//# sourceMappingURL=%5Broot-of-the-server%5D__12asewppn46qw._.js.map
