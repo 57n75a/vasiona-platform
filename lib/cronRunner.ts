@@ -217,7 +217,9 @@ export async function runCronJob(options: { force?: boolean } = {}): Promise<Cro
     overSerbia: matchedThisRun,
     durationMs,
     truncated,
-    error: runError,
+    // A fallback to cached TLEs isn't a failed run, but it's worth a visible
+    // note in the admin run history so a blocked CelesTrak IP doesn't go unseen.
+    error: runError ?? (tleNetworkError ? `warning: used cached TLEs — ${tleNetworkError}` : undefined),
   });
 
   // Read back what was just written, through the exact same function the

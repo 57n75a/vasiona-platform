@@ -1,0 +1,20 @@
+# dependencies & build output (Vercel installs and builds these itself)
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+
+# local env files — real secrets live in Vercel Project Settings
+.env
+.env*.local
+
+# Vercel CLI
+.vercel
+
+# SSH keys must never be committed
+yes
+yes.pub
+id_*
+*.pem
+
+.DS_Store
