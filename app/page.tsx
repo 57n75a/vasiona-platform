@@ -161,10 +161,6 @@ export default async function Home({
           <p className="muted" style={{ fontSize: 13, marginBottom: 14 }}>{t.contactSubtitle}</p>
           <ContactForm lang={lang} />
         </div>
-
-        <div className="banner" style={{ margin: "20px 0 0" }}>
-          {t.banner}
-        </div>
       </main>
 
       <Footer lang={lang} />

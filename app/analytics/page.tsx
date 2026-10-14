@@ -100,6 +100,10 @@ export default async function AnalyticsPage({
           </div>
         </div>
 
+        <div className="banner" style={{ margin: "0 0 18px" }}>
+          {t.banner}
+        </div>
+
         <div className="card">
           <div className="label">{t.yearlyBreakdown}</div>
           <div className="muted" style={{ marginBottom: 8, fontSize: 11.5, letterSpacing: 0.5 }}>{t.chartSatsTitle}</div>
