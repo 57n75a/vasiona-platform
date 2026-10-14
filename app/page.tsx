@@ -1,5 +1,4 @@
 import { getDict } from "@/lib/i18n";
-import { getLedgerData } from "@/lib/ledgerService";
 import { getOverheadEvents } from "@/lib/overheadService";
 import { classifyOperator, classifyObjectType } from "@/lib/operatorLookup";
 import { LOGO_SRC } from "@/app/components/logo";
@@ -7,7 +6,6 @@ import NavBar from "@/app/components/NavBar";
 import Footer from "@/app/components/Footer";
 import ContactForm from "@/app/components/ContactForm";
 import SerbiaMap, { type MapDot } from "@/app/components/SerbiaMap";
-import { CumulativeTotalChart, SatellitesChart } from "@/app/components/GrowthCharts";
 import { getCronStatus } from "@/lib/cronStatusService";
 import { cronBelgradeTime } from "@/lib/site";
 
@@ -22,8 +20,7 @@ export default async function Home({
   const t = getDict(lang);
   const qs = `?lang=${lang}`;
 
-  const [ledger, overhead, cronStatus] = await Promise.all([
-    getLedgerData(lang),
+  const [overhead, cronStatus] = await Promise.all([
     getOverheadEvents(100),
     getCronStatus(),
   ]);
@@ -63,12 +60,10 @@ export default async function Home({
             <span className="mini-line" />
             {t.navBrandText}
           </p>
-          <h1 className="home-hero-title">{t.punchline2}</h1>
-          <p className="home-hero-sub">{t.subtitle}</p>
+          <h1 className="home-hero-title">{t.subtitle}</h1>
           <div className="home-hero-buttons">
-            <a className="button primary" href={`/petition${qs}`}>{t.navPetition}</a>
-            <a className="button secondary" href={`/crowdfund${qs}`}>{t.navCrowdfund}</a>
-            <a className="text-link" href="#about">{t.navAbout} ↓</a>
+            <a className="button primary" href={`/crowdfund${qs}`}>{t.navCrowdfund}</a>
+            <a className="text-link" href="#map">{t.mapTitle} ↓</a>
           </div>
         </div>
         <div className="hero-coordinate" aria-hidden="true">
@@ -78,17 +73,6 @@ export default async function Home({
       </section>
 
       <main className="page-main">
-        <div className="card" id="about">
-          <div className="label">{t.aboutTitle}</div>
-          <p style={{ fontSize: 15, lineHeight: 1.75, margin: 0 }}>{t.aboutText}</p>
-          <p style={{ fontSize: 15, lineHeight: 1.75, margin: "14px 0 0", color: "#c3cfdb" }}>
-            {t.aboutText2}{" "}
-            <a href={`/crowdfund${qs}`} style={{ color: "var(--accent)", fontWeight: 600, whiteSpace: "nowrap" }}>
-              {t.aboutCta}
-            </a>
-          </p>
-        </div>
-
         <div className="card map-card" id="map">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16 }}>
             <div>
@@ -117,62 +101,6 @@ export default async function Home({
           </div>
           <SerbiaMap events={mapDots} lang={lang} />
           <p className="muted" style={{ textAlign: "center", marginTop: 8 }}>{t.mapCaption}</p>
-        </div>
-
-        <div className="card stat-card">
-          <div className="label">{t.totalLabel}</div>
-          <div className="num-big" style={{ fontSize: "clamp(34px, 5vw, 52px)", margin: "4px 0 6px" }}>
-            ${Math.round(ledger.grandTotalUsd).toLocaleString()}
-          </div>
-          <div className="muted">
-            {t.modeledPrefix} $
-            {Math.round(ledger.modeledEstimate.totalUsd).toLocaleString()} · {t.realPrefix}{" "}
-            {ledger.realLogged.events} ($
-            {Math.round(ledger.realLogged.totalUsd).toLocaleString()})
-          </div>
-
-          <div style={{ marginTop: 22, borderTop: "1px solid var(--border)", paddingTop: 18 }}>
-            <div className="label" style={{ color: "var(--muted)" }}>
-              {t.chartCumTitle}
-            </div>
-            <CumulativeTotalChart
-              years={ledger.modeledEstimate.years}
-              lang={lang}
-              labels={{ annual: t.chartCumLegendAnnual, cumulative: t.chartCumLegendCum }}
-              partialLast={
-                ledger.modeledEstimate.years.length > 0 &&
-                ledger.modeledEstimate.years[ledger.modeledEstimate.years.length - 1].year >= new Date().getUTCFullYear()
-              }
-            />
-            <div className="muted" style={{ fontSize: 11.5, marginTop: 6 }}>* {t.chartCumNote}</div>
-          </div>
-        </div>
-
-        <div className="card">
-          <div className="label">{t.yearlyBreakdown}</div>
-          <div className="muted" style={{ marginBottom: 8, fontSize: 11.5, letterSpacing: 0.5 }}>{t.chartSatsTitle}</div>
-          <SatellitesChart
-            years={ledger.modeledEstimate.years}
-            lang={lang}
-            labels={{ growth: t.chartSatsGrowth, cagr: t.chartSatsCagr, yoy: t.chartYoY }}
-          />
-          <div className="muted" style={{ fontSize: 11.5, margin: "4px 0 14px" }}>{t.chartSatsNote}</div>
-          <div style={{ overflowX: "auto" }}>
-            <table>
-              <thead>
-                <tr><th>{t.colYear}</th><th>{t.colSats}</th><th>{t.colRevenue}</th></tr>
-              </thead>
-              <tbody>
-                {ledger.modeledEstimate.years.map((y: any) => (
-                  <tr key={y.year}>
-                    <td>{y.year}</td>
-                    <td>{y.activeSatellites.toLocaleString()}</td>
-                    <td>${Math.round(y.annualRevenueUsd).toLocaleString()}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
         </div>
 
         <div className="card">
