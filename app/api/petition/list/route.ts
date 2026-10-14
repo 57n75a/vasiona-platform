@@ -3,6 +3,9 @@ import { ensurePetitionSchema, listSignatures } from "@/lib/petitionService";
 
 export const dynamic = "force-dynamic";
 
+// Admin-only and temporary: kept so the old signatures can be exported/copied.
+// Not linked from any page. Remove once the copy is confirmed.
+
 function isAuthorized(req: NextRequest): boolean {
   const secret = process.env.ADMIN_SECRET;
   if (!secret) return false; // admin endpoint requires an explicit secret — no open-by-default fallback

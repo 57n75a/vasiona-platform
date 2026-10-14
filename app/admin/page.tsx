@@ -2,16 +2,6 @@
 
 import { useState, useEffect } from "react";
 
-interface Signature {
-  id: number;
-  name: string | null;
-  email: string | null;
-  country: string | null;
-  comment: string | null;
-  contact_consent: boolean | null;
-  created_at: string;
-}
-
 interface InterestRow {
   id: number;
   name: string | null;
@@ -22,7 +12,7 @@ interface InterestRow {
   created_at: string;
 }
 
-type Tab = "cron" | "petition" | "crowdfund";
+type Tab = "cron" | "crowdfund";
 
 // A manual run can genuinely take up to ~45s (see CRON_TIME_BUDGET_MS in
 // lib/cronRunner.ts) and hits both CelesTrak and the DB fairly hard —
@@ -46,7 +36,6 @@ export default function AdminPage() {
   const [error, setError] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>("cron");
 
-  const [signatures, setSignatures] = useState<Signature[]>([]);
   const [interest, setInterest] = useState<InterestRow[]>([]);
   const [cronResult, setCronResult] = useState<any>(null);
   const [cronRunning, setCronRunning] = useState(false);
@@ -106,18 +95,13 @@ export default function AdminPage() {
     setLoading(true);
     setError(null);
     try {
-      const [petRes, cfRes] = await Promise.all([
-        fetch("/api/petition/list", { headers: { Authorization: `Bearer ${secret}` } }),
-        fetch("/api/crowdfund/list", { headers: { Authorization: `Bearer ${secret}` } }),
-      ]);
-      if (petRes.status === 401 || cfRes.status === 401) {
+      const cfRes = await fetch("/api/crowdfund/list", { headers: { Authorization: `Bearer ${secret}` } });
+      if (cfRes.status === 401) {
         setError("Incorrect admin secret.");
         setLoading(false);
         return;
       }
-      const petData = await petRes.json();
       const cfData = await cfRes.json();
-      setSignatures(petData.signatures ?? []);
       setInterest(cfData.interest ?? []);
       setLoggedIn(true);
 
@@ -242,9 +226,6 @@ export default function AdminPage() {
         <div>
           <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
             <button style={tabStyle(tab === "cron")} onClick={() => setTab("cron")}>Cron</button>
-            <button style={tabStyle(tab === "petition")} onClick={() => setTab("petition")}>
-              Petition ({signatures.length})
-            </button>
             <button style={tabStyle(tab === "crowdfund")} onClick={() => setTab("crowdfund")}>
               Crowdfund ({interest.length})
             </button>
@@ -472,36 +453,6 @@ export default function AdminPage() {
                   </div>
                 </div>
               )}
-            </div>
-          )}
-
-          {tab === "petition" && (
-            <div>
-              <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10 }}>
-                <button
-                  onClick={() => downloadCsv("/api/petition/list?format=csv", "petition_signatures.csv")}
-                  style={{ ...buttonStyle, background: "transparent", color: "var(--text)", border: "1px solid var(--border)" }}
-                >
-                  Download CSV
-                </button>
-              </div>
-              <div className="card" style={{ overflowX: "auto" }}>
-                <table>
-                  <thead><tr><th>When</th><th>Name</th><th>Email</th><th>Country</th><th>Comment</th><th>May contact</th></tr></thead>
-                  <tbody>
-                    {signatures.map((s) => (
-                      <tr key={s.id}>
-                        <td>{new Date(s.created_at).toISOString()}</td>
-                        <td>{s.name || <span className="muted">—</span>}</td>
-                        <td>{s.email || <span className="muted">—</span>}</td>
-                        <td>{s.country || <span className="muted">—</span>}</td>
-                        <td>{s.comment || <span className="muted">—</span>}</td>
-                        <td>{s.contact_consent ? "yes" : <span className="muted">no</span>}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
             </div>
           )}
 

@@ -7,7 +7,7 @@ export const CONTACT_EMAIL = "info@vasiona.org";
 
 // Static asset served from /public — see docs/SUPPORT_KIT.md for how it is built.
 export const SUPPORT_KIT_PATH = "/vasiona-support-kit.zip";
-export const SUPPORT_KIT_SIZE_MB = 18; // approx. size of the ZIP, shown next to the download button (0 hides it)
+export const SUPPORT_KIT_SIZE_MB = 11; // approx. size of the ZIP, shown next to the download button (0 hides it)
 
 // Hour (UTC) of the daily cron in vercel.json ("0 6 * * *"). Vercel cron runs in
 // UTC only and can't follow daylight saving, so 06:00 UTC is 08:00 in Belgrade

@@ -1,5 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Pages that used to live here (petition, story, analytics) were removed.
+  // Old links land on the homepage instead of a "page not found".
+  async redirects() {
+    return [
+      { source: "/petition", destination: "/", permanent: false },
+      { source: "/petition/:path*", destination: "/", permanent: false },
+      { source: "/analytics", destination: "/", permanent: false },
+      { source: "/story", destination: "/", permanent: false },
+    ];
+  },
   async headers() {
     return [
       {
