@@ -7,9 +7,10 @@ export default function NavBar({ lang }: { lang: Lang }) {
   const qs = `?lang=${lang}`;
   const qsOther = `?lang=${otherLang}`;
 
-  // Top bar: crowdfunding, contact and language only. The story and
+  // Top bar: about, crowdfunding, contact and language only. The story and
   // analytics pages are linked from the footer; the petition from the story.
   const links = [
+    { href: `/${qs}#about`, label: t.navAbout },
     { href: `/crowdfund${qs}`, label: t.navCrowdfund },
     { href: `/${qs}#contact`, label: t.navContact },
   ];
