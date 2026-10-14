@@ -1,12 +1,9 @@
 import "./globals.css";
 import { SITE_URL } from "@/lib/site";
-import { Lora } from "next/font/google";
 
-// Same serif used across the marketing kit's headlines (brochure, social
-// images, video) — see the marketing assets under vasiona-marketing/. Used
-// here for hero/section display type on /petition and /crowdfund so the
-// live pages and the off-platform marketing material read as one brand.
-const lora = Lora({ subsets: ["latin", "cyrillic"], weight: ["500", "600", "700"], variable: "--font-display" });
+// Typeface: Manrope, self-hosted from public/fonts (see app/globals.css) to
+// match the new.vasiona.org design. Self-hosting also means the build no
+// longer needs to reach Google Fonts.
 
 const TITLE = "VASIONA — Satellite Orbiting / Орбитирање сателита";
 const DESCRIPTION =
@@ -35,7 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   // Individual pages set the actual content language via ?lang=; this root
   // tag defaults to English since it wraps both locales.
   return (
-    <html lang="en" className={lora.variable}>
+    <html lang="en">
       <body>{children}</body>
     </html>
   );

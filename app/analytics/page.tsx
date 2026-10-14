@@ -103,7 +103,7 @@ export default async function AnalyticsPage({
                 <span style={{ fontWeight: 700 }}>{fmt(c.totalUsd)}</span>
               </div>
               <div style={{ background: "var(--track, #1e2a63)", borderRadius: 5, height: 8, overflow: "hidden" }}>
-                <div style={{ width: `${(c.totalUsd / maxCompany) * 100}%`, height: "100%", background: "#f2a93c" }} />
+                <div style={{ width: `${(c.totalUsd / maxCompany) * 100}%`, height: "100%", background: "var(--gold)" }} />
               </div>
             </div>
           ))}

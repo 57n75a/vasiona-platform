@@ -203,7 +203,7 @@ export default function AdminPage() {
     borderRadius: 999,
     border: "1px solid var(--border)",
     background: active ? "var(--accent)" : "transparent",
-    color: active ? "#fff" : "var(--text)",
+    color: active ? "var(--on-accent)" : "var(--text)",
     fontSize: 13,
     fontWeight: 600,
     cursor: "pointer",
@@ -211,7 +211,7 @@ export default function AdminPage() {
 
   const buttonStyle: React.CSSProperties = {
     background: "var(--accent)",
-    color: "#fff",
+    color: "var(--on-accent)",
     border: "none",
     borderRadius: 999,
     padding: "10px 20px",
@@ -236,7 +236,7 @@ export default function AdminPage() {
           <button type="submit" disabled={loading} style={{ ...buttonStyle, opacity: loading ? 0.7 : 1 }}>
             {loading ? "Checking…" : "Log in"}
           </button>
-          {error && <div style={{ color: "var(--accent)", fontSize: 12, marginTop: 8 }}>{error}</div>}
+          {error && <div style={{ color: "var(--danger)", fontSize: 12, marginTop: 8 }}>{error}</div>}
         </form>
       ) : (
         <div>
@@ -375,9 +375,9 @@ export default function AdminPage() {
                         borderRadius: 8,
                         fontSize: 13,
                         fontWeight: 600,
-                        background: cronResult.statusWriteConfirmed ? "rgba(61,220,132,0.12)" : "rgba(198,54,60,0.12)",
-                        border: `1px solid ${cronResult.statusWriteConfirmed ? "var(--good)" : "var(--accent)"}`,
-                        color: cronResult.statusWriteConfirmed ? "var(--good)" : "var(--accent)",
+                        background: cronResult.statusWriteConfirmed ? "rgba(127,209,185,0.10)" : "rgba(230,108,108,0.10)",
+                        border: `1px solid ${cronResult.statusWriteConfirmed ? "var(--good)" : "var(--danger)"}`,
+                        color: cronResult.statusWriteConfirmed ? "var(--good)" : "var(--danger)",
                       }}
                     >
                       {cronResult.statusWriteConfirmed
@@ -458,7 +458,7 @@ export default function AdminPage() {
                             <td style={{ padding: "4px 8px", textAlign: "right" }}>{r.matched ?? "—"}</td>
                             <td style={{ padding: "4px 8px" }}>
                               {r.error ? (
-                                <span style={{ color: "var(--accent)" }}>error: {r.error}</span>
+                                <span style={{ color: "var(--danger)" }}>error: {r.error}</span>
                               ) : r.truncated ? (
                                 <span className="muted">truncated (time budget)</span>
                               ) : (

@@ -6,7 +6,7 @@ import type { Lang } from "@/lib/i18n";
  * cleanly and stay crisp at any width — the SVG scales with its container.
  */
 
-const BLUE = "#3aa0ff";
+const BLUE = "#5f9fb8";
 const RED = "var(--accent)";
 
 function niceScale(max: number, ticks = 4): { step: number; top: number } {
@@ -77,8 +77,8 @@ export function CumulativeTotalChart({
       <title>{aria}</title>
       <defs>
         <linearGradient id="cumFill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#c6363c" stopOpacity="0.32" />
-          <stop offset="100%" stopColor="#c6363c" stopOpacity="0" />
+          <stop offset="0%" stopColor="#efb35c" stopOpacity="0.32" />
+          <stop offset="100%" stopColor="#efb35c" stopOpacity="0" />
         </linearGradient>
       </defs>
 
@@ -204,7 +204,7 @@ export function SatellitesChart({
         })}
 
         {/* growth line through the bar tops */}
-        <path d={line} fill="none" stroke="#f2a93c" strokeWidth={2} strokeDasharray="5 4" />
+        <path d={line} fill="none" stroke="#89cbd8" strokeWidth={2} strokeDasharray="5 4" />
 
         {years.map((y, i) => {
           const g = i === 0 ? null : y.activeSatellites / years[i - 1].activeSatellites - 1;

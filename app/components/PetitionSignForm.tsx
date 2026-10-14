@@ -110,7 +110,7 @@ export default function PetitionSignForm({ lang, initialCount }: { lang: Lang; i
             disabled={submitting}
             style={{
               background: "var(--accent)",
-              color: "#fff",
+              color: "var(--on-accent)",
               border: "none",
               borderRadius: 999,
               padding: "10px 20px",
@@ -122,7 +122,7 @@ export default function PetitionSignForm({ lang, initialCount }: { lang: Lang; i
           >
             {t.signFormSubmit}
           </button>
-          {error && <div style={{ color: "var(--accent)", fontSize: 12, marginTop: 8 }}>{error}</div>}
+          {error && <div style={{ color: "var(--danger)", fontSize: 12, marginTop: 8 }}>{error}</div>}
           <div className="muted" style={{ fontSize: 11.5, marginTop: 10 }}>{t.signFormPrivacy}</div>
         </form>
       )}

@@ -58,7 +58,7 @@ export default function ContactForm({ lang }: { lang: Lang }) {
         type="submit"
         style={{
           background: "var(--accent)",
-          color: "#fff",
+          color: "var(--on-accent)",
           border: "none",
           borderRadius: 999,
           padding: "10px 20px",

@@ -31,8 +31,8 @@ function DotShape({ shape, x, y, color, size = 5 }: { shape: MapDot["shape"]; x:
         width={size * 2}
         height={size * 2}
         fill={color}
-        stroke="#fff"
-        strokeWidth={0.75}
+        stroke="#0a111b"
+        strokeWidth={1}
         transform={`rotate(45 ${x} ${y})`}
       />
     );
@@ -45,12 +45,12 @@ function DotShape({ shape, x, y, color, size = 5 }: { shape: MapDot["shape"]; x:
         width={size * 2}
         height={size * 2}
         fill={color}
-        stroke="#fff"
-        strokeWidth={0.75}
+        stroke="#0a111b"
+        strokeWidth={1}
       />
     );
   }
-  return <circle cx={x} cy={y} r={size} fill={color} stroke="#fff" strokeWidth={0.75} />;
+  return <circle cx={x} cy={y} r={size} fill={color} stroke="#0a111b" strokeWidth={1} />;
 }
 
 export default function SerbiaMap({ events, lang }: { events: MapDot[]; lang: Lang }) {
@@ -68,7 +68,17 @@ export default function SerbiaMap({ events, lang }: { events: MapDot[]; lang: La
     <div>
       <div style={{ position: "relative", maxWidth: 420, margin: "0 auto" }}>
         <svg viewBox={`0 0 ${width} ${height}`} style={{ width: "100%", height: "auto", display: "block" }}>
-          <path d={pathD} fill="rgba(198,54,60,0.18)" stroke="#C6363C" strokeWidth={1.5} strokeLinejoin="round" />
+          <defs>
+            <pattern id="vasiona-grid" width="30" height="30" patternUnits="userSpaceOnUse">
+              <path d="M30 0H0V30" fill="none" stroke="#26303d" strokeWidth={0.65} />
+            </pattern>
+            <linearGradient id="vasiona-land" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stopColor="#172b3c" />
+              <stop offset="1" stopColor="#0d1a26" />
+            </linearGradient>
+          </defs>
+          <rect width={width} height={height} fill="url(#vasiona-grid)" />
+          <path d={pathD} fill="url(#vasiona-land)" stroke="#658293" strokeWidth={1.4} strokeLinejoin="round" />
           {events.map((e, i) => {
             const [x, y] = project(e.lon, e.lat);
             return (
@@ -94,12 +104,12 @@ export default function SerbiaMap({ events, lang }: { events: MapDot[]; lang: La
               zIndex: 50,
               background: "var(--panel)",
               border: "1px solid var(--border)",
-              borderRadius: 10,
-              padding: "8px 12px",
+              borderRadius: 6,
+              padding: "10px 13px",
               fontSize: 12,
               maxWidth: 220,
               pointerEvents: "none",
-              boxShadow: "0 6px 20px rgba(0,0,0,0.35)",
+              boxShadow: "0 12px 30px rgba(0,0,0,0.45)",
             }}
           >
             <div style={{ fontWeight: 700, marginBottom: 2 }}>{hover.dot.name}</div>
@@ -131,7 +141,7 @@ export default function SerbiaMap({ events, lang }: { events: MapDot[]; lang: La
         {SHAPE_LEGEND.map(({ shape, labelKey }) => (
           <span key={shape} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11.5 }} className="muted">
             <svg width={14} height={14} viewBox="0 0 14 14">
-              <DotShape shape={shape} x={7} y={7} color="#a7b0e0" size={5} />
+              <DotShape shape={shape} x={7} y={7} color="#89cbd8" size={5} />
             </svg>
             {t[labelKey]}
           </span>

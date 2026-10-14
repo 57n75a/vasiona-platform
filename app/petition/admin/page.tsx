@@ -93,7 +93,7 @@ export default function PetitionAdminPage() {
             disabled={loading}
             style={{
               background: "var(--accent)",
-              color: "#fff",
+              color: "var(--on-accent)",
               border: "none",
               borderRadius: 999,
               padding: "10px 20px",
@@ -105,7 +105,7 @@ export default function PetitionAdminPage() {
           >
             {loading ? "Checking…" : "View signatures"}
           </button>
-          {error && <div style={{ color: "var(--accent)", fontSize: 12, marginTop: 8 }}>{error}</div>}
+          {error && <div style={{ color: "var(--danger)", fontSize: 12, marginTop: 8 }}>{error}</div>}
         </form>
       ) : (
         <div>
