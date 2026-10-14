@@ -1,4 +1,5 @@
 import { getDict, type Lang } from "@/lib/i18n";
+import { LOGO_SRC } from "@/app/components/logo";
 
 export default function NavBar({ lang }: { lang: Lang }) {
   const t = getDict(lang);
@@ -6,57 +7,47 @@ export default function NavBar({ lang }: { lang: Lang }) {
   const qs = `?lang=${lang}`;
   const qsOther = `?lang=${otherLang}`;
 
-  const linkStyle: React.CSSProperties = {
-    fontSize: 13,
-    color: "var(--text)",
-    textDecoration: "none",
-    padding: "6px 12px",
-    borderRadius: 999,
-    whiteSpace: "nowrap",
-  };
+  const links = [
+    { href: `/${qs}#about`, label: t.navAbout },
+    { href: `/petition${qs}`, label: t.navPetition },
+    { href: `/crowdfund${qs}`, label: t.navCrowdfund },
+    { href: `/analytics${qs}`, label: t.navAnalytics },
+    { href: `/${qs}#contact`, label: t.navContact },
+  ];
 
   return (
-    <nav
-      style={{
-        position: "sticky",
-        top: 12,
-        zIndex: 20,
-        margin: "12px auto 20px",
-        maxWidth: 860,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: 12,
-        padding: "8px 16px",
-        borderRadius: 999,
-        border: "1px solid var(--border)",
-        background: "rgba(14, 26, 68, 0.72)",
-        backdropFilter: "blur(10px)",
-      }}
-    >
-      <a href={`/${qs}`} style={{ display: "flex", alignItems: "center", textDecoration: "none", minWidth: 0 }}>
-        <span style={{ color: "var(--text)", fontWeight: 700, fontSize: 14, letterSpacing: 0.3, lineHeight: 1.3 }}>
-          {t.navBrandText}
-        </span>
-      </a>
-
-      <div style={{ display: "flex", alignItems: "center", gap: 2, flexWrap: "wrap", justifyContent: "flex-end" }}>
-        <a href={`/${qs}#about`} style={linkStyle}>{t.navAbout}</a>
-        <a href={`/petition${qs}`} style={linkStyle}>{t.navPetition}</a>
-        <a href={`/crowdfund${qs}`} style={linkStyle}>{t.navCrowdfund}</a>
-        <a href={`/analytics${qs}`} style={linkStyle}>{t.navAnalytics}</a>
-        <a href={`/${qs}#contact`} style={linkStyle}>{t.navContact}</a>
-        <a
-          href={qsOther}
-          style={{
-            ...linkStyle,
-            border: "1px solid var(--border)",
-            marginLeft: 6,
-          }}
-        >
-          {t.langToggle}
+    <header className="site-header">
+      <div className="site-header-inner">
+        <a href={`/${qs}`} className="brand">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={LOGO_SRC} alt="" />
+          <span className="brand-text">
+            {t.navBrandText}
+            <span className="brand-dot">.</span>
+          </span>
         </a>
+
+        <nav className="site-nav" aria-label="Main">
+          {links.map((l) => (
+            <a key={l.href} href={l.href}>{l.label}</a>
+          ))}
+          <a href={qsOther} className="lang-toggle">{t.langToggle}</a>
+        </nav>
+
+        <details className="mobile-nav">
+          <summary aria-label="Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
+          </summary>
+          <div className="mobile-nav-panel">
+            {links.map((l) => (
+              <a key={l.href} href={l.href}>{l.label}</a>
+            ))}
+            <a href={qsOther} className="lang-toggle">{t.langToggle}</a>
+          </div>
+        </details>
       </div>
-    </nav>
+    </header>
   );
 }

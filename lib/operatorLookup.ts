@@ -14,7 +14,7 @@ export interface OperatorInfo {
 // Small, fixed palette bucketed by country/bloc — keeps the map legend to a
 // handful of swatches instead of one color per operator.
 export const COUNTRY_COLORS: Record<string, string> = {
-  USA: "#3aa0ff",
+  USA: "#89cbd8",
   Russia: "#e05a5a",
   China: "#f2a93c",
   EU: "#4dc98f",

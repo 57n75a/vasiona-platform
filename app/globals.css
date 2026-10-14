@@ -1,92 +1,358 @@
+/* ------------------------------------------------------------------ */
+/* VASIONA visual system — palette, type and components taken from    */
+/* the new.vasiona.org redesign (deep navy, amber accent, teal data,  */
+/* Manrope). Variable and class names are the same ones this app has  */
+/* always used, so every page and inline style picks up the new look  */
+/* without its content or structure changing.                         */
+/* ------------------------------------------------------------------ */
+
+@font-face { font-family: "Manrope"; font-style: normal; font-weight: 400; font-display: swap; src: url(/fonts/manrope-0.ttf) format("truetype"); }
+@font-face { font-family: "Manrope"; font-style: normal; font-weight: 500; font-display: swap; src: url(/fonts/manrope-1.ttf) format("truetype"); }
+@font-face { font-family: "Manrope"; font-style: normal; font-weight: 600; font-display: swap; src: url(/fonts/manrope-2.ttf) format("truetype"); }
+@font-face { font-family: "Manrope"; font-style: normal; font-weight: 700; font-display: swap; src: url(/fonts/manrope-3.ttf) format("truetype"); }
+@font-face { font-family: "Manrope"; font-style: normal; font-weight: 800; font-display: swap; src: url(/fonts/manrope-4.ttf) format("truetype"); }
+
 :root {
-  --bg: #0b1330;
-  --bg2: #0e1a44;
-  --panel: #121c4a;
-  --border: #2a3a7a;
-  --text: #eef1ff;
-  --muted: #a7b0e0;
-  --accent: #c6363c;
-  --good: #3ddc84;
-  --gold: #f2a93c;
-  --font-display: "Lora", Georgia, serif;
+  --bg: #080e17;          /* page */
+  --bg2: #0e1723;         /* inputs, inner cards */
+  --bg3: #0c1420;         /* alternate section band */
+  --panel: #101924;       /* cards */
+  --border: #263441;
+  --border-strong: #3b4754;
+  --text: #f1f3f5;
+  --muted: #9caab9;
+  --accent: #efb35c;      /* amber — primary action, highlights */
+  --accent-hover: #facd8f;
+  --on-accent: #0b1119;   /* text on amber */
+  --gold: #efb35c;
+  --good: #7fd1b9;        /* success */
+  --danger: #e66c6c;      /* errors */
+  --teal: #89cbd8;        /* data marks */
+  --teal-deep: #5f9fb8;
+  --track: #1d2b3a;
+  --accent2: #5f9fb8;
+  --font-display: "Manrope", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 * { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 90px; }
 
 body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Manrope", Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
+
+a { color: inherit; }
+a, button { transition: color .2s, background .2s, border-color .2s, transform .2s; }
+button { cursor: pointer; font-family: inherit; }
+input, textarea, select { font-family: inherit; }
+input::placeholder, textarea::placeholder { color: #6f8396; }
+input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent) !important; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+h1, h2, h3 { font-weight: 500; letter-spacing: -0.03em; line-height: 1.15; }
+
+/* ---- Cards & panels ------------------------------------------------ */
 
 .card {
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 18px;
-  margin-bottom: 16px;
+  border-radius: 8px;
+  padding: 26px 28px;
+  margin-bottom: 18px;
 }
 
 .banner {
-  border: 1px solid var(--accent);
-  background: rgba(198, 54, 60, 0.12);
-  border-radius: 10px;
-  padding: 12px 16px;
+  border: 1px solid #685037;
+  background: rgba(239, 179, 92, 0.07);
+  color: #d9c3a0;
+  border-radius: 6px;
+  padding: 14px 18px;
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th, td { text-align: left; padding: 7px 6px; border-bottom: 1px solid var(--border); }
-th { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+th, td { text-align: left; padding: 11px 10px; border-bottom: 1px solid #1b2835; }
+th {
+  color: #8da2b7;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  border-bottom-color: var(--border);
+}
+tbody tr:hover td { background: #121e2b; }
 
-.num-big { font-size: 26px; font-weight: 800; color: var(--good); }
-.muted { color: var(--muted); font-size: 12px; }
+.num-big {
+  font-size: 34px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1.2;
+  color: var(--accent);
+}
+.muted { color: var(--muted); font-size: 12.5px; }
 
-/* ------------------------------------------------------------------ */
-/* Hero / numbered-section language — shared by /petition and         */
-/* /crowdfund, matching the visual pattern of the new.vasiona.org      */
-/* redesign (numbered eyebrows, display-serif headlines, card grids,   */
-/* chip tags, numbered step lists) while keeping this app's existing   */
-/* navy/red palette and card system rather than replacing it.          */
-/* ------------------------------------------------------------------ */
+/* Small uppercase label used across the homepage cards. */
+.label {
+  color: var(--accent);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+/* ---- Buttons ------------------------------------------------------ */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 11px 20px;
+  border-radius: 4px;
+  font-size: 13.5px;
+  font-weight: 650;
+  text-decoration: none;
+  line-height: 1.4;
+}
+.button.primary { background: var(--accent); border: 1px solid var(--accent); color: var(--on-accent); }
+.button.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); transform: translateY(-2px); }
+.button.secondary { background: transparent; border: 1px solid var(--border-strong); color: #e4eaf0; }
+.button.secondary:hover { background: #1a2837; border-color: #8b9eac; }
+
+/* Inline-styled submit buttons in the forms (background: var(--accent)) */
+button[type="submit"], form button { border-radius: 4px !important; font-weight: 650 !important; }
+button[type="submit"]:hover:not(:disabled) { background: var(--accent-hover) !important; }
+/* Inline-styled link buttons on /crowdfund and /petition */
+main a[style*="--accent)"] { border-radius: 4px !important; font-weight: 650 !important; }
+main a[style*="--accent)"]:hover { background: var(--accent-hover) !important; }
+
+/* ---- Header ------------------------------------------------------- */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  border-bottom: 1px solid #26313e99;
+  background: rgba(8, 14, 23, 0.93);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.site-header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 28px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text);
+  min-width: 0;
+}
+.brand img { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; }
+.brand-text { font-weight: 700; font-size: 13.5px; letter-spacing: .04em; line-height: 1.25; }
+.brand-dot { color: var(--accent); }
+.site-nav { display: flex; align-items: center; gap: 26px; }
+.site-nav a { font-size: 13px; color: #a4b1bf; text-decoration: none; white-space: nowrap; }
+.site-nav a:hover { color: #fff; }
+.lang-toggle {
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  padding: 6px 12px;
+  color: var(--accent) !important;
+  font-weight: 600;
+}
+.lang-toggle:hover { border-color: var(--accent); }
+
+/* Mobile menu: a <details> element, so it works without any client JS. */
+.mobile-nav { display: none; position: relative; }
+.mobile-nav summary {
+  list-style: none;
+  cursor: pointer;
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  color: var(--text);
+}
+.mobile-nav summary::-webkit-details-marker { display: none; }
+.mobile-nav[open] summary { border-color: var(--accent); color: var(--accent); }
+.mobile-nav-panel {
+  position: absolute;
+  right: 0;
+  top: 50px;
+  width: min(280px, calc(100vw - 32px));
+  background: #0c1522;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .45);
+  display: flex;
+  flex-direction: column;
+}
+.mobile-nav-panel a {
+  padding: 11px 12px;
+  font-size: 14px;
+  color: #d5dee7;
+  text-decoration: none;
+  border-radius: 4px;
+}
+.mobile-nav-panel a:hover { background: #17222f; color: #fff; }
+.mobile-nav-panel .lang-toggle { margin-top: 6px; text-align: center; }
+
+/* ---- Homepage hero ------------------------------------------------- */
+
+.home-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #030811;
+  border-bottom: 1px solid var(--border);
+}
+.home-hero-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 49%;
+  z-index: -2;
+}
+.home-hero-shade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, #050b14 0%, #050b14de 30%, #050b1470 62%, #050b1410 88%),
+    linear-gradient(0deg, #080e17 0%, #080e1700 35%);
+}
+.home-hero-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 92px 28px 80px;
+}
+.home-hero .eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.mini-line { display: inline-block; width: 24px; height: 1px; background: var(--accent); }
+.home-hero-title {
+  font-size: clamp(30px, 4.6vw, 54px);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 1.1;
+  max-width: 720px;
+  margin: 0;
+}
+.home-hero-sub {
+  max-width: 470px;
+  color: #b9c5d2;
+  font-size: 15.5px;
+  line-height: 1.8;
+  margin: 22px 0 0;
+}
+.home-hero-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; margin-top: 32px; }
+.text-link { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: var(--text); text-decoration: none; }
+.text-link:hover { color: var(--accent); }
+.hero-coordinate {
+  position: absolute;
+  right: 6%;
+  bottom: 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: .12em;
+  color: #d5e2ed;
+  border-left: 1px solid #ffffff50;
+  padding-left: 13px;
+}
+.hero-coordinate span + span { color: #a2b5c6; }
+
+/* Page body container for the homepage and other pages. */
+.page-main { max-width: 1000px; margin: 0 auto; padding: 36px 28px 20px; }
+
+/* ---- Map card ------------------------------------------------------ */
+
+.map-card { background: #0a111b; border-color: #2a3745; }
+.map-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: .08em;
+  color: #758da5;
+  margin: 18px 0 6px;
+}
+.status-dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--teal);
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* ---- Hero / numbered-section language — /petition and /crowdfund ---- */
 
 .hero {
   text-align: center;
-  padding: 38px 20px 30px;
-  margin-bottom: 8px;
+  padding: 56px 24px 44px;
+  margin: 28px 0 18px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(95, 159, 184, .14), transparent 65%),
+    linear-gradient(180deg, #0c1420, var(--bg));
 }
 
 .eyebrow {
   display: inline-block;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 2px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .16em;
   text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 14px;
+  color: var(--accent);
+  margin-bottom: 18px;
 }
 
 .hero-title {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 30px;
-  line-height: 1.25;
-  margin: 0 0 12px;
+  font-weight: 500;
+  font-size: clamp(28px, 4vw, 44px);
+  letter-spacing: -0.045em;
+  line-height: 1.12;
+  margin: 0 auto 16px;
+  max-width: 760px;
 }
 
 .hero-sub {
-  color: var(--muted);
-  font-size: 14.5px;
-  line-height: 1.6;
-  max-width: 560px;
+  color: #b9c5d2;
+  font-size: 15px;
+  line-height: 1.75;
+  max-width: 580px;
   margin: 0 auto;
 }
 
 /* Wrap a page's body sections in <div className="numbered-sections"> and
-   give each section <div className="section eyebrow-num">; the "0N / " part
-   of the eyebrow is generated from CSS counters so sections can be added,
+   give each section className="section-num"; the "0N / " part of the
+   eyebrow is generated from CSS counters so sections can be added,
    removed or reordered without renumbering anything by hand. */
 .numbered-sections { counter-reset: section; }
 .section-num { counter-increment: section; }
@@ -94,176 +360,213 @@ th { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spa
 
 .section-title {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 21px;
-  line-height: 1.35;
-  margin: 0 0 12px;
+  font-weight: 500;
+  font-size: 24px;
+  letter-spacing: -0.03em;
+  line-height: 1.3;
+  margin: 0 0 14px;
   color: var(--text);
 }
 
 .feature-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 12px;
-  margin: 4px 0 16px;
+  margin: 6px 0 16px;
 }
 
 .feature-card {
   background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 14px 16px;
+  border: 1px solid #2d3a48;
+  border-radius: 6px;
+  padding: 16px 18px;
 }
-
 .feature-card .label {
-  font-weight: 700;
-  font-size: 13.5px;
-  margin-bottom: 4px;
-}
-
-.feature-card .desc {
-  color: var(--muted);
-  font-size: 12.5px;
-  line-height: 1.5;
-}
-
-.chip-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 10px 0 4px;
-}
-
-.chip {
-  display: inline-block;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 5px 14px;
-  font-size: 12.5px;
   color: var(--text);
-  background: var(--bg2);
+  font-weight: 600;
+  font-size: 13.5px;
+  letter-spacing: 0;
+  text-transform: none;
+  margin-bottom: 5px;
+}
+.feature-card .desc { color: var(--muted); font-size: 12.5px; line-height: 1.6; }
+
+.chip-row { display: flex; flex-wrap: wrap; gap: 9px; margin: 12px 0 4px; }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #2d4252;
+  border-radius: 3px;
+  padding: 5px 10px;
+  font-size: 12px;
+  color: #b5c8d7;
+  background: transparent;
   white-space: nowrap;
 }
 
 .stat-card {
-  background: linear-gradient(135deg, rgba(242, 169, 60, 0.14), rgba(198, 54, 60, 0.08));
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 18px 20px;
-  margin-bottom: 16px;
+  background: linear-gradient(135deg, #132130, #0d1520);
+  border: 1px solid #2d3a48;
+  border-radius: 6px;
+  padding: 22px 24px;
+  margin-bottom: 18px;
 }
-
 .stat-card .stat-label {
   font-size: 11.5px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: .16em;
   color: var(--muted);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
-
 .stat-card .stat-value {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 26px;
-  color: var(--gold);
+  font-weight: 500;
+  font-size: 34px;
+  letter-spacing: -0.045em;
+  color: var(--accent);
   margin-bottom: 8px;
 }
 
 .tier-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 12px;
-  margin: 4px 0;
+  margin: 6px 0;
 }
-
 .tier-card {
   background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 14px 16px;
+  border: 1px solid #2d3a48;
+  border-radius: 6px;
+  padding: 18px 20px;
 }
-
+.tier-card:hover { border-color: #685037; }
 .tier-card .tier-amount {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 18px;
-  color: var(--gold);
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: -0.03em;
+  color: var(--accent);
   margin-bottom: 4px;
 }
+.tier-card .tier-name { font-weight: 600; font-size: 13.5px; margin-bottom: 6px; }
+.tier-card .tier-reward { color: var(--muted); font-size: 12.5px; line-height: 1.6; }
 
-.tier-card .tier-name {
-  font-weight: 700;
-  font-size: 13px;
-  margin-bottom: 6px;
-}
-
-.tier-card .tier-reward {
-  color: var(--muted);
-  font-size: 12.5px;
-  line-height: 1.5;
-}
-
-.step-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  counter-reset: step;
-}
-
+.step-list { list-style: none; margin: 0; padding: 0; counter-reset: step; }
 .step-list li {
   counter-increment: step;
   position: relative;
-  padding: 4px 0 20px 46px;
+  padding: 3px 0 22px 48px;
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.65;
 }
-
 .step-list li:last-child { padding-bottom: 0; }
-
 .step-list li::before {
   content: counter(step, decimal-leading-zero);
   position: absolute;
   left: 0;
-  top: 2px;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 15px;
-  color: var(--gold);
-  border: 1px solid var(--border);
+  top: 0;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--accent);
+  border: 1px solid #685037;
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 29px;
+  height: 29px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg2);
+  background: #18212b;
+  z-index: 1;
 }
-
 .step-list li:not(:last-child)::after {
   content: "";
   position: absolute;
-  left: 15px;
-  top: 32px;
+  left: 14px;
+  top: 29px;
   width: 1px;
-  height: calc(100% - 22px);
-  background: var(--border);
+  height: calc(100% - 29px);
+  background: #344351;
 }
 
-/* Mobile breakpoint — cards get tighter padding, type scales down slightly,
-   nav wraps to two lines gracefully instead of overflowing. */
+/* ---- Footer ------------------------------------------------------- */
+
+.site-footer { border-top: 1px solid var(--border); margin-top: 56px; background: #060b13; }
+.site-footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 28px 30px;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 40px;
+}
+.footer-brand { display: flex; gap: 14px; align-items: flex-start; }
+.footer-brand img { width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; }
+.footer-brand-name { font-weight: 800; font-size: 17px; letter-spacing: .18em; }
+.footer-tagline { color: var(--muted); font-size: 13px; margin-top: 6px; max-width: 320px; line-height: 1.6; }
+.footer-heading {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #8296a9;
+  margin: 0 0 14px;
+}
+.footer-links { display: flex; flex-direction: column; gap: 9px; font-size: 13.5px; }
+.footer-links a { color: #d0dae3; text-decoration: none; }
+.footer-links a:hover { color: var(--accent); }
+.footer-socials { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+.footer-socials a {
+  color: #c0cedb;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  border: 1px solid var(--border-strong);
+  font-size: 14px;
+  text-decoration: none;
+}
+.footer-socials a:hover { color: var(--accent); border-color: var(--accent); }
+.site-footer-bottom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 18px 28px 28px;
+  border-top: 1px solid #1b2734;
+  color: #7c8fa2;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* ---- Responsive --------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .site-nav { display: none; }
+  .mobile-nav { display: block; }
+  .site-footer-inner { grid-template-columns: 1fr 1fr; }
+  .footer-brand { grid-column: 1 / -1; }
+  .hero-coordinate { display: none; }
+}
+
 @media (max-width: 600px) {
-  .card { padding: 14px; border-radius: 12px; }
+  body { font-size: 14.5px; }
+  .site-header-inner { padding: 0 16px; height: 64px; }
+  .brand-text { font-size: 12px; }
+  .page-main { padding: 22px 16px 12px; }
+  .home-hero-content { padding: 56px 16px 52px; }
+  .card { padding: 18px 16px; }
   table { font-size: 12px; }
-  th, td { padding: 6px 4px; }
-  .num-big { font-size: 22px; }
-  h1 { font-size: 17px !important; }
-  .hero { padding: 28px 14px 22px; }
-  .hero-title { font-size: 24px; }
-  .section-title { font-size: 18px; }
-  .stat-card .stat-value { font-size: 22px; }
+  th, td { padding: 8px 6px; }
+  .num-big { font-size: 28px; }
+  .hero { padding: 40px 16px 30px; margin: 18px 0 16px; }
+  .section-title { font-size: 20px; }
+  .stat-card .stat-value { font-size: 28px; }
+  .site-footer-inner { grid-template-columns: 1fr; padding: 36px 16px 24px; gap: 28px; }
+  .site-footer-bottom { padding: 16px 16px 24px; }
 }
 
 @media (max-width: 420px) {
-  .card { padding: 12px; }
+  .card { padding: 16px 14px; }
   table { font-size: 11px; }
 }

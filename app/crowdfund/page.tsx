@@ -60,7 +60,7 @@ export default async function CrowdfundPage({
 
           <div
             className="card section-num"
-            style={{ background: "linear-gradient(135deg, rgba(242,169,60,0.10), rgba(198,54,60,0.08))" }}
+            style={{ background: "linear-gradient(135deg, rgba(239,179,92,0.10), rgba(95,159,184,0.06))" }}
           >
             <span className="eyebrow">{t.cfSponsorsTitle}</span>
             <p style={{ fontSize: 14, lineHeight: 1.6 }}>{t.cfSponsorsText}</p>
@@ -75,7 +75,7 @@ export default async function CrowdfundPage({
               style={{
                 display: "inline-block",
                 background: "var(--accent)",
-                color: "#fff",
+                color: "var(--on-accent)",
                 borderRadius: 999,
                 padding: "10px 20px",
                 fontSize: 14,
@@ -106,7 +106,7 @@ export default async function CrowdfundPage({
         <div
           className="card"
           id="kit"
-          style={{ background: "linear-gradient(135deg, rgba(58,160,255,0.10), rgba(198,54,60,0.08))" }}
+          style={{ background: "linear-gradient(135deg, rgba(95,159,184,0.12), rgba(239,179,92,0.05))" }}
         >
           <h2 style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: 1, color: "var(--muted)" }}>
             {t.kitTitle}
@@ -123,7 +123,7 @@ export default async function CrowdfundPage({
             style={{
               display: "inline-block",
               background: "var(--accent)",
-              color: "#fff",
+              color: "var(--on-accent)",
               borderRadius: 999,
               padding: "10px 20px",
               fontSize: 14,
