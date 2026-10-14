@@ -5,7 +5,7 @@ export type Lang = "en" | "sr";
 export const dict = {
   en: {
     title: "🛰️ VASIONA — Satellite Orbiting",
-    subtitle: "Live cron-fed satellite tracking over Serbia, plus a hypothetical toll-fee ledger.",
+    subtitle: "Live satellite tracking over Serbia.",
     banner:
       "⚠️ The dollar figures below are a hypothetical scenario model — there is no current legal basis for collecting satellite overflight fees (Outer Space Treaty, Art. II). See docs/BUSINESS_PLAN.md for the real vs. hypothetical split.",
     punchline:
@@ -232,7 +232,7 @@ export const dict = {
   },
   sr: {
     title: "🛰️ ВАСИОНА — Орбитирање сателита",
-    subtitle: "Праћење сателита изнад Србије уживо, путем cron задатка, уз хипотетички обрачун накнада.",
+    subtitle: "Праћење сателита изнад Србије уживо.",
     banner:
       "⚠️ Износи у доларима приказани испод представљају хипотетички сценарио — тренутно не постоји правни основ за наплату накнада за прелет сателита (Уговор о космосу, члан II). Погледати docs/BUSINESS_PLAN.md за јасну поделу стварног и хипотетичког дела.",
     punchline:
