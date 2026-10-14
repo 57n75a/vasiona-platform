@@ -30,7 +30,13 @@ export default function StoryPage({
         </div>
 
         <div className="card">
-          <p style={{ fontSize: 15.5, lineHeight: 1.8, margin: 0 }}>{t.aboutText}</p>
+          <p style={{ fontSize: 15.5, lineHeight: 1.8, margin: 0 }}>
+            {t.aboutText}{" "}
+            <a href={`/analytics${qs}`} style={{ color: "var(--accent)", fontWeight: 600 }}>
+              {t.storyAnalyticsLink}
+            </a>
+            {t.storyAnalyticsTail}
+          </p>
           <p style={{ fontSize: 15.5, lineHeight: 1.8, margin: "16px 0 0", color: "#c3cfdb" }}>{t.aboutText2}</p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "14px 22px", alignItems: "center", marginTop: 26 }}>
             <a className="button primary" href={`/petition${qs}`}>{t.storyPetitionCta}</a>

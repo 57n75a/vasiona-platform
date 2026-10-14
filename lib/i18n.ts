@@ -13,7 +13,7 @@ export const dict = {
     punchline2: "It no longer benefits humanity as a whole — only a select few.",
     aboutTitle: "The story behind VASIONA",
     aboutText:
-      "It started with a short 2020 concept note asking a simple question: if a country's airspace is worth charging for, why does that logic quietly stop at the edge of the atmosphere? VASIONA — Serbian for \"cosmos\" — is what that question grew into: a real, working satellite tracker built to make the idea concrete rather than rhetorical. The logo pairs Serbia's territory, highlighted in red, with a dashed sovereignty column rising from it into orbit, ringed by satellite nodes — the same vertical claim aviation has made routine for eighty years, just extended a little further up. The tracker below is real. The fee ledger next to it is a thought experiment, clearly labeled as one, showing what that extension could be worth if the world ever decided the sky's limit wasn't the limit.",
+      "It started with a short 2020 concept note asking a simple question: if a country's airspace is worth charging for, why does that logic quietly stop at the edge of the atmosphere? VASIONA — Serbian for \"cosmos\" — is what that question grew into: a real, working satellite tracker built to make the idea concrete rather than rhetorical. The logo pairs Serbia's territory, highlighted in red, with a dashed sovereignty column rising from it into orbit, ringed by satellite nodes — the same vertical claim aviation has made routine for eighty years, just extended a little further up.",
     aboutText2:
       "That question now has a second chapter: an idea to help finance, design and build Serbia's first satellite — a small CubeSat that would put a Serbian-flagged system into orbit, rather than only tracking everyone else's. It's an early-stage idea, not a funded program yet, built around a realistic budget and timeline rather than a symbolic gesture.",
     aboutCta: "See the plan and register your interest →",
@@ -50,6 +50,8 @@ export const dict = {
     navCrowdfund: "Fund a Satellite",
     navAnalytics: "Analytics",
     storyPetitionCta: "Read and sign the petition →",
+    storyAnalyticsLink: "Explore the tracker's observational data and analytics",
+    storyAnalyticsTail: " — the fee figures are experimental model estimates, derived from the orbital exposure of Serbian territory, quantifying what such an extension of sovereignty could be worth were it ever recognised beyond the atmosphere.",
     navContact: "Contact",
     navHome: "Dashboard",
 
@@ -238,7 +240,7 @@ export const dict = {
     punchline2: "То више не користи човечанству у целини — само уском кругу одабраних.",
     aboutTitle: "Прича иза ВАСИОНЕ",
     aboutText:
-      "Све је почело кратком концептуалном белешком из 2020. која поставља једноставно питање: ако се ваздушни простор државе наплаћује, зашто та логика тихо престаје на ивици атмосфере? ВАСИОНА — реч која значи космос/универзум — израсла је из тог питања: стваран, функционалан систем праћења сателита направљен да идеју учини конкретном, а не само реториком. Логотип спаја територију Србије, истакнуту црвеном бојом, са испрекиданом „колоном суверенитета” која се пружа од ње ка орбити, окружену чворовима сателита — иста та вертикална тврдња коју је ваздухопловство учинило уобичајеном последњих осамдесет година, само мало продужена навише. Систем праћења испод је стваран. Табела накнада поред њега је мисаони експеримент, јасно означен као такав, који показује колико би то продужење могло вредети када би свет икада одлучио да небо ипак није граница.",
+      "Све је почело кратком концептуалном белешком из 2020. која поставља једноставно питање: ако се ваздушни простор државе наплаћује, зашто та логика тихо престаје на ивици атмосфере? ВАСИОНА — реч која значи космос/универзум — израсла је из тог питања: стваран, функционалан систем праћења сателита направљен да идеју учини конкретном, а не само реториком. Логотип спаја територију Србије, истакнуту црвеном бојом, са испрекиданом „колоном суверенитета” која се пружа од ње ка орбити, окружену чворовима сателита — иста та вертикална тврдња коју је ваздухопловство учинило уобичајеном последњих осамдесет година, само мало продужена навише.",
     aboutText2:
       "То питање сада има и други део приче: идеју да се помогне у финансирању, дизајну и изградњи првог српског сателита — малог CubeSat-а који би у орбиту поставио систем под српском заставом, а не само пратио туђе. То је идеја у раној фази, још увек не и финансиран програм, заснована на реалном буџету и временском оквиру, а не на симболичном гесту.",
     aboutCta: "Погледај план и пријави интересовање →",
@@ -275,6 +277,8 @@ export const dict = {
     navCrowdfund: "Финансирај сателит",
     navAnalytics: "Аналитика",
     storyPetitionCta: "Прочитај и потпиши петицију →",
+    storyAnalyticsLink: "Погледајте аналитику опсервационих података система праћења",
+    storyAnalyticsTail: " — износи накнада су експерименталне моделске процене, изведене из орбиталне изложености територије Србије, које квантификују колико би такво проширење суверенитета могло вредети ако би икада било признато и изван атмосфере.",
     navContact: "Контакт",
     navHome: "Контролна табла",
 
