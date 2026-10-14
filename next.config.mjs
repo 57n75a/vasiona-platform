@@ -1,5 +1,17 @@
 /** @type {import('next').NextConfig} */
+// The overflight-fee campaign (petition, story, analytics) moved to its own
+// site. Old links are sent there so nobody lands on a missing page.
+const PETITION_SITE = "https://petition.vasiona.org";
+
 const nextConfig = {
+  async redirects() {
+    return [
+      { source: "/petition", destination: `${PETITION_SITE}/petition`, permanent: false },
+      { source: "/petition/:path*", destination: `${PETITION_SITE}/petition/:path*`, permanent: false },
+      { source: "/analytics", destination: `${PETITION_SITE}/analytics`, permanent: false },
+      { source: "/story", destination: `${PETITION_SITE}/story`, permanent: false },
+    ];
+  },
   async headers() {
     return [
       {

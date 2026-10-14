@@ -31,9 +31,9 @@ export default function Footer({ lang }: { lang: Lang }) {
         <div>
           <h4 className="footer-heading">VASIONA</h4>
           <div className="footer-links">
-            <a href={`/story${qs}`}>{t.aboutTitle}</a>
+            <a href={`/${qs}#about`}>{t.navAbout}</a>
             <a href={`/crowdfund${qs}`}>{t.navCrowdfund}</a>
-            <a href={`/analytics${qs}`}>{t.navAnalytics}</a>
+            <a href={`/${qs}#contact`}>{t.navContact}</a>
           </div>
         </div>
 

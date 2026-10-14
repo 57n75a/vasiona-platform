@@ -69,7 +69,7 @@ export const dict = {
 
     // Footer
     footerTagline: "Guarding the sky above. Charting the space beyond.",
-    footerRights: "A concept platform for space-sovereignty policy advocacy — not a government agency.",
+    footerRights: "A citizen initiative for Serbia's first satellite — not a government agency.",
     footerContact: "Contact",
 
     // Petition page
@@ -300,7 +300,7 @@ export const dict = {
 
     // Footer
     footerTagline: "Изнад Србије, за Србију.",
-    footerRights: "Концептуална платформа за заговарање политике свемирског суверенитета — није државна агенција.",
+    footerRights: "Грађанска иницијатива за први српски сателит — није државна агенција.",
     footerContact: "Контакт",
 
     // Petition page

@@ -7,8 +7,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "estimate:historical": "ts-node scripts/historical-estimate.ts"
+    "lint": "next lint"
   },
   "dependencies": {
     "@vercel/postgres": "^0.10.0",
