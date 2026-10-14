@@ -73,6 +73,15 @@ export default async function Home({
       </section>
 
       <main className="page-main">
+        <section className="card about-card" id="about">
+          <div className="label">{t.navAbout}</div>
+          <h2 className="about-title">{t.satAboutTitle}</h2>
+          <p>{t.satAboutP1}</p>
+          <p>{t.satAboutP2}</p>
+          <p>{t.satAboutP3}</p>
+          <a className="button primary" href={`/crowdfund${qs}`} style={{ marginTop: 8 }}>{t.aboutCta}</a>
+        </section>
+
         <div className="card map-card" id="map">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16 }}>
             <div>
