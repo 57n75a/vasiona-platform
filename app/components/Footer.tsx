@@ -29,10 +29,9 @@ export default function Footer({ lang }: { lang: Lang }) {
         </div>
 
         <div>
-          <h4 className="footer-heading">{t.navHome}</h4>
+          <h4 className="footer-heading">VASIONA</h4>
           <div className="footer-links">
-            <a href={`/${qs}#about`}>{t.navAbout}</a>
-            <a href={`/petition${qs}`}>{t.navPetition}</a>
+            <a href={`/story${qs}`}>{t.aboutTitle}</a>
             <a href={`/crowdfund${qs}`}>{t.navCrowdfund}</a>
             <a href={`/analytics${qs}`}>{t.navAnalytics}</a>
           </div>

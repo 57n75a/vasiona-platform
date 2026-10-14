@@ -49,6 +49,7 @@ export const dict = {
     navPetition: "Petition",
     navCrowdfund: "Fund a Satellite",
     navAnalytics: "Analytics",
+    storyPetitionCta: "Read and sign the petition →",
     navContact: "Contact",
     navHome: "Dashboard",
 
@@ -273,6 +274,7 @@ export const dict = {
     navPetition: "Петиција",
     navCrowdfund: "Финансирај сателит",
     navAnalytics: "Аналитика",
+    storyPetitionCta: "Прочитај и потпиши петицију →",
     navContact: "Контакт",
     navHome: "Контролна табла",
 
