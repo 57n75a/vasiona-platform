@@ -69,7 +69,6 @@ export default async function AnalyticsPage({
           <p className="hero-sub">{t.analyticsSubtitle}</p>
         </div>
 
-        <div className="banner" style={{ margin: "16px 0" }}>{t.analyticsDisclaimer}</div>
 
         <div className="card stat-card">
           <div className="label">{t.totalLabel}</div>
@@ -98,6 +97,10 @@ export default async function AnalyticsPage({
             />
             <div className="muted" style={{ fontSize: 11.5, marginTop: 6 }}>* {t.chartCumNote}</div>
           </div>
+        </div>
+
+        <div className="banner" style={{ margin: "0 0 18px" }}>
+          {t.banner}
         </div>
 
         <div className="card">
