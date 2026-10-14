@@ -1,15 +1,13 @@
 /** @type {import('next').NextConfig} */
-// The overflight-fee campaign (petition, story, analytics) moved to its own
-// site. Old links are sent there so nobody lands on a missing page.
-const PETITION_SITE = "https://petition.vasiona.org";
-
 const nextConfig = {
+  // Pages that used to live here (petition, story, analytics) were removed.
+  // Old links land on the homepage instead of a "page not found".
   async redirects() {
     return [
-      { source: "/petition", destination: `${PETITION_SITE}/petition`, permanent: false },
-      { source: "/petition/:path*", destination: `${PETITION_SITE}/petition/:path*`, permanent: false },
-      { source: "/analytics", destination: `${PETITION_SITE}/analytics`, permanent: false },
-      { source: "/story", destination: `${PETITION_SITE}/story`, permanent: false },
+      { source: "/petition", destination: "/", permanent: false },
+      { source: "/petition/:path*", destination: "/", permanent: false },
+      { source: "/analytics", destination: "/", permanent: false },
+      { source: "/story", destination: "/", permanent: false },
     ];
   },
   async headers() {

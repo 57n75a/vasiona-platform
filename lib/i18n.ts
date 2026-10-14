@@ -210,18 +210,17 @@ export const dict = {
     // Supporter kit (crowdfunding page, bottom)
     kitTitle: "Supporter kit — download & print",
     kitIntro:
-      "Help spread the word. This free kit has everything you need to print and share VASIONA: the logo, a brochure, posters and flyers, stickers, QR codes and ready-made social media images.",
+      "Help spread the word. This free kit has everything you need to print and share VASIONA: the logo, flyers, stickers, QR codes and ready-made social media images.",
     kitContents: [
       "Logo in several versions (PNG — transparent, white and dark backgrounds)",
-      "Brochure — A4, 4 pages (Serbian and English)",
-      "Poster (A3 / A4) and flyer (A5) with QR codes (Serbian and English)",
+      "Flyer (A5) with QR code (Serbian and English)",
       "Printable sticker sheet",
-      "QR codes for vasiona.org, the petition and the crowdfunding page",
+      "QR codes for vasiona.org and the crowdfunding page",
       "Social media images and ready-to-post captions",
     ],
     kitButton: "Download the kit (ZIP)",
     kitNote:
-      "Free to print and share in support of the project. Please keep the logo unaltered and keep the note that VASIONA is a concept platform, not a government agency, and that no payment is collected.",
+      "Free to print and share in support of the project. Please keep the logo unaltered and keep the note that VASIONA is a citizen initiative, not a government agency, and that no payment is collected.",
 
     // Charts (home page)
     chartCumTitle: "Cumulative modeled total, year by year",
@@ -441,18 +440,17 @@ export const dict = {
     // Пакет за подршку (страница за финансирање, на дну)
     kitTitle: "Пакет за подршку — преузми и одштампај",
     kitIntro:
-      "Помозите да се прича прошири. Овај бесплатан пакет садржи све што вам треба да одштампате и поделите ВАСИОНУ: лого, брошуру, плакате и флајере, налепнице, QR кодове и готове слике за друштвене мреже.",
+      "Помозите да се прича прошири. Овај бесплатан пакет садржи све што вам треба да одштампате и поделите ВАСИОНУ: лого, флајере, налепнице, QR кодове и готове слике за друштвене мреже.",
     kitContents: [
       "Лого у више верзија (PNG — провидна, бела и тамна позадина)",
-      "Брошура — А4, 4 странице (српски и енглески)",
-      "Плакат (А3 / А4) и флајер (А5) са QR кодовима (српски и енглески)",
+      "Флајер (А5) са QR кодом (српски и енглески)",
       "Лист налепница за штампу",
-      "QR кодови за vasiona.org, петицију и страницу за финансирање",
+      "QR кодови за vasiona.org и страницу за финансирање",
       "Слике за друштвене мреже и готови текстови за објаве",
     ],
     kitButton: "Преузми пакет (ZIP)",
     kitNote:
-      "Слободно штампајте и делите у циљу подршке пројекту. Молимо да лого не мењате и да задржите напомену да је ВАСИОНА концептуална платформа, а не државна агенција, и да се плаћање не прикупља.",
+      "Слободно штампајте и делите у циљу подршке пројекту. Молимо да лого не мењате и да задржите напомену да је ВАСИОНА грађанска иницијатива, а не државна агенција, и да се плаћање не прикупља.",
 
     // Графикони (почетна страница)
     chartCumTitle: "Кумулативни моделовани збир по годинама",
