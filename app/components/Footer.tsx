@@ -3,6 +3,7 @@ import { LOGO_SRC } from "@/app/components/logo";
 import { CONTACT_EMAIL, SITE_DOMAIN, SITE_URL } from "@/lib/site";
 
 const SOCIAL_LINKS = [
+  { name: "Facebook", url: "https://www.facebook.com/vasiona.org", icon: "f" },
   { name: "X", url: "https://x.com/serbvasiona", icon: "𝕏" },
   { name: "Instagram", url: "https://www.instagram.com/serbvasiona", icon: "📷" },
   { name: "YouTube", url: "https://www.youtube.com/@SerbVasiona", icon: "▶" },
